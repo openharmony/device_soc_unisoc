@@ -1,0 +1,2 @@
+libimgdnn.so filter=lfs diff=lfs merge=lfs -text
+libnnacompiler.so filter=lfs diff=lfs merge=lfs -text

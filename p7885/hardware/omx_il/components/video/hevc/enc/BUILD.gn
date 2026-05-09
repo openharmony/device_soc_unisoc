@@ -1,0 +1,77 @@
+#
+# Copyright 2016-2026 Unisoc (Shanghai) Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/hardware/omx_il/sprd_omx.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+ohos_shared_library("libstagefright_sprd_h265enc") {
+  sources = [
+    "SPRDHEVCEncoder.cpp",
+  ]
+
+  include_dirs = openmax_include_dirs
+  include_dirs += [
+    "//drivers/peripheral/base",
+    "//drivers/peripheral/codec/interfaces/include",
+    "//drivers/peripheral/display/interfaces/include",
+    "//foundation/graphic/graphic_surface/interfaces/inner_api/utils",
+    "//device/soc/unisoc/p7885/hardware/omx_il/libstagefrighthw/include",
+    "//device/soc/unisoc/p7885/hardware/omx_il/components/video/vpp/deintl/component",
+    "//device/soc/unisoc/p7885/hardware/omx_il/components/video/vpp/deintl/core/vsp",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+  ]
+  cflags_cc = [
+    "-Wno-switch",
+    "-Wno-header-hygiene",
+    "-Wno-reorder-ctor",
+    "-Wno-unused-variable",
+  ]
+
+  deps = [
+    "//device/soc/unisoc/p7885/hardware/omx_il/libstagefrighthw:libstagefrighthw",
+    "//device/soc/unisoc/p7885/hardware/omx_il/components/video/vpp/deintl:libstagefright_sprd_deintl",
+    "//device/soc/unisoc/p7885/hardware/omx_il/libutils:libomx_utils",
+    "//device/soc/unisoc/p7885/hardware/omx_il/libutils/memory/libmemion:libomx_memion",
+  ]
+  external_deps = [ 
+    "hilog:libhilog",
+    "c_utils:utils",
+  ]
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_shared_library( "libomx_hevcenc_hw_sprd" ) {
+  source = "lib64/libomx_hevcenc_hw_sprd.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+group( "libstagefright_sprd_hevc_enc" ) {
+  deps = [
+    ":libstagefright_sprd_h265enc",
+    ":libomx_hevcenc_hw_sprd",
+  ]
+}

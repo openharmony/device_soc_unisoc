@@ -1,0 +1,313 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
+#import("//vendor/$product_company/$product_name/product.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+UNISOC_WRAPPER_PATH = "//device/soc/unisoc/p7885/unisoc_wrapper"
+
+root_path = "../../../../../.."
+
+group("display_buffer_model") {
+  deps = [
+    "//device/soc/unisoc/p7885/hardware/display:libdisplay_buffer_vdi_impl",
+    "//device/soc/unisoc/p7885/hardware/display:display_gralloc",
+  ]
+}
+
+config("gralloc_config") {
+
+  include_dirs = [
+    "${UNISOC_WRAPPER_PATH}/frameworks/native/libs/ui/include",
+    "${UNISOC_WRAPPER_PATH}/hardware",
+    "${UNISOC_WRAPPER_PATH}/hardware/android/hardware/graphics/common",
+    "${UNISOC_WRAPPER_PATH}/hardware/android/hardware/graphics/common/aidl/android/hardware/graphics/common/binder_utils",
+    "${UNISOC_WRAPPER_PATH}/hardware/android/hardware/graphics/common/aidl/android/hardware/graphics/common",
+    "${UNISOC_WRAPPER_PATH}/hardware/libhardware",
+    "${UNISOC_WRAPPER_PATH}/frameworks/native/libs/arect/include",
+    "${UNISOC_WRAPPER_PATH}/frameworks/native/libs/gralloc/types/include",
+    "${UNISOC_WRAPPER_PATH}/frameworks/native/libs/math/include",
+    "${UNISOC_WRAPPER_PATH}/frameworks/native/libs/nativebase/include",
+    "${UNISOC_WRAPPER_PATH}/frameworks/native/libs/nativewindow/include",
+    "${UNISOC_WRAPPER_PATH}/system/libhidl",
+    "${UNISOC_WRAPPER_PATH}/system/libhidl/base/include",
+    "${UNISOC_WRAPPER_PATH}/system/libhidl/transport/include",
+    "${UNISOC_WRAPPER_PATH}/system/libfmq/base",
+    "${UNISOC_WRAPPER_PATH}/system/libbase/include",
+    "${UNISOC_WRAPPER_PATH}/system/libhwbinder/include/",
+    "${UNISOC_WRAPPER_PATH}/system/core/libsystem/include",
+    "${UNISOC_WRAPPER_PATH}/system/core/libutils/include",
+    "${UNISOC_WRAPPER_PATH}/system/core/libcutils/include",
+    "${UNISOC_WRAPPER_PATH}/system/core/libsync/include",
+    "${UNISOC_WRAPPER_PATH}/system/core/libgrallocusage/include",
+    "${UNISOC_WRAPPER_PATH}/wrapper",
+    "//base/hiviewdfx/hilog/interfaces/native/innerkits/include/hilog",
+  ]
+
+}
+
+config("libdisplay_buffer_vdi_impl_config") {
+  include_dirs = [ "./src/display_gralloc" ]
+}
+
+ohos_shared_library("libdisplay_buffer_vdi_impl") {
+  sources = [ "src/display_gralloc/display_buffer_vdi_impl.cpp" ]
+
+  public_configs = [ ":libdisplay_buffer_vdi_impl_config" ]
+
+  include_dirs = [
+    "./src/display_gralloc",
+    "${root_path}/drivers/peripheral/base",
+    "${root_path}/drivers/interface/display/composer/hdifd_parcelable",
+    "${root_path}/drivers/interface/display/buffer",
+    "${root_path}/drivers/peripheral/display/utils/include",
+    "${root_path}/drivers/peripheral/display/buffer/hdi_service/include",
+    "${root_path}/drivers/peripheral/display/interfaces/include",
+  ]
+
+  output_name = "libdisplay_buffer_vdi_impl"
+  cflags = [
+#    "-DGRALLOC_GBM_SUPPORT",
+    "-Wno-macro-redefined",
+  ]
+  deps = [ "//device/soc/unisoc/p7885/hardware/display:display_gralloc" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+  ]
+
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "soc_p7885"
+  part_name = "soc_p7885"
+}
+
+ohos_shared_library("display_gralloc") {
+  sources = [
+    "src/display_gralloc/allocator.cpp",
+    "src/display_gralloc/allocator_manager.cpp",
+    "src/display_gralloc/display_gralloc.cpp",
+    "src/display_gralloc/dmabufferheap_allocator.cpp",
+    "src/display_gralloc/drm_allocator.cpp",
+    "src/display_gralloc/framebuffer_allocator.cpp",
+    "src/utils/display_adapter.cpp",
+    "src/display_gralloc/sprd_allocator.cpp"
+  ]
+  include_dirs = [
+    "include",
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
+    "src/utils/",
+    "${UNISOC_WRAPPER_PATH}/system/memory/libmemion/include",
+    "${UNISOC_WRAPPER_PATH}/system/memory/libdmabufheap/include",
+    #ion
+    "${UNISOC_WRAPPER_PATH}/system/memory/libion/include",
+    "${UNISOC_WRAPPER_PATH}/system/memory/libion/kernel-headers",
+    "${UNISOC_WRAPPER_PATH}/system/core/libutils/include",
+    "${UNISOC_WRAPPER_PATH}/system/core/libcutils/include",
+    "${root_path}/drivers/interface/display/composer/hdifd_parcelable",
+  ]
+
+  public_configs = [
+    ":gralloc_config",
+  ]
+
+  output_name = "display_gralloc"
+  cflags = [ "-Wno-macro-redefined" ]
+  deps = [
+    "//third_party/libdrm:libdrm",
+    "${UNISOC_WRAPPER_PATH}/frameworks/native/libs/ui:ui",
+    "${UNISOC_WRAPPER_PATH}/system/core/libcutils:aosp_cutils",
+    "${UNISOC_WRAPPER_PATH}/system/core/libutils:aosp_utils",
+    "${UNISOC_WRAPPER_PATH}/system/memory/libion:libion",
+    "${UNISOC_WRAPPER_PATH}/system/memory/libmemion:libmemion",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+    "memory_utils:libdmabufheap",
+  ]
+
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "soc_p7885"
+  part_name = "soc_p7885"
+}
+
+group("display_composer_model") {
+  deps = [
+   "//device/soc/unisoc/p7885/hardware/display:display_device",
+   "//device/soc/unisoc/p7885/hardware/display:display_gfx",
+   "//device/soc/unisoc/p7885/hardware/display:libdisplay_composer_vdi_impl",
+  ]
+}
+
+ohos_shared_library("libdisplay_composer_vdi_impl") {
+  sources = [ "src/display_device/core/display_composer_vdi_impl.cpp" ]
+
+  include_dirs = [
+    "include",
+    "src/utils",
+    "src/display_device/vsync",
+    "src/display_device/drm",
+    "src/display_device/fbdev",
+    "src/display_device/core",
+    "src/display_device/composer",
+    "${root_path}/drivers/peripheral/display/utils/include",
+    "${root_path}/drivers/interface/display/composer",
+    "${root_path}/drivers/peripheral/display/composer/hdi_service/include",
+    "${root_path}/drivers/interface/display/composer/hdifd_parcelable",
+  ]
+
+  deps = [ "//device/soc/unisoc/p7885/hardware/display:display_device" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+    "graphic_surface:buffer_handle",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+  ]
+
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "soc_p7885"
+  part_name = "soc_p7885"
+}
+
+config("def_display_device_pub_config") {
+  visibility = [ ":*" ]
+
+  include_dirs = [
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
+    "//device/soc/unisoc/p7885/hardware/display/include",
+  ]
+}
+
+ohos_shared_library("display_gfx") {
+  sources = [ 
+    "src/display_gfx/display_gfx.cpp",
+    "src/display_gfx/gsp/src/gsp_r9p0_common.cpp"
+  ]
+
+  include_dirs = [
+    "src/display_gfx/gsp/include"
+  ]
+
+  include_dirs += [
+    "include",
+    "//drivers/peripheral/base",
+    "//drivers/hdf_core/framework/include/utils",
+    "//drivers/hdf_core/adapter/uhdf2/adapter/osal/include/",
+    "//utils/native/base/include",
+    "//foundation/graphic/standard/utils/include",
+    "//base/hiviewdfx/interfaces/innerkits/libhilog/include",
+    "${root_path}/drivers/interface/display/composer/hdifd_parcelable"
+  ]
+  output_name = "display_gfx"
+  cflags = [ "-Wno-macro-redefined" ]
+  deps = [
+    "//third_party/libdrm:libdrm",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "hilog:libhilog",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+  ]
+
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "soc_p7885"
+  part_name = "soc_p7885"
+}
+
+ohos_shared_library("display_device") {
+  sources = [
+    "src/display_device/composer/hdi_composer.cpp",
+    "src/display_device/composer/hdi_gfx_composition.cpp",
+    "src/display_device/core/hdi_device_interface.cpp",
+    "src/display_device/core/hdi_display.cpp",
+    "src/display_device/core/hdi_layer.cpp",
+    "src/display_device/core/hdi_session.cpp",
+    "src/display_device/drm/drm_connector.cpp",
+    "src/display_device/drm/drm_crtc.cpp",
+    "src/display_device/drm/drm_device.cpp",
+    "src/display_device/drm/drm_display.cpp",
+    "src/display_device/drm/drm_encoder.cpp",
+    "src/display_device/drm/drm_plane.cpp",
+    "src/display_device/drm/drm_vsync_worker.cpp",
+    "src/display_device/drm/hdi_drm_composition.cpp",
+    "src/display_device/drm/hdi_drm_layer.cpp",
+    "src/display_device/fbdev/fb_composition.cpp",
+    "src/display_device/fbdev/fb_device.cpp",
+    "src/display_device/fbdev/fb_display.cpp",
+    "src/display_device/vsync/sorft_vsync.cpp",
+    "src/utils/display_adapter.cpp",
+  ]
+  public_configs = [ ":def_display_device_pub_config" ]
+
+  output_name = "display_device"
+
+  include_dirs = [
+    "include",
+    "src/display_device",
+    "src/display_device/drm",
+    "src/display_device/fbdev",
+    "src/display_device/core",
+    "src/display_device/composer",
+    "//drivers/peripheral/base",
+    "${root_path}/drivers/peripheral/display/buffer/hdi_service/include",
+    "src/utils",
+    "${root_path}/drivers/interface/display/composer/hdifd_parcelable",
+  ]
+
+
+
+  deps = [
+    "//device/soc/unisoc/p7885/hardware/display:libdisplay_buffer_vdi_impl",
+    "//device/soc/unisoc/p7885/hardware/display:display_gfx",
+#    ":display_layer_video",
+    "//third_party/libdrm:libdrm",
+  ]
+  cflags = [ "-Wno-unused-function" ]
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+    "hitrace:hitrace_meter",
+  ]
+
+  symlink_target_name = [ "libdisplay_layer.z.so" ]
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "soc_p7885"
+  part_name = "soc_p7885"
+}
+

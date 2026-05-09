@@ -1,0 +1,51 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { read } for  pid=3048 comm="OS_IPC_1_3050" name="hw" dev="sda47" ino=249 scontext=u:r:allocator_host:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
+allow allocator_host vendor_lib_file:dir { read open };
+
+# avc:  denied  { open } for  pid=2490 comm="hdf_devhost" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:allocator_host:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow allocator_host hiviewdfx_hiview_param:file { open read map };
+
+# avc:  denied  { search } for  pid=845 comm="OS_IPC_0_851" name="dma_heap" dev="tmpfs" ino=346 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=dir permissive=0
+allow allocator_host dev_dma_heap_file:dir { search };
+
+# avc:  denied  { read } for  pid=845 comm="OS_IPC_1_888" name="system" dev="tmpfs" ino=348 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=863 comm="OS_IPC_1_1156" path="/dev/dma_heap/system" dev="tmpfs" ino=348 ioctlcmd=0x4800 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=chr_file permissive=1
+allow allocator_host dev_dma_heap_file:chr_file { open read ioctl };
+
+# avc:  denied  { ioctl } for  pid=834 comm="OS_IPC_0_860" path="/dev/dma_heap/system" dev="tmpfs" ino=348 ioctlcmd=0x4800 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=chr_file permissive=0
+allowxperm allocator_host dev_dma_heap_file:chr_file ioctl { 0x4800 };
+
+# avc:  denied  { read write open } for  pid=863 comm="OS_IPC_1_1156" path="/data/ashmem/android-ashmem-863-XXXhGDEDe" dev="sda62" ino=3070 scontext=u:r:allocator_host:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=1
+# avc:  denied  { unlink } for  pid=863 comm="OS_IPC_1_1156" name="android-ashmem-863-XXXhGDEDe" dev="sda62" ino=3070 scontext=u:r:allocator_host:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=1
+# avc:  denied  { map } for  pid=863 comm="OS_IPC_1_1156" path=*** dev="sda62" ino=3070 scontext=u:r:allocator_host:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=1
+# avc:  denied  { create } for  pid=831 comm="OS_IPC_1_850" name="android-ashmem-831-XXXOhhmjD" scontext=u:r:allocator_host:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+#allow allocator_host data_file:file { open read write map unlink create };
+allow allocator_host data_ashmem_file:file { open read write map unlink create };
+
+# avc:  denied  { search } for  pid=836 comm="OS_IPC_1_1023" name="/" dev="sda62" ino=3 scontext=u:r:allocator_host:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=0
+# avc:  denied  { add_name } for  pid=890 comm="OS_IPC_1_935" name="android-ashmem-890-XXXODcMLG" scontext=u:r:allocator_host:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=0
+# avc:  denied  { remove_name } for  pid=818 comm="OS_IPC_0_828" name="android-ashmem-818-XXXgBJpJE" dev="sda62" ino=3295 scontext=u:r:allocator_host:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=0
+allow allocator_host data_file:dir { search read write open add_name remove_name };
+allow allocator_host data_ashmem_file:dir { search read write open add_name remove_name };
+
+# avc:  denied  { read write } for  pid=833 comm="OS_IPC_1_903" name="hwbinder" dev="tmpfs" ino=370 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_hwbinder_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { open } for  pid=846 comm="OS_IPC_1_887" path="/dev/hwbinder" dev="tmpfs" ino=370 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_hwbinder_file:s0 tclass=chr_file permissive=0
+allow allocator_host dev_hwbinder_file:chr_file { read write open map };
+
+# avc:  denied  { ioctl } for  pid=847 comm="OS_IPC_1_867" path="/dev/hwbinder" dev="tmpfs" ino=370 ioctlcmd=0x6209 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_hwbinder_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=874 comm="OS_IPC_1_910" path="/dev/hwbinder" dev="tmpfs" ino=370 ioctlcmd=0x6205 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_hwbinder_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=874 comm="OS_IPC_1_910" path="/dev/hwbinder" dev="tmpfs" ino=370 ioctlcmd=0x6210 scontext=u:r:allocator_host:s0 tcontext=u:object_r:dev_hwbinder_file:s0 tclass=chr_file permissive=0
+allow allocator_host dev_hwbinder_file:chr_file { ioctl };
+allowxperm allocator_host dev_hwbinder_file:chr_file ioctl { 0x6209 0x6205 0x6210 };

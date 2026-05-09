@@ -1,0 +1,4 @@
+nnrt_device_service                         u:object_r:hdf_nnrt_device_service:s0
+nnrt_device_service_v2_0                    u:object_r:hdf_nnrt_device_service:s0
+nnrt_device_service_v1_0                    u:object_r:hdf_nnrt_device_service:s0
+

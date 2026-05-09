@@ -1,0 +1,35 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { call } for  pid=571 comm="OS_FFRT_2_0" scontext=u:r:accessibility:s0 tcontext=u:r:bootanimation:s0 tclass=binder permissive=0
+allow accessibility bootanimation:binder { call };
+
+# avc: denied  { search } for  pid=575 comm="accessibility" name="etc" dev="sda47" ino=24 scontext=u:r:accessibility:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=dir permissive=0
+#allow accessibility vendor_etc_file:dir { search };
+
+# avc:  denied  { transfer } for  pid=453 comm="OS_FFRT_2_0" scontext=u:r:accessibility:s0 tcontext=u:r:multimodalinput:s0 tclass=binder permissive=1
+allow accessibility multimodalinput:binder { transfer };
+
+# avc:  denied  { read } for  pid=557 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:accessibility:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow accessibility hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { open } for  pid=557 comm="accessibility" path="/sys/devices/system/cpu/online" dev="sysfs" ino=8387 scontext=u:r:accessibility:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+allow accessibility sysfs_devices_system_cpu:file { read open map getattr };
+
+# avc:  denied  { map } for  pid=587 comm="accessibility" path="/dev/__parameters__/u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:accessibility:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=567 comm="accessibility" path="/dev/__parameters__/u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:accessibility:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=570 comm="accessibility" name="u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:accessibility:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
+allow accessibility arkcompiler_param:file { map open read };
+
+# avc:  denied  { transfer } for  pid=573 comm="OS_IPC_1_646" scontext=u:r:accessibility:s0 tcontext=u:r:distributeddata:s0 tclass=binder permissive=0
+allow accessibility distributeddata:binder { transfer };

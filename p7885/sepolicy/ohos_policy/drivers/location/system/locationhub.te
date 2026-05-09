@@ -1,0 +1,28 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { search } for  pid=3256 comm="locationhub" name="etc" dev="sda47" ino=23 scontext=u:r:locationhub:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=dir permissive=0
+# avc:  denied  { read } for  pid=3256 comm="locationhub" name="online" dev="sysfs" ino=8390 scontext=u:r:locationhub:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+
+# avc:  denied  { call } for  pid=3256 comm="OS_FFRT_2_0" scontext=u:r:locationhub:s0 tcontext=u:r:resource_schedule_service:s0 tclass=binder permissive=0
+allow locationhub resource_schedule_service:binder {call};
+
+# avc:  denied  { transfer } for  pid=3256 comm="OS_IPC_1_3259" scontext=u:r:locationhub:s0 tcontext=u:r:distributeddata:s0 tclass=binder permissive=0
+allow locationhub distributeddata:binder {transfer};
+
+# avc:  denied  { ioctl } for  pid=3256 comm="OS_IPC_1_3259" path="/dev/access_token_id" dev="tmpfs" ino=363 ioctlcmd=0x5413 scontext=u:r:locationhub:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allow locationhub dev_at_file:chr_file { ioctl };
+allowxperm locationhub dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { call } for  pid=3256 comm="OS_IPC_1_3259" scontext=u:r:locationhub:s0 tcontext=u:r:system_core_hap:s0 tclass=binder permissive=0
+allow locationhub system_core_hap:binder {call};

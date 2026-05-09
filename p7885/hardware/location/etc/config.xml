@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016-2026 Unisoc (Shanghai) Technologies Co., Ltd.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<GNSS>
+    <PROPERTY NAME="CHIP-MODULE" VALUE="GREENEYE2"/>
+    <PROPERTY NAME="GPS-IMG-MODE" VALUE="GNSSMODEM"/>
+    <PROPERTY NAME="GE2-VERSION" VALUE="GPS_GLO GE2_W17.40.5"/>
+    <PROPERTY NAME="SPREADORBIT-ENABLE" VALUE="FALSE"/>
+    <PROPERTY NAME="CP-MODE" VALUE="0x0"/>
+    <PROPERTY NAME="CHIP-ID" VALUE="SP12"/>
+    <PROPERTY NAME="OUTPUT-PROTOCOL" VALUE="0011"/>
+    <PROPERTY NAME="LOG-ENABLE" VALUE="TRUE"/>
+    <PROPERTY NAME="UART-NAME" VALUE="/dev/ttyS4"/>
+    <PROPERTY NAME="UART-SPEED" VALUE="3000000"/>
+    <PROPERTY NAME="STTY-NAME" VALUE="/dev/sttygnss0"/>
+    <PROPERTY NAME="DEBUG-ENABLE" VALUE="TRUE"/>
+    <PROPERTY NAME="POST-ENABLE" VALUE="FALSE"/>
+    <PROPERTY NAME="APWDG-ENABLE" VALUE="TRUE"/>
+    <PROPERTY NAME="REALEPH-ENABLE" VALUE="FALSE"/>
+    <PROPERTY NAME="SLEEP-ENABLE" VALUE="TRUE"/>
+    <PROPERTY NAME="SLEEP-TIMER" VALUE="300"/>
+    <PROPERTY NAME="CMCC-ENABLE" VALUE="TRUE"/>
+    <PROPERTY NAME="TSX-ENABLE" VALUE="FALSE"/>
+    <PROPERTY NAME="RF-TOOL" VALUE="FALSE"/>
+    <PROPERTY NAME="SUPL-PATH" VALUE="/vendor/etc/supl.xml"/>
+    <PROPERTY NAME="FLOAT-CN0" VALUE="FALSE"/>
+    <PROPERTY NAME="BASEBAND-MODE" VALUE="FALSE"/>
+    <PROPERTY NAME="MEASURE-REPORT" VALUE="TRUE"/>
+    <PROPERTY NAME="MINIPVT" VALUE="FALSE"/>
+    <PROPERTY NAME="FL_WORK_MODE" VALUE="0x0"/>
+    <PROPERTY NAME="FL_VDR_MODE" VALUE="255"/>
+    <PROPERTY NAME="WHITE-LIST-ENABLE" VALUE="FALSE"/>
+    <PROPERTY NAME="CPLOGTOAP-ENABLE" VALUE="TRUE"/>
+    <PROPERTY NAME="RfPathLossDb_Ap" VALUE="0"/>
+    <PROPERTY NAME="RfPathLossDb_Cp" VALUE="0"/>
+    <PROPERTY NAME="IDLEON-DELAY" VALUE="0"/>
+    <PROPERTY NAME="WIFIONLY-ENABLE" VALUE="FALSE"/>
+    <PROPERTY NAME="GE2-SUPPORT-GALILEO" VALUE="TRUE"/>
+</GNSS>

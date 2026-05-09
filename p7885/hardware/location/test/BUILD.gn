@@ -1,0 +1,116 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//build/ohos/ndk/ndk.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+config("gnss_hal_config") {
+  visibility = [ ":*" ]
+  include_dirs = [ 
+    "//drivers/peripheral/location/gnss/hdi_service",
+    "./include",
+    "native/include",
+    "//utils/native/base/include",
+    ]
+
+  cflags = [
+    "-Wextra",
+    "-fsigned-char",
+    "-fno-common",
+    "-fno-strict-aliasing",
+    "-Wno-missing-field-initializers",
+    "-Wno-unreachable-code",
+    "-Wno-pointer-arith",
+    "-Wno-shadow",
+    "-Wno-unused-const-variable",
+    "-Wno-unused-parameter",
+    "-Wno-gnu-designator",
+    "-Wno-unused-variable",
+    "-Wno-header-hygiene",
+    "-Wno-undefined-internal",
+    "-Wno-sign-compare",
+    "-Wno-writable-strings",
+    "-Wno-constant-conversion",
+    "-Wno-error=return-type",
+    "-Wno-error=unused-function",
+    "-Wno-error=unused-const-variable",
+    "-Wno-error=unused-parameter",
+    "-Wno-error=unused-const-variable",
+    "-Wno-error=unused-variable",
+    "-Wno-error=header-hygiene",
+    "-Wno-error=constant-conversion",
+    "-Wno-error=undefined-internal",
+    "-Wno-error=sign-compare",
+    "-Wno-error=writable-strings",
+    "-Wno-error=misleading-indentation",
+    "-Wno-error=unused-private-field",
+  ]
+}
+
+ohos_executable("gnss_test") {
+  sources = [ 
+    "./gnss_test_sprd.cpp",
+    ]
+  defines += [ "__OHOS__USER__" ]
+
+  deps = [ 
+     "//device/soc/unisoc/p7885/hardware/location/gnss:vendorGnssAdapter",
+   ]
+
+  if (is_standard_system) {
+    external_deps = [
+      "drivers_interface_location_gnss:location_gnss_idl_headers",
+      "c_utils:utils",
+      "hdf_core:libhdf_host",
+      "hdf_core:libhdf_ipc_adapter",
+      "hdf_core:libhdi",
+      "hilog:libhilog",
+      "ipc:ipc_single",
+    "ability_base:want",
+    "ability_runtime:ability_manager",
+    "bundle_framework:appexecfwk_base",
+    "c_utils:utils",
+    "common_event_service:cesfwk_core",
+    "common_event_service:cesfwk_innerkits",
+    #"drivers_interface_battery:libbattery_proxy_1.1",
+    "drivers_interface_light:liblight_proxy_1.0",
+    "eventhandler:libeventhandler",
+    "hdf_core:libhdi",
+    "hicollie:libhicollie",
+    "hisysevent:libhisysevent",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "image_framework:image_native",
+    "power_manager:powermgr_client",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+    "window_manager:libdm",
+    ]
+  } else {
+    external_deps = [
+      "hilog:libhilog",
+      "ipc:ipc_single",
+    ]
+  }
+  external_deps += [
+    "drivers_interface_location_gnss:liblocation_gnss_stub_2.0"
+  ]
+  public_configs = [ ":gnss_hal_config" ]
+
+  install_enable = true
+  install_images = [ 
+    chipset_base_dir,
+  ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}

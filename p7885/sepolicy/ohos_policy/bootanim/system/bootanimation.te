@@ -1,0 +1,64 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { get } for service=801 sid=u:r:bootanimation:s0 scontext=u:r:bootanimation:s0 tcontext=u:object_r:sa_accessibleabilityms:s0 tclass=samgr_class permissive=1
+allow bootanimation sa_accessibleabilityms:samgr_class { get };
+
+# avc:  denied  { search } for  pid=855 comm="bootanimation" name="/" dev="sda62" ino=3 scontext=u:r:bootanimation:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=0
+allow bootanimation data_file:dir { search };
+
+# avc:  denied  { read } for  pid=855 comm="bootanimation" name="cpu" dev="sysfs" ino=8385 scontext=u:r:bootanimation:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=dir permissive=0
+allow bootanimation sysfs_devices_system_cpu:dir { read };
+
+# avc:  denied  { search } for  pid=861 comm="bootanimation" name="data" dev="sda62" ino=121 scontext=u:r:bootanimation:s0 tcontext=u:object_r:data_data_file:s0 tclass=dir permissive=0
+allow bootanimation data_data_file:dir { search };
+
+# avc:  denied  { open } for  pid=861 comm="bootanimation" path="/sys/devices/system/cpu" dev="sysfs" ino=8385 scontext=u:r:bootanimation:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=dir permissive=0
+allow bootanimation sysfs_devices_system_cpu:dir { open };
+
+# avc:  denied  { open } for  pid=861 comm="bootanimation" path="/sys/devices/system/cpu" dev="sysfs" ino=8385 scontext=u:r:bootanimation:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=dir permissive=0
+allow bootanimation data_data_file:dir { open };
+
+# avc:  denied  { call } for  pid=892 comm="OS_IPC_1_1133" scontext=u:r:bootanimation:s0 tcontext=u:r:accessibility:s0 tclass=binder permissive=0
+# avc:  denied  { transfer } for  pid=978 comm="OS_IPC_1_1114" scontext=u:r:bootanimation:s0 tcontext=u:r:accessibility:s0 tclass=binder permissive=0
+allow bootanimation accessibility:binder { call transfer };
+
+# avc:  denied  { ioctl } for  pid=866 comm="bootanimation" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:bootanimation:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allowxperm bootanimation dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { read } for  pid=843 comm="bootanimation" name="shader_cache" dev="sda62" ino=1233 scontext=u:r:bootanimation:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=file permissive=0
+# avc:  denied  { getattr } for  pid=870 comm="bootanimation" path="/data/service/el0/render_service/shader_cache" dev="sda62" ino=1233 scontext=u:r:bootanimation:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=file permissive=0
+allow bootanimation data_service_el0_file:file { read open map getattr };
+
+# avc:  denied  { getattr } for  pid=843 comm="bootanimation" path="/proc/cpuinfo" dev="proc" ino=4026532040 scontext=u:r:bootanimation:s0 tcontext=u:object_r:proc_cpuinfo_file:s0 tclass=file permissive=0
+allow bootanimation proc_cpuinfo_file:file { getattr };
+
+# avc:  denied  { read write } for  pid=860 comm="OS_IPC_0_1206" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3833332D5858584A69474C6863202864656C6574656429 dev="sda62" ino=10937 scontext=u:r:bootanimation:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+allow bootanimation data_ashmem_file:file { read write map };
+
+# avc:  denied  { read } for  pid=877 comm="bootanimation" name="hw" dev="sda47" ino=249 scontext=u:r:bootanimation:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
+allow bootanimation vendor_lib_file:dir { read open map };
+allow bootanimation vendor_lib_file:file { read open map };
+
+# avc:  denied  { open } for  pid=910 comm="bootanimation" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:bootanimation:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+# avc:  denied  { read } for  pid=910 comm="bootanimation" name="sda6" dev="tmpfs" ino=300 scontext=u:r:bootanimation:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+allow bootanimation dev_block_file:blk_file { open read };
+
+# avc:  denied  { search } for  pid=910 comm="bootanimation" name="by-name" dev="tmpfs" ino=14 scontext=u:r:bootanimation:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+allow bootanimation dev_block_file:dir { search };
+
+# avc:  denied  { read } for  pid=910 comm="bootanimation" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:bootanimation:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
+allow bootanimation dev_block_file:lnk_file { read };
+
+# avc:  denied  { search } for  pid=910 comm="bootanimation" name="block" dev="tmpfs" ino=6 scontext=u:r:bootanimation:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+allow bootanimation dev_block_volfile:dir { search };

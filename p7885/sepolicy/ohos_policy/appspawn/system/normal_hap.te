@@ -1,0 +1,23 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { ioctl } for  pid=2345 comm="os.settingsdata" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:normal_hap:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allowxperm normal_hap dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { map } for  pid=3184 comm="RSRenderThread" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3834332D585858626F454D4F48202864656C6574656429 dev="sda62" ino=17913 scontext=u:r:normal_hap:s0 tcontext=u:object_r:data_ashmem_file:s0 tclass=file permissive=1
+# avc:  denied  { read write } for  pid=3184 comm="RSRenderThread" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3834332D585858626F454D4F48202864656C6574656429 dev="sda62" ino=17913 scontext=u:r:normal_hap:s0 tcontext=u:object_r:data_ashmem_file:s0 tclass=file permissive=1
+allow normal_hap data_ashmem_file:file { read write map };
+
+# avc:  denied  { open } for  pid=2886 comm="RSRenderThread" path="/vendor/lib64/hw" dev="sda47" ino=249 scontext=u:r:normal_hap:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
+# avc:  denied  { read } for  pid=5182 comm="RSRenderThread" name="hw" dev="sda47" ino=249 scontext=u:r:normal_hap:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
+allow normal_hap vendor_lib_file:dir { open read };

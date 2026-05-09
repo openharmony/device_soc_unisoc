@@ -1,0 +1,30 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { transfer } for  pid=861 comm="OS_HCodecLoop" scontext=u:r:av_codec_service:s0 tcontext=u:r:hdf_devmgr:s0 tclass=binder permissive=1
+allow av_codec_service hdf_devmgr:binder { transfer };
+
+# avc:  denied  { read } for  pid=860 comm="OS_IPC_1_947" name="u:object_r:persist_param:s0" dev="tmpfs" ino=92 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:persist_param:s0 tclass=file permissive=0
+allow av_codec_service persist_param:file { read open map };
+
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D58585848466D4C456D202864656C6574656429 dev="sda62" ino=17008 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D585858704A44474F6C202864656C6574656429 dev="sda62" ino=17012 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D5858584C4549624944202864656C6574656429 dev="sda62" ino=17015 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D5858584D4445664A46202864656C6574656429 dev="sda62" ino=17016 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D5858584E6E6B684661202864656C6574656429 dev="sda62" ino=17017 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D585858506E46476567202864656C6574656429 dev="sda62" ino=17041 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D5858584843476B6564202864656C6574656429 dev="sda62" ino=17081 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D585858454A6D636467202864656C6574656429 dev="sda62" ino=17082 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=851 comm="OS_IPC_0_897" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835312D585858674966434D4D202864656C6574656429 dev="sda62" ino=17126 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+# avc:  denied  { write } for  pid=827 comm="OS_IPC_1_861" path=*** dev="sda62" ino=8777 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=1
+allow av_codec_service data_ashmem_file:file { read write map };

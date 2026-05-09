@@ -1,0 +1,55 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+typeattribute dhardware devinfo_type_allow_attr;
+
+# avc:  denied  { get } for service=codec_component_manager_service sid=u:r:dhardware:s0 scontext=u:r:dhardware:s0 tcontext=u:object_r:hdf_codec_component_manager_service:s0 tclass=hdf_devmgr_class permissive=1
+allow dhardware hdf_codec_component_manager_service:hdf_devmgr_class { get };
+
+# avc:  denied  { read } for  pid=2388 comm="dhardware" name="u:object_r:devinfo_type_param:s0" dev="tmpfs" ino=137 scontext=u:r:dhardware:s0 tcontext=u:object_r:devinfo_type_param:s0 tclass=file permissive=0
+allow dhardware devinfo_type_param:file { read };
+
+# avc:  denied  { ioctl } for  pid=2388 comm="EventRunner#1" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:dhardware:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allowxperm dhardware dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { read } for  pid=2289 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:dhardware:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow dhardware hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { setattr } for  pid=2315 comm="EventRunner#1" name="dtbhardware_manager_service" dev="sda62" ino=2796 scontext=u:r:dhardware:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=2315 comm="EventRunner#1" name="kvdb" dev="sda62" ino=2814 scontext=u:r:dhardware:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=2315 comm="EventRunner#1" name="dbd305ff9d6bc965f23b23027c128c2fe6a2cf8b04c36d5a55b475cc2a7ce5ab" dev="sda62" ino=2817 scontext=u:r:dhardware:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=2315 comm="EventRunner#1" name="single_ver" dev="sda62" ino=2818 scontext=u:r:dhardware:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=2315 comm="EventRunner#1" name="main" dev="sda62" ino=2820 scontext=u:r:dhardware:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+allow dhardware data_service_el1_file:dir { setattr };
+
+# avc:  denied  { ioctl } for  pid=2344 comm="collectEvents" path="/dev/input/event5" dev="tmpfs" ino=593 ioctlcmd=0x4534 scontext=u:r:dhardware:s0 tcontext=u:object_r:dev_input_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=2344 comm="collectEvents" path="/dev/input/event4" dev="tmpfs" ino=592 ioctlcmd=0x4534 scontext=u:r:dhardware:s0 tcontext=u:object_r:dev_input_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=2344 comm="collectEvents" path="/dev/input/event3" dev="tmpfs" ino=584 ioctlcmd=0x4534 scontext=u:r:dhardware:s0 tcontext=u:object_r:dev_input_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=2344 comm="collectEvents" path="/dev/input/event2" dev="tmpfs" ino=575 ioctlcmd=0x4572 scontext=u:r:dhardware:s0 tcontext=u:object_r:dev_input_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=2344 comm="collectEvents" path="/dev/input/event1" dev="tmpfs" ino=343 ioctlcmd=0x4534 scontext=u:r:dhardware:s0 tcontext=u:object_r:dev_input_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=2344 comm="collectEvents" path="/dev/input/event0" dev="tmpfs" ino=326 ioctlcmd=0x4534 scontext=u:r:dhardware:s0 tcontext=u:object_r:dev_input_file:s0 tclass=chr_file permissive=0
+allow dhardware dev_input_file:chr_file { ioctl };
+allowxperm dhardware dev_input_file:chr_file ioctl { 0x4534 0x4572 };
+
+# avc:  denied  { search } for  pid=2362 comm="EventRunner#1" name="usr" dev="sda46" ino=5061 scontext=u:r:dhardware:s0 tcontext=u:object_r:system_usr_file:s0 tclass=dir permissive=0
+allow dhardware system_usr_file:dir { search };
+
+# avc:  denied  { getattr } for  pid=2398 comm="EventRunner#1" path="/system/usr/ohos_locale_config/supported_locales.xml" dev="sda46" ino=5134 scontext=u:r:dhardware:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { map } for  pid=2592 comm="EventRunner#1" path="/system/usr/ohos_icu/icudt72l.dat" dev="sda46" ino=5120 scontext=u:r:dhardware:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=2611 comm="EventRunner#1" path="/system/usr/ohos_icu/icudt72l.dat" dev="sda46" ino=5120 scontext=u:r:dhardware:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=2398 comm="EventRunner#1" name="supported_locales.xml" dev="sda46" ino=5134 scontext=u:r:dhardware:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+allow dhardware system_usr_file:file { getattr map open read };
+
+# avc:  denied  { ioctl } for  pid=2444 comm="EventRunner#1" path="/data/service/el1/public/database/dtbhardware_manager_service/kvdb/e327e256a5e5b23fc29b7c063ce9cb13a0e8e5b2e591fd63cb5ea06070af8f77/single_ver/main" dev="sda62" ino=2870 ioctlcmd=0xf546 scontext=u:r:dhardware:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+allow dhardware data_service_el1_file:dir { ioctl };
+allowxperm dhardware data_service_el1_file:dir ioctl { 0xf546 };

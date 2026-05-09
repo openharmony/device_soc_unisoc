@@ -1,0 +1,122 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied { read } for  pid=353 comm="chipset_init" name="/" dev="tmpfs" ino=1 scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=353 comm="chipset_init" name="/" dev="tmpfs" ino=1 scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir permissive=0
+# avc:  denied  { write } for  pid=353 comm="chipset_init" name="/" dev="tmpfs" ino=1 scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir permissive=0
+# avc:  denied  { add_name } for  pid=347 comm="chipset_init" name="vendor" scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=dir permissive=0
+allow chipset_init tmpfs:dir { open read setattr write add_name create };
+
+# avc:  denied  { execute_no_trans } for  pid=2470 comm="init" path="/vendor/bin/channelmanager.bin" dev="sda47" ino=13 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_bin_file:s0 tclass=file permissive=0
+allow chipset_init vendor_bin_file:file { execute_no_trans };
+
+# avc:  denied  { search } for  pid=590 comm="cp_diskserver.b" name="socket" dev="tmpfs" ino=65 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_unix_socket:s0 tclass=dir permissive=0
+allow chipset_init dev_unix_socket:dir { search };
+
+# avc:  denied  { read write } for  pid=578 comm="modem_control.b" name="spipe_nr2" dev="tmpfs" ino=435 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+allow chipset_init dev_file:chr_file { read write open map };
+
+# avc:  denied  { create } for  pid=351 comm="chipset_init" name="hdc_usb_debug_mode" scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=file permissive=0
+#allow chipset_init dev_file:file { create };
+
+# avc:  denied  { execute_no_trans } for  pid=2960 comm="init" path="/vendor/bin/cp_diskserver.bin" dev="sda47" ino=14 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_bin_file:s0 tclass=file permissive=0
+# avc:  denied  { map } for  pid=2966 comm="modem_control.b" path="/vendor/bin/modem_control.bin" dev="sda47" ino=20 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_bin_file:s0 tclass=file permissive=0
+allow chipset_init vendor_bin_file:file { execute_no_trans map read open };
+
+# avc:  denied  { siginh } for  pid=3134 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nnrt_host:s0 tclass=process permissive=0
+# avc:  denied  { rlimitinh } for  pid=3134 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nnrt_host:s0 tclass=process permissive=0
+allow chipset_init nnrt_host:process { siginh rlimitinh };
+
+# avc:  denied  { read } for  pid=582 comm="modem_control.b" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:chipset_init:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=582 comm="modem_control.b" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:chipset_init:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow chipset_init hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { read } for  pid=591 comm="cp_diskserver.b" name="u:object_r:persist_param:s0" dev="tmpfs" ino=92 scontext=u:r:chipset_init:s0 tcontext=u:object_r:persist_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=590 comm="modem_control.b" name="u:object_r:persist_param:s0" dev="tmpfs" ino=92 scontext=u:r:chipset_init:s0 tcontext=u:object_r:persist_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=590 comm="modem_control.b" name="u:object_r:persist_param:s0" dev="tmpfs" ino=92 scontext=u:r:chipset_init:s0 tcontext=u:object_r:persist_param:s0 tclass=file permissive=0
+allow chipset_init persist_param:file { read open map };
+
+# avc:  denied  { read } for  pid=591 comm="cp_diskserver.b" name="cmdline" dev="proc" ino=4026532038 scontext=u:r:chipset_init:s0 tcontext=u:object_r:proc_cmdline_file:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=591 comm="cp_diskserver.b" name="cmdline" dev="proc" ino=4026532038 scontext=u:r:chipset_init:s0 tcontext=u:object_r:proc_cmdline_file:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=590 comm="modem_control.b" name="cmdline" dev="proc" ino=4026532038 scontext=u:r:chipset_init:s0 tcontext=u:object_r:proc_cmdline_file:s0 tclass=file permissive=0
+allow chipset_init proc_cmdline_file:file { read open map };
+
+# avc:  denied  { read } for  pid=591 comm="cp_diskserver.b" name="bootconfig" dev="proc" ino=4026532053 scontext=u:r:chipset_init:s0 tcontext=u:object_r:proc_file:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=591 comm="cp_diskserver.b" name="bootconfig" dev="proc" ino=4026532053 scontext=u:r:chipset_init:s0 tcontext=u:object_r:proc_file:s0 tclass=file permissive=0
+allow chipset_init proc_file:file { read open map };
+
+# avc:  denied  { rlimitinh } for  pid=3236 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nfc_host:s0 tclass=process permissive=0
+# avc:  denied  { siginh } for  pid=777 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nfc_host:s0 tclass=process permissive=0
+# allow chipset_init nfc_host:process { rlimitinh siginh };
+
+# avc:  denied  { ioctl } for  pid=548 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d03 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=548 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d06 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=548 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d04 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=582 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d0c scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=582 comm="modem_control.b" path="/dev/phycp" dev="tmpfs" ino=409 ioctlcmd=0x4d12 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=582 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d08 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+allow chipset_init dev_file:chr_file { ioctl };
+allowxperm chipset_init dev_file:chr_file ioctl { 0x4d03 0x4d06 0x4d04 0x4d0c 0x4d12 0x4d08 0x4d0d 0x5413 0x5401 0x5402 };
+
+# avc:  denied  { module_request } for  pid=582 comm="modem_control.b" kmod="char-major-10-118" scontext=u:r:chipset_init:s0 tcontext=u:r:kernel:s0 tclass=system permissive=0
+allow chipset_init kernel:system { module_request };
+
+# avc:  denied  { read write } for  pid=582 comm="cp_diskserver.b" name="wake_lock" dev="sysfs" ino=9498 scontext=u:r:chipset_init:s0 tcontext=u:object_r:sysfs_wake_lck:s0 tclass=file permissive=0
+allow chipset_init sysfs_wake_lck:file { read open write };
+
+# avc:  denied  { search } for  pid=829 comm="init" name="/" dev="cgroup" ino=1 scontext=u:r:chipset_init:s0 tcontext=u:object_r:cgroup:s0 tclass=dir permissive=0
+allow chipset_init cgroup:dir { search };
+
+# avc:  denied  { set } for parameter=vendor.modem.sp-boot pid=582 uid=1000 gid=0 scontext=u:r:chipset_init:s0 tcontext=u:object_r:default_param:s0 tclass=parameter_service permissive=1
+allow chipset_init modem_param:parameter_service { set };
+
+# avc:  denied  { read write } for  pid=587 comm="channelmanager." name="ptmx" dev="tmpfs" ino=419 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_ptmx:s0 tclass=chr_file permissive=0
+allow chipset_init dev_ptmx:chr_file { read write open ioctl };
+
+# avc:  denied  { ioctl } for  pid=570 comm="channelmanager." path="/dev/ptmx" dev="tmpfs" ino=419 ioctlcmd=0x5430 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_ptmx:s0 tclass=chr_file permissive=0
+allowxperm chipset_init dev_ptmx:chr_file ioctl { 0x5430 0x5431 };
+
+# avc:  denied  { search } for  pid=598 comm="channelmanager." name="/" dev="devpts" ino=1 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_pts_file:s0 tclass=dir permissive=0
+allow chipset_init dev_pts_file:dir { search };
+
+# avc:  denied  { read write } for  pid=571 comm="channelmanager." name="69" dev="devpts" ino=72 scontext=u:r:chipset_init:s0 tcontext=u:object_r:devpts:s0 tclass=chr_file permissive=0
+allow chipset_init devpts:chr_file { read write open setattr };
+
+# add by xqb
+allow chipset_init cgroup:dir { search };
+#allow chipset_init dev_file:file { write open };
+allow chipset_init cgroup:file { write };
+
+allow chipset_init sys_file:dir { open read };
+allow chipset_init sys_file:file { read open };
+#allow chipset_init chipset_init:capability2 { block_suspend };
+allow chipset_init cgroup:file { getattr ioctl open };
+allowxperm chipset_init cgroup:file ioctl 0x5413;
+
+allow chipset_init sysfs_wake_lck:file { read open write };
+allow chipset_init data_local:dir { search };
+#allow chipset_init data_local_tmp:dir { write search getattr};
+#allow chipset_init default_param:parameter_service { set };
+# allow chipset_init sh_exec:file { execute };
+# allow chipset_init sh_exec:file { execute_no_trans };
+allow chipset_init sh_exec:file { map read open };
+allow chipset_init tty_device:chr_file { open read write };
+allow chipset_init dev_ptmx:chr_file { open read write };
+allow chipset_init dev_pts_file:dir { search };
+allow chipset_init devpts:chr_file { ioctl };
+allowxperm chipset_init devpts:chr_file ioctl { 0x5401 0x5404 };
+allow chipset_init devpts:chr_file { open read write setattr};
+allow chipset_init kernel:unix_stream_socket { connectto };
+allow chipset_init paramservice_socket:sock_file { write };
+allow chipset_init dev_ptmx:chr_file { ioctl };
+allowxperm chipset_init dev_ptmx:chr_file ioctl { 0x5401 0x5402 0x540e 0x540f 0x5410 0x5413 0x5430 0x5431 };

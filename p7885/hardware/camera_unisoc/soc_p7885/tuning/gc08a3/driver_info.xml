@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+# Copyright 2016-2026 Unisoc (Shanghai) Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+-->
+<driver_info>
+  <sensor_name>gc08a3</sensor_name>
+  <versionid>0x000D0019</versionid>
+  <scenario_num>1</scenario_num>
+  <size>
+    <fullsize>
+      <width>3264</width>
+      <height>2448</height>
+    </fullsize>
+    <binningsize>
+      <width>1632</width>
+      <height>1224</height>
+    </binningsize>
+  </size>
+  <deviceinfo>
+    <line_time>10893</line_time>
+    <mine_line>6</mine_line>
+    <max_gain>2048</max_gain>
+    <min_gain>128</min_gain>
+    <gain_precision>1</gain_precision>
+    <exp_skip_num>1</exp_skip_num>
+    <gain_skip_num>1</gain_skip_num>
+  </deviceinfo>
+  <blc>
+    <r>1024</r>
+    <gr>1024</gr>
+    <gb>1024</gb>
+    <b>1024</b>
+  </blc>
+</driver_info>

@@ -1,0 +1,68 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { ioctl } for  pid=796 comm="OS_IPC_2_1159" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=592 ioctlcmd=0x4100 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { map } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { open } for  pid=813 comm="OS_IPC_0_987" path="/dev/snd/controlC0" dev="tmpfs" ino=621 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { read } for  pid=828 comm="OS_IPC_0_909" name="controlC0" dev="tmpfs" ino=614 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { write } for  pid=807 comm="OS_IPC_1_934" name="controlC0" dev="tmpfs" ino=621 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+allow audio_host dev_snd_file:chr_file { ioctl map open read write };
+
+# avc:  denied  { open } for  pid=827 comm="hdf_devhost" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:audio_host:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=3062 comm="hdf_devhost" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:audio_host:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow audio_host hiviewdfx_hiview_param:file { open read };
+
+# avc:  denied  { ioctl } for  pid=796 comm="OS_IPC_2_1159" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=592 ioctlcmd=0x4100 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=813 comm="OS_IPC_2_1191" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=592 ioctlcmd=0x4101 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=840 comm="OS_IPC_1_905" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5500 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=815 comm="OS_IPC_2_960" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5501 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=825 comm="OS_IPC_3_1373" path="/dev/snd/controlC0" dev="tmpfs" ino=621 ioctlcmd=0x5530 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=827 comm="OS_IPC_0_851" path="/dev/snd/controlC0" dev="tmpfs" ino=621 ioctlcmd=0x5531 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=815 comm="OS_IPC_0_1055" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5532 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+allowxperm audio_host dev_snd_file:chr_file ioctl { 0x4100 0x4101 0x5500 0x5501 0x5530 0x5531 0x5532 };
+
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5511 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5513 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4104 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4103 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4123 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5510 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5512 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5516 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4110 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_3_2100" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4144 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_3_2100" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4112 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=812 comm="OS_IPC_3_1813" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=593 ioctlcmd=0x4113 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=807 comm="OS_IPC_0_1044" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4111 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=855 comm="OS_IPC_0_879" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=585 ioctlcmd=0x4140 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+allowxperm audio_host dev_snd_file:chr_file ioctl { 0x5511 0x5513 0x4104 0x4103 0x4123 0x5510 0x5512 0x5516 0x4110 0x4144 0x4112 0x4113 0x4111 0x4140 };
+
+# avc:  denied  { ioctl } for  pid=813 comm="OS_IPC_2_1191" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=592 ioctlcmd=0x4101 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=840 comm="OS_IPC_1_905" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5500 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=815 comm="OS_IPC_2_960" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5501 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=825 comm="OS_IPC_3_1373" path="/dev/snd/controlC0" dev="tmpfs" ino=621 ioctlcmd=0x5530 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=827 comm="OS_IPC_0_851" path="/dev/snd/controlC0" dev="tmpfs" ino=621 ioctlcmd=0x5531 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=815 comm="OS_IPC_0_1055" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5532 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
+allowxperm audio_host dev_snd_file:chr_file ioctl { 0x4101 0x5500 0x5501 0x5530 0x5531 0x5532 };
+
+# avc:  denied  { getattr } for  pid=833 comm="OS_IPC_1_856" path="/system/etc/audio/alsa/share/alsa.conf" dev="sda46" ino=605 scontext=u:r:audio_host:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=1
+allow audio_host system_etc_file:file { getattr };
+
+# avc:  denied  { search } for  pid=827 comm="OS_IPC_1_920" name="/" dev="sda62" ino=3 scontext=u:r:audio_host:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=1
+allow audio_host data_file:dir { search };
+
+# avc:  denied  { read } for  pid=841 comm="OS_IPC_0_862" name="alsa.conf" dev="sda46" ino=605 scontext=u:r:audio_host:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=841 comm="OS_IPC_0_862" path="/system/etc/audio/alsa/share/alsa.conf" dev="sda46" ino=605 scontext=u:r:audio_host:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=1
+allow audio_host system_etc_file:file { read open map};
+
+allow audio_host hiviewdfx_hiview_param:file { read open map };

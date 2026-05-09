@@ -1,0 +1,40 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+CAMERA_ETC_PATH="//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/etc"
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+group("sensor_etc") {
+  deps = [
+    ":sensor_config.xml",
+    ":camera_property.ini",
+  ]
+}
+
+ohos_prebuilt_etc("sensor_config.xml") {
+  source = "${CAMERA_ETC_PATH}/sensor_config.xml"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("camera_property.ini") {
+  source = "${CAMERA_ETC_PATH}/camera_property.ini"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}

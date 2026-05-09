@@ -1,0 +1,37 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { map } for  pid=534 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:resource_schedule_executor:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=534 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:resource_schedule_executor:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=1
+# avc:  denied  { read } for  pid=534 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:resource_schedule_executor:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=1
+allow resource_schedule_executor hiviewdfx_hiview_param:file { map open read };
+
+# avc:  denied  { setsched } for  pid=553 comm="resource_schedu" scontext=u:r:resource_schedule_executor:s0 tcontext=u:r:normal_hap:s0 tclass=process permissive=0
+allow resource_schedule_executor normal_hap:process { setsched };
+
+# avc:  denied  { setsched } for  pid=563 comm="OS_IPC_1_566" scontext=u:r:resource_schedule_executor:s0 tcontext=u:r:permissionmanager_hap:s0 tclass=process permissive=0
+allow resource_schedule_executor permissionmanager_hap:process { setsched };
+
+# avc:  denied  { setsched } for  pid=543 comm="OS_IPC_1_551" scontext=u:r:resource_schedule_executor:s0 tcontext=u:r:system_core_hap:s0 tclass=process permissive=0
+allow resource_schedule_executor system_core_hap:process { setsched };
+
+# avc:  denied  { write } for  pid=556 comm="sa_main" name="kmsg" dev="tmpfs" ino=63 scontext=u:r:resource_schedule_executor:s0 tcontext=u:object_r:dev_kmsg_file:s0 tclass=chr_file permissive=0
+allow resource_schedule_executor dev_kmsg_file:chr_file { open write };
+
+# avc:  denied  { read } for  pid=473 comm="resource_schedu" name="cgroup_action_config.json" dev="sda47" ino=37 scontext=u:r:resource_schedule_executor:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=473 comm="resource_schedu" path="/vendor/etc/cgroup_sched/cgroup_action_config.json" dev="sda47" ino=37 scontext=u:r:resource_schedule_executor:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=file permissive=1
+# avc:  denied  { getattr } for  pid=473 comm="resource_schedu" path="/vendor/etc/cgroup_sched/cgroup_action_config.json" dev="sda47" ino=37 scontext=u:r:resource_schedule_executor:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=file permissive=1
+allow resource_schedule_executor vendor_etc_cgroupsched_file:file { read open getattr };
+
+# avc:  denied  { setsched } for  pid=495 comm="resource_schedu" scontext=u:r:resource_schedule_executor:s0 tcontext=u:r:ringtonelibrary_hap:s0 tclass=process permissive=1
+allow resource_schedule_executor ringtonelibrary_hap:process { setsched };
