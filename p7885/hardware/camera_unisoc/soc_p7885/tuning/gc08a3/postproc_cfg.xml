@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Copyright 2016-2026 Unisoc (Shanghai) Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+-->
+<postproc_cfg>
+  <sensor_name>gc08a3</sensor_name>
+  <versionid>0x000D0019</versionid>
+  <scenario_num>7</scenario_num>
+  <scenario alia="com">
+    <id>0x0000000000000000</id>
+    <postprocfile_num>23</postprocfile_num>
+    <postprocfile name="TRG_RAW_AI_MFNR_29971.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_MFNR6_29956.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_MFSR3_29975.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_HDR5.2_29978.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_CHDR_29982.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_XDR2_29974.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_YNR2_29954.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_CNR4_291224.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_AISFNR_28683.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_VID_HDR_29955.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_VID_NR_29983.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_V_BLUR_29965.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SP_BOKEH2_29961.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SC_BOKEH_29963.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_D_MASK_29966.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_DP_BOKEH_29967.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_DC_BOKEH_29968.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SD_MFNR2.0_29960.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SD_USD2.2_29959.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SD_LOWLIGHT_29979.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SD_MFSR_29976.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SD_HIGHRES_29980.xml">
+      <param>com</param>
+    </postprocfile>
+    <postprocfile name="TRG_SD_ISZ_29981.xml">
+      <param>com</param>
+    </postprocfile>
+  </scenario>
+  <scenario alia="prv0">
+    <id>0x0000010000000000</id>
+    <postprocfile_num>0</postprocfile_num>
+  </scenario>
+  <scenario alia="prv1">
+    <id>0x0000020000000000</id>
+    <postprocfile_num>0</postprocfile_num>
+  </scenario>
+  <scenario alia="cap0">
+    <id>0x0000050000000000</id>
+    <postprocfile_num>0</postprocfile_num>
+  </scenario>
+  <scenario alia="cap1">
+    <id>0x0000060000000000</id>
+    <postprocfile_num>0</postprocfile_num>
+  </scenario>
+  <scenario alia="video0">
+    <id>0x0000090000000000</id>
+    <postprocfile_num>0</postprocfile_num>
+  </scenario>
+  <scenario alia="video1">
+    <id>0x00000A0000000000</id>
+    <postprocfile_num>0</postprocfile_num>
+  </scenario>
+</postproc_cfg>

@@ -1,0 +1,19 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { ioctl } for  pid=643 comm="OS_FFRT_2_1" path="/system/etc/wallpaperdefault.jpeg" dev="sda46" ino=1625 ioctlcmd=0xf207 scontext=u:r:wallpaper_service:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=0
+allow wallpaper_service system_etc_file:file { ioctl };
+allowxperm wallpaper_service system_etc_file:file ioctl { 0xf207 };
+
+# avc:  denied  { getattr } for  pid=618 comm="OS_FFRT_2_1" path="/proc/cpuinfo" dev="proc" ino=4026532040 scontext=u:r:wallpaper_service:s0 tcontext=u:object_r:proc_cpuinfo_file:s0 tclass=file permissive=1
+allow wallpaper_service proc_cpuinfo_file:file { getattr };

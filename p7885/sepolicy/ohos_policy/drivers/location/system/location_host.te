@@ -1,0 +1,71 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { read write } for  pid=3475 comm="OS_IPC_3_3490" name="data0_gnss" dev="tmpfs" ino=446 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=3378 comm="OS_IPC_0_3383" path="/dev/data0_gnss" dev="tmpfs" ino=447 ioctlcmd=0x540b scontext=u:r:location_host:s0 tcontext=u:object_r:dev_gnss_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=3293 comm="OS_IPC_1_3299" path="/dev/data0_gnss" dev="tmpfs" ino=447 ioctlcmd=0x5401 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_gnss_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=3293 comm="OS_IPC_1_3299" path="/dev/data0_gnss" dev="tmpfs" ino=447 ioctlcmd=0x5402 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_gnss_file:s0 tclass=chr_file permissive=1
+allow location_host dev_gnss_file:chr_file { open read write map ioctl };
+allowxperm location_host dev_gnss_file:chr_file ioctl { 0x540b 0x5401 0x5402 };
+
+# avc:  denied  { search } for  pid=3765 comm="OS_IPC_0_3771" name="vendor" dev="sda62" ino=117 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=dir permissive=1
+# avc:  denied  { write } for  pid=3765 comm="OS_IPC_0_3771" name="gnss" dev="sda62" ino=147 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=dir permissive=1
+# avc:  denied  { add_name } for  pid=3765 comm="OS_IPC_0_3771" name="lte" scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=dir permissive=1
+# avc:  denied  { create } for  pid=3765 comm="OS_IPC_0_3771" name="lte" scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=dir permissive=1
+allow location_host data_vendor:dir { search write add_name create };
+
+# avc:  denied  { create } for  pid=3765 comm="OS_IPC_0_3771" name="config.xml" scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=file permissive=1
+allow location_host data_vendor:file { create };
+
+# avc:  denied  { search } for  pid=3765 comm="OS_IPC_0_3771" name="block" dev="tmpfs" ino=6 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+allow location_host dev_block_volfile:dir { search };
+
+# avc:  denied  { search } for  pid=3765 comm="OS_IPC_0_3771" name="by-name" dev="tmpfs" ino=14 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+allow location_host dev_block_file:dir { search };
+
+# avc:  denied  { read } for  pid=3765 comm="OS_IPC_0_3771" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
+allow location_host dev_block_file:lnk_file { read };
+
+# avc:  denied  { read write open } for  pid=3765 comm="OS_IPC_0_3771" path="/data/vendor/gnss/config/config.xml" dev="sda62" ino=4206 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=file permissive=1
+# avc:  denied  { getattr } for  pid=3207 comm="OS_IPC_2_3216" path="/data/vendor/gnss/config/config.xml" dev="sda62" ino=4206 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=file permissive=1
+allow location_host data_vendor:file { read write open getattr };
+
+# avc:  denied  { read write } for  pid=3207 comm="OS_IPC_2_3216" name="gnss_pmnotify_ctl" dev="tmpfs" ino=538 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { open } for  pid=3207 comm="OS_IPC_2_3216" path="/dev/gnss_pmnotify_ctl" dev="tmpfs" ino=538 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { read write } for  pid=3269 comm="OS_IPC_1_3276" name="gnss_dbg" dev="tmpfs" ino=536 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { open } for  pid=3269 comm="OS_IPC_1_3276" path="/dev/gnss_dbg" dev="tmpfs" ino=536 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+allow location_host dev_gnss_file:chr_file { read write open };
+
+# avc:  denied  { create } for  pid=3207 comm="supltls_task" scontext=u:r:location_host:s0 tcontext=u:r:location_host:s0 tclass=udp_socket permissive=1
+allow location_host location_host:udp_socket { create };
+
+# avc:  denied  { ioctl } for  pid=3207 comm="OS_IPC_2_3216" path="/data/vendor/gnss/supl/supl.xml" dev="sda62" ino=4207 ioctlcmd=0x5413 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=file permissive=1
+# avc:  denied  { append } for  pid=3378 comm="OS_IPC_0_3383" name="gnss.log" dev="sda62" ino=4210 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=file permissive=1
+allow location_host data_vendor:file { ioctl append };
+allowxperm location_host data_vendor:file ioctl { 0x5413 };
+
+# avc:  denied  { write } for  pid=3269 comm="OS_IPC_1_3276" name="gnss_subsys" dev="sysfs" ino=56144 scontext=u:r:location_host:s0 tcontext=u:object_r:sys_file:s0 tclass=file permissive=1
+# avc:  denied  { ioctl } for  pid=3269 comm="OS_IPC_1_3276" path="/sys/devices/virtual/misc/gnss_common_ctl/gnss_subsys" dev="sysfs" ino=56144 ioctlcmd=0x540b scontext=u:r:location_host:s0 tcontext=u:object_r:sys_file:s0 tclass=file permissive=1
+allow location_host sys_file:file { write ioctl };
+allowxperm location_host sys_file:file ioctl { 0x540b };
+
+# avc:  denied  { read } for  pid=3269 comm="SUPL_TASK" path="socket:[33521]" dev="sockfs" ino=33521 scontext=u:r:location_host:s0 tcontext=u:r:location_host:s0 tclass=unix_dgram_socket permissive=1
+# avc:  denied  { sendto } for  pid=3269 comm="supltls_task" scontext=u:r:location_host:s0 tcontext=u:r:location_host:s0 tclass=unix_dgram_socket permissive=1
+allow location_host location_host:unix_dgram_socket { read sendto };
+
+# avc:  denied  { connect } for  pid=3269 comm="supltls_task" scontext=u:r:location_host:s0 tcontext=u:r:location_host:s0 tclass=udp_socket permissive=1
+allow location_host location_host:udp_socket { connect };
+
+# avc:  denied  { read } for  pid=3633 comm="OS_IPC_1_3641" name="sda6" dev="tmpfs" ino=300 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+# avc:  denied  { open } for  pid=3633 comm="OS_IPC_1_3641" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+allow location_host dev_block_file:blk_file { read open };

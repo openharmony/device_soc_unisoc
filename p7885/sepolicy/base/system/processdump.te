@@ -1,0 +1,35 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { read write } for  pid=3176 comm="processdump" path="socket:[34554]" dev="sockfs" ino=34554 scontext=u:r:processdump:s0 tcontext=u:r:camera_host:s0 tclass=netlink_kobject_uevent_socket permissive=0
+allow processdump camera_host:netlink_kobject_uevent_socket { read write };
+
+# avc:  denied  { read write } for  pid=3176 comm="processdump" path="/dev/hdf_kevent" dev="tmpfs" ino=401 scontext=u:r:processdump:s0 tcontext=u:object_r:dev_hdf_kevent:s0 tclass=chr_file permissive=0
+allow processdump dev_hdf_kevent:chr_file { read write };
+
+# avc:  denied  { setopt } for  pid=1589 comm="processdump" scontext=u:r:processdump:s0 tcontext=u:r:processdump:s0 tclass=unix_dgram_socket permissive=0
+# avc:  denied  { getopt } for  pid=1589 comm="processdump" scontext=u:r:processdump:s0 tcontext=u:r:processdump:s0 tclass=unix_dgram_socket permissive=0
+allow processdump processdump:unix_dgram_socket { getopt setopt };
+
+# avc:  denied  { read write } for  pid=1509 comm="processdump" path="socket:[30107]" dev="sockfs" ino=30107 scontext=u:r:processdump:s0 tcontext=u:r:render_service:s0 tclass=unix_stream_socket permissive=0
+allow processdump render_service:unix_stream_socket { read write };
+
+# avc:  denied  { read write } for  pid=2362 comm="processdump" path="socket:[31383]" dev="sockfs" ino=31383 scontext=u:r:processdump:s0 tcontext=u:r:multimodalinput:s0 tclass=unix_stream_socket permissive=0
+allow processdump multimodalinput:unix_stream_socket { read write };
+
+# avc:  denied  { write } for  pid=10120 comm="processdump" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3835322D5858585043614C6549202864656C6574656429 dev="sda62" ino=14047 scontext=u:r:processdump:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+#allow processdump data_file:file { write };
+# avc:  denied  { read write } for  pid=3177 comm="processdump" path="/dev/sprd_image" dev="tmpfs" ino=389 scontext=u:r:processdump:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+#allow processdump dev_file:chr_file { read write };
+# avc:  denied  { write } for  pid=3078 comm="processdump" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3831352D5858586C4A46616B43202864656C6574656429 dev="sda62" ino=13845 scontext=u:r:processdump:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=1
+#allow processdump render_service:unix_stream_socket { read write };

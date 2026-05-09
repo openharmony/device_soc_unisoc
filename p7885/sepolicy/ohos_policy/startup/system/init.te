@@ -1,0 +1,198 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#type security_component_service, sadomain, domain;
+
+typeattribute init vendor_bin_file_violator_file_execute_no_trans;
+
+# avc:  denied  { read } for  pid=1 comm="init" name="mali_kbase.ko" dev="sda47" ino=646 scontext=u:r:init:s0 tcontext=u:object_r:vendor_module_file:s0 tclass=file permissive=0
+allow init vendor_module_file:file { read open getattr };
+
+# avc:  denied  { module_load } for  pid=1 comm="init" path="/vendor/modules/mali_kbase.ko" dev="sda47" ino=646 scontext=u:r:init:s0 tcontext=u:object_r:vendor_module_file:s0 tclass=system permissive=0
+allow init vendor_module_file:system { module_load };
+
+# avc:  denied  { search } for  pid=1 comm="init" name="modules" dev="sda47" ino=639 scontext=u:r:init:s0 tcontext=u:object_r:vendor_module_file:s0 tclass=dir permissive=0
+allow init vendor_module_file:dir { search };
+
+# avc:  denied  { remove_name } for  pid=1 comm="init" name="pid_363" dev="tmpfs" ino=541 scontext=u:r:init:s0 tcontext=u:object_r:dev_file:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=1 comm="init" name="pids" dev="tmpfs" ino=557 scontext=u:r:init:s0 tcontext=u:object_r:dev_file:s0 tclass=dir permissive=0
+# avc:  denied  { rmdir } for  pid=1 comm="init" name="pid_384" dev="tmpfs" ino=569 scontext=u:r:init:s0 tcontext=u:object_r:dev_file:s0 tclass=dir permissive=0
+allow init dev_file:dir { remove_name setattr rmdir };
+
+# avc:  denied  { read } for  pid=1 comm="init" name="cid" dev="proc" ino=4026532599 scontext=u:r:init:s0 tcontext=u:object_r:proc_file:s0 tclass=file permissive=0
+allow init proc_file:file { read };
+
+# avc:  denied  { sys_module } for  pid=1 comm="init" capability=23  scontext=u:r:init:s0 tcontext=u:r:init:s0 tclass=capability permissive=0
+allow init init:capability { sys_module };
+
+# avc:  denied  { syslog } for  pid=363 comm="init" capability=34  scontext=u:r:init:s0 tcontext=u:r:init:s0 tclass=capability2 permissive=0
+#allow init init:capability2 { syslog };
+
+# avc:  denied  { integrity } for  pid=1 comm="init" lockdown_reason="unsigned module loading" scontext=u:r:init:s0 tcontext=u:r:init:s0 tclass=lockdown permissive=0
+debug_only(`
+allow init init:lockdown { integrity };
+')
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=2010 scontext=u:r:init:s0 tcontext=u:r:installs:s0 tclass=file permissive=0
+allow init installs:file { write };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/block" dev="tmpfs" ino=6 scontext=u:r:init:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+allow init dev_block_volfile:dir { getattr };
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/block/sda62" dev="tmpfs" ino=187 scontext=u:r:init:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=blk_file permissive=0
+allow init dev_block_volfile:blk_file { getattr };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=30631 scontext=u:r:init:s0 tcontext=u:r:chipset_init:s0 tclass=file permissive=0
+allow init chipset_init:file { write };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=31363 scontext=u:r:init:s0 tcontext=u:r:security_component_service:s0 tclass=file permissive=0
+allow init security_component_service:file { write };
+
+# avc:  denied  { sys_nice } for  pid=1 comm="init" capability=23  scontext=u:r:init:s0 tcontext=u:r:init:s0 tclass=capability permissive=0
+# avc:  denied  { sys_ptrace } for  pid=1 comm="init" capability=19  scontext=u:r:init:s0 tcontext=u:r:init:s0 tclass=capability permissive=0
+#allow init init:capability { sys_nice sys_ptrace };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=27528 scontext=u:r:init:s0 tcontext=u:r:el5_filekey_manager:s0 tclass=file permissive=0
+allow init el5_filekey_manager:file { write };
+
+# avc:  denied  { open } for  pid=1 comm="init" path="/dev/bbox" dev="tmpfs" ino=408 scontext=u:r:init:s0 tcontext=u:object_r:dev_bbox:s0 tclass=chr_file permissive=0
+# avc:  denied  { write } for  pid=1 comm="init" name="bbox" dev="tmpfs" ino=408 scontext=u:r:init:s0 tcontext=u:object_r:dev_bbox:s0 tclass=chr_file permissive=0
+allow init dev_bbox:chr_file { open write };
+
+# avc:  denied  { search } for  pid=1 comm="init" name="dma_heap" dev="tmpfs" ino=346 scontext=u:r:init:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=dir permissive=0
+allow init dev_dma_heap_file:dir { search };
+
+# avc:  denied  { setattr } for  pid=1 comm="init" name="system" dev="tmpfs" ino=348 scontext=u:r:init:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=chr_file permissive=0
+allow init dev_dma_heap_file:chr_file { setattr };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=19143 scontext=u:r:init:s0 tcontext=u:r:intell_voice_service:s0 tclass=file permissive=0
+allow init intell_voice_service:file { write };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=11965 scontext=u:r:init:s0 tcontext=u:r:sandbox_manager_service:s0 tclass=file permissive=0
+allow init sandbox_manager_service:file { write };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=32053 scontext=u:r:init:s0 tcontext=u:r:asset_service:s0 tclass=file permissive=0
+allow init asset_service:file { open write };
+
+# avc:  denied  { getattr } for  pid=2097 comm="chown" path="/dev/ttyBT0" dev="tmpfs" ino=576 scontext=u:r:init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+allow init dev_file:chr_file { getattr };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/data/service/el1/public/bundle_usage" dev="sda62" ino=270 scontext=u:r:init:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=dir permissive=0
+# avc:  denied  { search } for  pid=1 comm="init" name="bundle_usage" dev="sda62" ino=270 scontext=u:r:init:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=1 comm="init" name="bundle_usage" dev="sda62" ino=270 scontext=u:r:init:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=dir permissive=0
+allow init data_service_el1_public_bundle_usage:dir { getattr search setattr };
+
+# avc:  denied  { getattr } for  pid=2108 comm="chown" path="/proc/bluetooth/sleep/btwrite" dev="proc" ino=4026532922 scontext=u:r:init:s0 tcontext=u:object_r:proc_bluetooth_file:s0 tclass=file permissive=0
+# avc:  denied  { setattr } for  pid=2295 comm="chown" name="btwrite" dev="proc" ino=4026532912 scontext=u:r:init:s0 tcontext=u:object_r:proc_bluetooth_file:s0 tclass=file permissive=0
+allow init proc_bluetooth_file:file { getattr setattr };
+
+# avc:  denied  { getattr } for  pid=2129 comm="chown" path="/dev/uhid" dev="tmpfs" ino=386 scontext=u:r:init:s0 tcontext=u:object_r:dev_uhid_file:s0 tclass=chr_file permissive=0
+allow init dev_uhid_file:chr_file { getattr };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=30347 scontext=u:r:init:s0 tcontext=u:r:wifi_host:s0 tclass=file permissive=0
+allow init wifi_host:file { write };
+
+# avc:  denied  { write } for  pid=331 comm="check_module_up" name="log" dev="sda62" ino=221 scontext=u:r:init:s0 tcontext=u:object_r:data_updater_file:s0 tclass=dir permissive=1
+allow init data_updater_file:dir { write };
+
+# avc:  denied  { ioctl } for  pid=331 comm="check_module_up" path="/data/updater/log/module_update.log" dev="sda62" ino=3649 ioctlcmd=0x5413 scontext=u:r:init:s0 tcontext=u:object_r:data_updater_file:s0 tclass=file permissive=1
+allow init data_updater_file:file { ioctl };
+allowxperm init data_updater_file:file ioctl { 0x5413 };
+
+# avc:  denied  { search } for  pid=1 comm="init" name="bus" dev="tmpfs" ino=318 scontext=u:r:init:s0 tcontext=u:object_r:dev_bus:s0 tclass=dir permissive=1
+allow init dev_bus:dir { search };
+
+# avc:  denied  { search } for  pid=1 comm="init" name="usb" dev="tmpfs" ino=319 scontext=u:r:init:s0 tcontext=u:object_r:dev_bus_usb_file:s0 tclass=dir permissive=1
+allow init dev_bus_usb_file:dir { search };
+
+# avc:  denied  { create } for  pid=693 comm="minidumpd" name="dump_report.txt" scontext=u:r:init:s0 tcontext=u:object_r:data_log:s0 tclass=file permissive=0
+allow init data_log:file { create };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=32182 scontext=u:r:init:s0 tcontext=u:r:dslm_service:s0 tclass=file permissive=0
+allow init dslm_service:file { write };
+
+# avc:  denied  { unlink } for  pid=1 comm="init" name="faultloggerd.crash.server" dev="tmpfs" ino=564 scontext=u:r:init:s0 tcontext=u:object_r:faultloggerd_socket_crash:s0 tclass=sock_file permissive=0
+allow init faultloggerd_socket_crash:sock_file { unlink };
+
+# avc:  denied  { mounton } for  pid=1 comm="init" path="/dev/usb-ffs/hdc" dev="functionfs" ino=16705 scontext=u:r:init:s0 tcontext=u:object_r:functionfs:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=1 comm="init" name="/" dev="functionfs" ino=28723 scontext=u:r:init:s0 tcontext=u:object_r:functionfs:s0 tclass=dir permissive=0
+allow init functionfs:dir { mounton setattr };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=32959 scontext=u:r:init:s0 tcontext=u:r:intell_voice_host:s0 tclass=file permissive=0
+allow init intell_voice_host:file { write };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=27097 scontext=u:r:init:s0 tcontext=u:r:local_code_sign:s0 tclass=file permissive=0
+allow init local_code_sign:file { write };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=30686 scontext=u:r:init:s0 tcontext=u:r:updater_sa:s0 tclass=file permissive=0
+allow init updater_sa:file { write };
+
+# avc:  denied  { execute_no_trans } for  pid=693 comm="init" path="/vendor/bin/minidumpd" dev="sda47" ino=19 scontext=u:r:init:s0 tcontext=u:object_r:vendor_bin_file:s0 tclass=file permissive=0
+# avc:  denied  { map } for  pid=682 comm="minidumpd" path="/vendor/bin/minidumpd" dev="sda47" ino=19 scontext=u:r:init:s0 tcontext=u:object_r:vendor_bin_file:s0 tclass=file permissive=0
+#allow init vendor_bin_file:file { execute_no_trans map };
+
+# avc:  denied  { read write } for  pid=455 comm="sh" name="tty" dev="tmpfs" ino=62 scontext=u:r:init:s0 tcontext=u:object_r:tty_device:s0 tclass=chr_file permissive=0
+# avc:  denied  { open } for  pid=465 comm="sh" path="/dev/tty" dev="tmpfs" ino=62 scontext=u:r:init:s0 tcontext=u:object_r:tty_device:s0 tclass=chr_file permissive=0
+# avc:  denied  { getattr } for  pid=2313 comm="chown" path="/dev/ttyBT0" dev="tmpfs" ino=576 scontext=u:r:init:s0 tcontext=u:object_r:tty_device:s0 tclass=chr_file permissive=1
+allow init tty_device:chr_file { read open write getattr };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/config/usb_gadget/g1/os_desc/b.1" dev="configfs" ino=27734 scontext=u:r:init:s0 tcontext=u:object_r:configfs:s0 tclass=lnk_file permissive=0
+allow init configfs:lnk_file { getattr };
+
+# avc:  denied  { execute_no_trans } for  pid=459 comm="init" path="/system/bin/sh" dev="sda46" ino=410 scontext=u:r:init:s0 tcontext=u:object_r:sh_exec:s0 tclass=file permissive=0
+# avc:  denied  { map } for  pid=450 comm="sh" path="/system/bin/sh" dev="sda46" ino=410 scontext=u:r:init:s0 tcontext=u:object_r:sh_exec:s0 tclass=file permissive=0
+#allow init sh_exec:file { execute_no_trans map };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/data/service/el1/public/bundle_usage" dev="sda62" ino=270 scontext=u:r:init:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=dir permissive=0
+# avc:  denied  { search } for  pid=1 comm="init" name="bundle_usage" dev="sda62" ino=270 scontext=u:r:init:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=1 comm="init" name="bundle_usage" dev="sda62" ino=270 scontext=u:r:init:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=dir permissive=0
+allow init data_service_el1_public_bundle_usage:dir { getattr search setattr };
+
+# avc:  denied  { setattr } for  pid=1 comm="init" name="vpu_enc0" dev="tmpfs" ino=578 scontext=u:r:init:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+allow init dev_vpu_file:chr_file { getattr setattr };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/sprd_vsp" dev="tmpfs" ino=596 scontext=u:r:init:s0 tcontext=u:object_r:dev_sprd_file:s0 tclass=chr_file permissive=1
+allow init dev_sprd_file:chr_file { getattr setattr };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/ppp" dev="tmpfs" ino=520 scontext=u:r:init:s0 tcontext=u:object_r:dev_ppp_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/ptmx" dev="tmpfs" ino=420 scontext=u:r:init:s0 tcontext=u:object_r:dev_ptmx:s0 tclass=chr_file permissive=1
+allow init dev_ppp_file:chr_file { getattr setattr };
+allow init dev_ptmx:chr_file { getattr setattr };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/snd" dev="tmpfs" ino=414 scontext=u:r:init:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=dir permissive=1
+allow init dev_snd_file:dir { getattr };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/mali0" dev="tmpfs" ino=529 scontext=u:r:init:s0 tcontext=u:object_r:dev_mali:s0 tclass=chr_file permissive=0
+allow init dev_mali:chr_file { getattr };
+
+allow init dev_vha:chr_file { getattr setattr };
+#allow init dev_modem_file:chr_file { getattr setattr };
+
+allow init data_ashmem_file:dir { getattr open read relabelto search setattr };
+allow init data_ashmem_file:file { relabelto create getattr map open read rename setattr unlink write append };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/data0_gnss" dev="tmpfs" ino=414 scontext=u:r:init:s0 tcontext=u:object_r:dev_gnss_file:s0 tclass=chr_file permissive=1
+allow init dev_gnss_file:chr_file { getattr setattr };
+
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=28101 scontext=u:r:init:s0 tcontext=u:r:deviceauth_service:s0 tclass=file permissive=1
+allow init deviceauth_service:file { write };
+
+# add by xqb
+allow init data_hdc_pubkeys:dir { getattr setattr };
+#allow init data_local_tmp:dir { write };
+allow init devpts:filesystem { unmount };
+allow init proc_file:filesystem { unmount };
+allow init dhardware:file { write };
+
+allow init hmdfs:dir { search };
+allow init hmdfs:filesystem { unmount };
+allow init pstorefs:filesystem { unmount };

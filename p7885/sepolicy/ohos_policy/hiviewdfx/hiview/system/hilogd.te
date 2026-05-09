@@ -1,0 +1,26 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { read } for  pid=363 comm="hilogd" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:hilogd:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=363 comm="hilogd" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:hilogd:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow hilogd hiviewdfx_hiview_param:file { read };
+
+# avc:  denied  { write } for  pid=364 comm="OS_FFRT_2_1" name="cgroup.procs" dev="cgroup" ino=77 scontext=u:r:hilogd:s0 tcontext=u:object_r:cgroup:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=363 comm="OS_FFRT_2_1" path="/dev/cpuset/system-background/cgroup.procs" dev="cgroup" ino=77 scontext=u:r:hilogd:s0 tcontext=u:object_r:cgroup:s0 tclass=file permissive=0
+allow hilogd cgroup:file { open write };
+
+# avc:  denied  { setopt } for  pid=363 comm="hilogd" scontext=u:r:hilogd:s0 tcontext=u:r:hilogd:s0 tclass=unix_dgram_socket permissive=0
+allow hilogd hilogd:unix_dgram_socket { setopt };
+
+# avc:  denied  { map } for  pid=365 comm="hilogd" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:hilogd:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow hilogd hiviewdfx_hiview_param:file { map open read };

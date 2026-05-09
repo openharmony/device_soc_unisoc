@@ -1,0 +1,61 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { search } for  pid=445 comm="OS_FFRT_2_0" name="/" dev="sda62" ino=3 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=1
+allow resource_schedule_service data_file:dir { search };
+
+# avc:  denied  { ioctl } for  pid=452 comm="rssDispatcher" path="/dev/access_token_id" dev="tmpfs" ino=358 ioctlcmd=0x5413 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+allow resource_schedule_service dev_at_file:chr_file { ioctl };
+
+# avc:  denied  { call } for  pid=452 comm="OS_IPC_3_780" scontext=u:r:resource_schedule_service:s0 tcontext=u:r:distributeddata:s0 tclass=binder permissive=1
+allow resource_schedule_service distributeddata:binder { call };
+
+# avc:  denied  { get } for service=200 sid=u:r:resource_schedule_service:s0 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:sa_accountmgr:s0 tclass=samgr_class permissive=1
+allow resource_schedule_service sa_accountmgr:samgr_class { get };
+
+# avc:  denied  { get } for service=3010 sid=u:r:resource_schedule_service:s0 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:sa_avsession_service:s0 tclass=samgr_class permissive=1
+allow resource_schedule_service sa_avsession_service:samgr_class { get };
+
+# avc:  denied  { get } for service=1301 sid=u:r:resource_schedule_service:s0 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:sa_distributeddata_service:s0 tclass=samgr_class permissive=1
+allow resource_schedule_service sa_distributeddata_service:samgr_class { get };
+
+# avc:  denied  { ioctl } for  pid=452 comm="rssDispatcher" path="/dev/access_token_id" dev="tmpfs" ino=358 ioctlcmd=0x5413 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+allowxperm resource_schedule_service dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { read } for  pid=1642 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow resource_schedule_service hiviewdfx_hiview_param:file { read };
+
+# avc:  denied  { search } for  pid=1525 comm="SaInit1" name="el3" dev="sda62" ino=72 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:data_service_el3_file:s0 tclass=dir permissive=0
+allow resource_schedule_service data_service_el3_file:dir { search };
+
+# avc:  denied  { getattr } for  pid=1525 comm="OS_IPC_2_1616" path="/vendor/etc/ressched/res_sched_config.xml" dev="sda47" ino=97 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:vendor_etc_ressched_file:s0 tclass=file permissive=0
+# avc:  denied  { getattr } for  pid=1525 comm="OS_IPC_2_1616" path="/vendor/etc/ressched/res_sched_plugin_switch.xml" dev="sda47" ino=98 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:vendor_etc_ressched_file:s0 tclass=file permissive=0
+allow resource_schedule_service vendor_etc_ressched_file:file { getattr };
+
+# avc:  denied  { transfer } for  pid=1525 comm="resource_schedu" scontext=u:r:resource_schedule_service:s0 tcontext=u:r:multimodalinput:s0 tclass=binder permissive=0
+allow resource_schedule_service multimodalinput:binder { transfer };
+
+# avc:  denied  { call } for  pid=1525 comm="OS_IPC_2_1616" scontext=u:r:resource_schedule_service:s0 tcontext=u:r:accountmgr:s0 tclass=binder permissive=0
+# avc:  denied  { call } for  pid=1525 comm="resource_schedu" scontext=u:r:resource_schedule_service:s0 tcontext=u:r:accountmgr:s0 tclass=binder permissive=0
+allow resource_schedule_service accountmgr:binder { call };
+
+# avc:  denied  { open } for  pid=505 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=505 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow resource_schedule_service hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { write } for  pid=505 comm="sa_main" name="kmsg" dev="tmpfs" ino=63 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:dev_kmsg_file:s0 tclass=chr_file permissive=0
+allow resource_schedule_service dev_kmsg_file:chr_file { open write };
+
+# avc:  denied  { read } for  pid=508 comm="resource_schedu" name="u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
+allow resource_schedule_service arkcompiler_param:file { read open map };
+

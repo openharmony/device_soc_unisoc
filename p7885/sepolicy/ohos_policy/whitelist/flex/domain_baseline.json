@@ -1,0 +1,21 @@
+{
+    "user": {
+        "sadomain": [],
+        "rgm_violator_sadomain": [],
+        "hap_domain": [],
+        "native_system_domain": [],
+        "hdfdomain": [
+            "nnrt_host"
+        ],
+        "native_chipset_domain": []
+    },
+    "developer": {
+        "sadomain": [],
+        "rgm_violator_sadomain": [],
+        "hap_domain": [],
+        "native_system_domain": [],
+        "hdfdomain": [],
+        "native_chipset_domain": []
+    }
+}
+

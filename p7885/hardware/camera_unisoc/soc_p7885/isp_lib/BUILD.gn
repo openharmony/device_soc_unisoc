@@ -1,0 +1,212 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+action("decrypt_isp") {
+  inputs = [
+    "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/isp_lib/isp_lib.tar.gz.gpg",
+  ]
+  outputs = [
+    "$target_out_dir/libae3.x.z.so",
+    "$target_out_dir/libaf3.2.z.so",
+    "$target_out_dir/libaf3.2_le.z.so",
+    "$target_out_dir/libaftrigger.z.so",
+    "$target_out_dir/libalsc3.2.z.so",
+    "$target_out_dir/libatm.z.so",
+    "$target_out_dir/libawb3.2.z.so",
+    "$target_out_dir/libcamAe4.0.z.so",
+    "$target_out_dir/libcamAf4.0.z.so",
+    "$target_out_dir/libcamAfl4.0.z.so",
+    "$target_out_dir/libcamAlsc4.0.z.so",
+    "$target_out_dir/libcamAwb4.0.z.so",
+    "$target_out_dir/libcamPd4.0.z.so",
+    "$target_out_dir/libdeflicker.z.so",
+    "$target_out_dir/libflash.z.so",
+    "$target_out_dir/libpdalgo.z.so",
+  ]
+  script = "//device/soc/unisoc/p7885/pac/encrypt.sh"
+  args = [
+    rebase_path("//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/isp_lib/isp_lib.tar.gz.gpg", root_build_dir),
+    rebase_path("$target_out_dir", root_build_dir),
+  ]
+}
+
+ohos_prebuilt_shared_library("isp3A1") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libae3.x.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A2") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libaf3.2.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A3") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libaf3.2_le.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A4") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libaftrigger.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A5") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libalsc3.2.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A6") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libatm.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A7") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libawb3.2.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A8") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libcamAe4.0.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A9") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libcamAf4.0.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A10") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libcamAfl4.0.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A11") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libcamAlsc4.0.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A12") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libcamAwb4.0.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A13") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libcamPd4.0.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A14") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libdeflicker.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A15") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libflash.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("isp3A16") {
+  deps = [ ":decrypt_isp" ]
+  source = "$target_out_dir/libpdalgo.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+group("isp3A") {
+  deps = [
+    ":decrypt_isp",
+    ":isp3A1",
+    ":isp3A2",
+    ":isp3A3",
+    ":isp3A4",
+    ":isp3A5",
+    ":isp3A6",
+    ":isp3A7",
+    ":isp3A8",
+    ":isp3A9",
+    ":isp3A10",
+    ":isp3A11",
+    ":isp3A12",
+    ":isp3A13",
+    ":isp3A14",
+    ":isp3A15",
+    ":isp3A16",
+  ]
+}
+

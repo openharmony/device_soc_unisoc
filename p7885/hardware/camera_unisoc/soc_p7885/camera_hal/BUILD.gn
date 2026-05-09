@@ -1,0 +1,338 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+CAMERA_HAL_PATH="//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/camera_hal"
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+ohos_prebuilt_shared_library("camerahal1") {
+  source = "${CAMERA_HAL_PATH}/libcambr.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal2") {
+  source = "${CAMERA_HAL_PATH}/libcamcommon.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal3") {
+  source = "${CAMERA_HAL_PATH}/libcam-ini-parser.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal4") {
+  source = "${CAMERA_HAL_PATH}/libcammem.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal5") {
+  source = "${CAMERA_HAL_PATH}/libcamoem.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal6") {
+  source = "${CAMERA_HAL_PATH}/libcam_otp_parser.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal7") {
+  source = "${CAMERA_HAL_PATH}/libcampm_isp2.7.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal8") {
+  source = "${CAMERA_HAL_PATH}/libcampmloader.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal9") {
+  source = "${CAMERA_HAL_PATH}/libcamppm.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal10") {
+  source = "${CAMERA_HAL_PATH}/libcamps.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal11") {
+  source = "${CAMERA_HAL_PATH}/libcamsensor.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal12") {
+  source = "${CAMERA_HAL_PATH}/libcamv4l2adapter.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal13") {
+  source = "${CAMERA_HAL_PATH}/libcamv4l2yuv2rgb.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal14") {
+  source = "${CAMERA_HAL_PATH}/libcamxmlparser.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal15") {
+  source = "${CAMERA_HAL_PATH}/libcppdrv.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal16") {
+  source = "${CAMERA_HAL_PATH}/libispalg.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal17") {
+  source = "${CAMERA_HAL_PATH}/libotp_general.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal18") {
+  source = "${CAMERA_HAL_PATH}/libpss_isp2.7.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal19") {
+  source = "${CAMERA_HAL_PATH}/libsensor_bf2257cs.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal20") {
+  source = "${CAMERA_HAL_PATH}/libsensor_gc05a2_f_n100.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal21") {
+  source = "${CAMERA_HAL_PATH}/libsensor_gc05a2.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal22") {
+  source = "${CAMERA_HAL_PATH}/libsensor_gc08a3_n100.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal23") {
+  source = "${CAMERA_HAL_PATH}/libsensor_gc5035.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal24") {
+  source = "${CAMERA_HAL_PATH}/libsensor_imx111.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal25") {
+  source = "${CAMERA_HAL_PATH}/libsensor_imx586.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal26") {
+  source = "${CAMERA_HAL_PATH}/libsensor_imx616.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal27") {
+  source = "${CAMERA_HAL_PATH}/libsensor_ov13853_m1.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal28") {
+  source = "${CAMERA_HAL_PATH}/libsensor_ov50c40.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal29") {
+  source = "${CAMERA_HAL_PATH}/libsensor_sc501ai.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal30") {
+  source = "${CAMERA_HAL_PATH}/libsensor_sp250a.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal31") {
+  source = "${CAMERA_HAL_PATH}/libvcm_dw9714v.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal32") {
+  source = "${CAMERA_HAL_PATH}/libvcm_dw9714.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal33") {
+  source = "${CAMERA_HAL_PATH}/libvcm_lc898229.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal34") {
+  source = "${CAMERA_HAL_PATH}/libsensor_gc08a3_22_n100.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal35") {
+  source = "./libsprd_h264enc_wrapper.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_shared_library("camerahal36") {
+  source = "./libsprd_jpegenc_wrapper.z.so"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+
+
+group("cameraHalSo") {
+  deps = [
+    ":camerahal1",
+    ":camerahal2",
+    ":camerahal3",
+    ":camerahal4",
+    ":camerahal5",
+    ":camerahal6",
+    ":camerahal7",
+    ":camerahal8",
+    ":camerahal9",
+    ":camerahal10",
+    ":camerahal11",
+    ":camerahal12",
+    ":camerahal13",
+    ":camerahal14",
+    ":camerahal15",
+    ":camerahal16",
+    ":camerahal17",
+    ":camerahal18",
+    ":camerahal20",
+    ":camerahal22",
+    ":camerahal32",
+    ":camerahal34",
+    ":camerahal35",
+    ":camerahal36",
+  ]
+}
+

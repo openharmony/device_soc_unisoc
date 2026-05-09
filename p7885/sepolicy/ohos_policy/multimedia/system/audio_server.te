@@ -1,0 +1,37 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+typeattribute audio_server devinfo_type_allow_attr;
+
+# avc:  denied  { ioctl } for  pid=469 comm="OS_IPC_3_689" path="/dev/access_token_id" dev="tmpfs" ino=358 ioctlcmd=0x5413 scontext=u:r:audio_server:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+allow audio_server dev_at_file:chr_file { ioctl };
+
+# avc:  denied  { get } for service=1912 sid=u:r:audio_server:s0 scontext=u:r:audio_server:s0 tcontext=u:object_r:sa_concurrent_task_service:s0 tclass=samgr_class permissive=1
+allow audio_server sa_concurrent_task_service:samgr_class { get };
+
+# avc:  denied  { ioctl } for  pid=469 comm="OS_IPC_3_689" path="/dev/access_token_id" dev="tmpfs" ino=358 ioctlcmd=0x5413 scontext=u:r:audio_server:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+allowxperm audio_server dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { read } for  pid=550 comm="audio_server" name="u:object_r:devinfo_type_param:s0" dev="tmpfs" ino=137 scontext=u:r:audio_server:s0 tcontext=u:object_r:devinfo_type_param:s0 tclass=file permissive=0
+allow audio_server devinfo_type_param:file { read open map };
+
+# avc:  denied  { call } for  pid=548 comm="Speaker" scontext=u:r:audio_server:s0 tcontext=u:r:concurrent_task_service:s0 tclass=binder permissive=0
+allow audio_server concurrent_task_service:binder { call };
+
+# avc:  denied  { read } for  pid=550 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:audio_server:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=550 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:audio_server:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow audio_server hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { read } for  pid=550 comm="audio_server" name="online" dev="sysfs" ino=8387 scontext=u:r:audio_server:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+# avc:  denied  { getattr } for  pid=563 comm="audio_server" path="/sys/devices/system/cpu/online" dev="sysfs" ino=8387 scontext=u:r:audio_server:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+allow audio_server sysfs_devices_system_cpu:file { read open map getattr };

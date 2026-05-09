@@ -1,0 +1,23 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { read } for  pid=463 comm="huks_service" name="online" dev="sysfs" ino=8387 scontext=u:r:huks_service:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+# avc:  denied  { getattr } for  pid=459 comm="huks_service" path="/sys/devices/system/cpu/online" dev="sysfs" ino=8387 scontext=u:r:huks_service:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+allow huks_service sysfs_devices_system_cpu:file { read open map getattr };
+
+# avc:  denied  { read } for  pid=463 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:huks_service:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow huks_service hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { read } for  pid=456 comm="huks_service" name="u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:huks_service:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=456 comm="huks_service" name="u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:huks_service:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
+allow huks_service arkcompiler_param:file { read open map };

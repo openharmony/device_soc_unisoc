@@ -1,0 +1,208 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+ 
+
+import("//build/ohos.gni")
+import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+action("decrypt_location") {
+  inputs = [
+    "//device/soc/unisoc/p7885/hardware/location/bin/gnss.tar.gz.gpg",
+  ]
+  outputs = [
+    "$target_out_dir/bin/gnssmodem.bin",
+    "$target_out_dir/bin/libasnsupl.z.so",
+    "$target_out_dir/bin/libgnssmgt.z.so",
+    "$target_out_dir/bin/liblcsagent.z.so",
+    "$target_out_dir/bin/liblcscp.z.so",
+    "$target_out_dir/bin/liblcsmgt.z.so",
+    "$target_out_dir/bin/liblcsmos.z.so",
+    "$target_out_dir/bin/liblcspkcs15.z.so",
+    "$target_out_dir/bin/liblcssc.z.so",
+    "$target_out_dir/bin/liblcswbxml2.z.so",
+    "$target_out_dir/bin/libsupl.z.so",
+  ]
+  script = "//device/soc/unisoc/p7885/pac/encrypt.sh"
+  args = [
+    rebase_path("//device/soc/unisoc/p7885/hardware/location/bin/gnss.tar.gz.gpg", root_build_dir),
+    rebase_path("$target_out_dir/bin", root_build_dir),
+  ]
+}
+
+group("location_group") {
+  deps = [
+    ":decrypt_location",
+    ":sprd_gnss_config_xml",
+    ":sprd_gnss_supl_xml",
+    ":sprd_gnss_prop_ini",
+    "gnss:vendorGnssAdapter",
+    #"test:gnss_test",
+    ":location_sa_7885",
+    ":gnssmodem",
+    ":libasnsupl",
+    ":libgnssmgt",
+    ":liblcsagent",
+    ":liblcscp",
+    ":liblcsmgt",
+    ":liblcsmos",
+    ":liblcspkcs15",
+    ":liblcssc",
+    ":liblcswbxml2",
+    ":libsupl",
+  ]
+}
+
+ohos_prebuilt_etc("sprd_gnss_config_xml") {
+  source = "etc/config.xml"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("sprd_gnss_supl_xml") {
+  source = "etc/supl.xml"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("sprd_gnss_prop_ini") {
+  source = "etc/prop.ini"
+  install_enable = true
+  install_images = [ system_base_dir ]
+  module_install_dir = "etc/gnss"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("location_sa_7885") {
+  source = "etc/locationsa-7885.cfg"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  relative_install_dir = "init"
+}
+
+ohos_prebuilt_executable("gnssmodem") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/gnssmodem.bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("libasnsupl") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/libasnsupl.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_shared_library("libgnssmgt") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/libgnssmgt.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_shared_library("liblcsagent") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/liblcsagent.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}" 
+}
+
+ohos_prebuilt_shared_library("liblcscp") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/liblcscp.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"  
+}
+
+ohos_prebuilt_shared_library("liblcsmgt") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/liblcsmgt.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}" 
+}
+
+ohos_prebuilt_shared_library("liblcsmos") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/liblcsmos.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}" 
+}
+
+ohos_prebuilt_shared_library("liblcspkcs15") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/liblcspkcs15.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}" 
+}
+
+ohos_prebuilt_shared_library("liblcssc") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/liblcssc.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"  
+}
+
+ohos_prebuilt_shared_library("liblcswbxml2") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/liblcswbxml2.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"  
+}
+
+ohos_prebuilt_shared_library("libsupl") {
+  deps = [ ":decrypt_location" ]
+  source = "$target_out_dir/bin/libsupl.z.so"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "lib64" 
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}

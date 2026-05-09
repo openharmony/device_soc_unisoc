@@ -1,0 +1,637 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+CAMERA_TUNING_gc05a2_f_PATH="//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/tuning/gc05a2_f"
+
+ohos_prebuilt_etc("gc05a2_f_tuning1") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/cfg.xml"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning2") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/3DNR_20571.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning3") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/3D_LUT_20617.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning4") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/4IN1_20488.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning5") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AEM_16398.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning6") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AE_16433.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning7") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AE_16433_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning8") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AE_ADAPT_20489.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning9") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AE_SYNC_20487.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning10") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AFL_V1_16409.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning11") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AFL_V3_16410.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning12") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AFT_16432.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning13") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AF_16435.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning14") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AI_PRO_20601.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning15") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/ALSC_16431.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning16") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/ANTIFL_16443.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning17") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/ATM4GAMM_16445.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning18") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AWBC_16397.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning19") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/AWB_16434.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning20") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/BAYER_NR_20591.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning21") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/BAYER_NR_20591_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning22") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/BCHS_20581.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning23") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/BLC_16386.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning24") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/BPC_20564.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning25") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/BWUD_20585.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning26") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/CCE_16407.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning27") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/CCE_UVDIV_20570.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning28") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/CFAI_20569.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning29") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/CMC10_16403.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning30") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/CNR_H_20619.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning31") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/DCT_20616.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning32") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/DFLASH_16438.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning33") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/DFLASH_16438_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning34") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/D_ENVI_16437.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning35") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/EE_20577.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning36") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/HIST2_16418.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning37") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/HSV_20621.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning38") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/IMBALANCE_20590.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning39") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/LSC_2D_16394.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning40") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/LSC_2D_16394_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning41") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/POST_CNR_H_20620.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning42") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/PPE_20595.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning43") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/PYRAMID_OFFL_20615.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning44") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/PYRAMID_ONL_20614.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning45") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/RGBGAIN_16391.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning46") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/RGB_AFM_20565.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning47") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/RGB_DITHER_20561.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning48") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/RGB_GAM_16404.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning49") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/RGB_GTM_20618.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning50") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/RGB_LTM_20587.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning51") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/SW3DNR_20582.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning52") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/UV_CDN_20574.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning53") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/YNR_20576.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning54") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/YUV_NOISEFILTER_20579.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning55") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/Y_GAMMA_20597.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning56") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/com/_0.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning57") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/other/captureinfo.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning58") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/other/libuse_info.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning59") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/other/raw_ioctrl.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning60") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/other/resolution_info.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc05a2_f_tuning61") {
+  source = "${CAMERA_TUNING_gc05a2_f_PATH}/other/version_info.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc05a2_f/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+
+
+
+
+group("tuning_gc05a2_f") {
+  deps = [
+    ":gc05a2_f_tuning1",
+    ":gc05a2_f_tuning2",
+    ":gc05a2_f_tuning3",
+    ":gc05a2_f_tuning4",
+    ":gc05a2_f_tuning5",
+    ":gc05a2_f_tuning6",
+    ":gc05a2_f_tuning7",
+    ":gc05a2_f_tuning8",
+    ":gc05a2_f_tuning9",
+    ":gc05a2_f_tuning10",
+    ":gc05a2_f_tuning11",
+    ":gc05a2_f_tuning12",
+    ":gc05a2_f_tuning13",
+    ":gc05a2_f_tuning14",
+    ":gc05a2_f_tuning15",
+    ":gc05a2_f_tuning16",
+    ":gc05a2_f_tuning17",
+    ":gc05a2_f_tuning18",
+    ":gc05a2_f_tuning19",
+    ":gc05a2_f_tuning20",
+    ":gc05a2_f_tuning21",
+    ":gc05a2_f_tuning22",
+    ":gc05a2_f_tuning23",
+    ":gc05a2_f_tuning24",
+    ":gc05a2_f_tuning25",
+    ":gc05a2_f_tuning26",
+    ":gc05a2_f_tuning27",
+    ":gc05a2_f_tuning28",
+    ":gc05a2_f_tuning29",
+    ":gc05a2_f_tuning30",
+    ":gc05a2_f_tuning31",
+    ":gc05a2_f_tuning32",
+    ":gc05a2_f_tuning33",
+    ":gc05a2_f_tuning34",
+    ":gc05a2_f_tuning35",
+    ":gc05a2_f_tuning36",
+    ":gc05a2_f_tuning37",
+    ":gc05a2_f_tuning38",
+    ":gc05a2_f_tuning39",
+    ":gc05a2_f_tuning40",
+    ":gc05a2_f_tuning41",
+    ":gc05a2_f_tuning42",
+    ":gc05a2_f_tuning43",
+    ":gc05a2_f_tuning44",
+    ":gc05a2_f_tuning45",
+    ":gc05a2_f_tuning46",
+    ":gc05a2_f_tuning47",
+    ":gc05a2_f_tuning48",
+    ":gc05a2_f_tuning49",
+    ":gc05a2_f_tuning50",
+    ":gc05a2_f_tuning51",
+    ":gc05a2_f_tuning52",
+    ":gc05a2_f_tuning53",
+    ":gc05a2_f_tuning54",
+    ":gc05a2_f_tuning55",
+    ":gc05a2_f_tuning56",
+    ":gc05a2_f_tuning57",
+    ":gc05a2_f_tuning58",
+    ":gc05a2_f_tuning59",
+    ":gc05a2_f_tuning60",
+    ":gc05a2_f_tuning61",
+  ]
+}
+

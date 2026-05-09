@@ -1,0 +1,113 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+ohos_prebuilt_shared_library("libuniai.so") {
+    source = "core/libuniai.so"
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_shared_library("unisoc_NPU_backend.so") {
+    source = "core/unisoc_NPU_backend.so"
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+
+}
+
+ohos_prebuilt_shared_library("libcxx_shared.so") {
+    source = "lib64/libc++_shared.so"
+    
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+
+}
+
+ohos_prebuilt_shared_library("libimgcustom.so") {
+    source = "lib64/libimgcustom.so"
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_shared_library("libimgdnn.so") {
+    source = "lib64/libimgdnn.so"
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_shared_library("libnnacompiler.so") {
+    source = "lib64/libnnacompiler.so"
+
+    install_enable = true    
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_shared_library("libnnaruntime.so") {
+    source = "lib64/libnnaruntime.so"
+
+    install_enable = true    
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("npu_img_hwconfig.json") {
+    source = "etc/npu_img_hwconfig.json"
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("npu_img_mapconfig.json") {
+    source = "etc/npu_img_mapconfig.json"
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+group("npu_vendor") {
+  deps = [
+    ":libuniai.so",
+    ":unisoc_NPU_backend.so",
+    ":libcxx_shared.so",
+    ":libimgcustom.so",
+    ":libimgdnn.so",
+    ":libnnacompiler.so",
+    ":libnnaruntime.so",
+    ":npu_img_hwconfig.json",
+    ":npu_img_mapconfig.json",
+    "nnrt_drivers/v2_0:hdf_nnrt_service",
+    "nnrt:nnrt"
+  ]
+}

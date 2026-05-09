@@ -1,0 +1,10 @@
+{
+    "whitelist": {
+        "user": [
+            "camera_host dev_sprd_file chr_file"
+        ],
+        "developer": [
+
+        ]
+    }
+}
