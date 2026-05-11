@@ -1,0 +1,209 @@
+# Copyright (C) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+#RIL_ADAPTER = "//unisoc_p7885_property/telephony"
+
+
+ohos_prebuilt_etc("modem_cp_info") {
+  source = "etc/xml/modem_cp_info.xml"
+  module_install_dir = "etc"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("modem_sp_info") {
+  source = "etc/xml/modem_sp_info.xml"
+  module_install_dir = "etc"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("modem_ch_info") {
+  source = "etc/xml/modem_ch_info.xml"
+  module_install_dir = "etc"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("libsprd7885_tele_adapter_1.0") {
+  source = "lib64/libsprd7885_tele_adapter_1.0.z.so"
+  module_install_dir = "lib64"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("libmodem_halo") {
+  source = "lib64/libmodem_halo.z.so"
+  module_install_dir = "lib64"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("libmodem-utils") {
+  source = "lib64/libmodem-utils.z.so"
+  module_install_dir = "lib64"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("libreadfixednv") {
+  source = "lib64/libreadfixednv.z.so"
+  module_install_dir = "lib64"
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("cp_diskserver") {
+  source = "bin/cp_diskserver.bin"
+  module_install_dir = "bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("modem_control") {
+
+  source = "bin/modem_control.bin"
+  module_install_dir = "bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("channelmanager") {
+  source = "bin/channelmanager.bin"
+  module_install_dir = "bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("cp_diskserver_cfg") {
+  source = "etc/cfg/nvitem.cfg"
+  relative_install_dir = "init"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("modem_control_cfg") {
+  source = "etc/cfg/modem_control.cfg"
+  relative_install_dir = "init"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("channelmanager_cfg") {
+  source = "etc/cfg/channelmanager.cfg"
+  relative_install_dir = "init"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("ueventd_confg") {
+  source = "etc/confg/ueventd.config"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("channelmanager_para") {
+  source = "etc/param/channelmanager.para"
+  relative_install_dir = "param"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("modem_control_para") {
+  source = "etc/param/modem_control.para"
+  relative_install_dir = "param"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("nvitem_para") {
+  source = "etc/param/nvitem.para"
+  relative_install_dir = "param"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("tele_adapter_para_dac") {
+  source = "etc/param/tele_adapter.para.dac"
+  relative_install_dir = "param"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("tele_adapter_para") {
+  source = "etc/param/tele_adapter.para"
+  relative_install_dir = "param"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+group("radio"){
+   deps = [
+    ":modem_ch_info",
+    ":modem_sp_info",
+    ":modem_cp_info",
+    ":libsprd7885_tele_adapter_1.0",
+    ":libmodem_halo",
+    ":libmodem-utils",
+    ":libreadfixednv",
+    ":cp_diskserver",
+    ":modem_control",
+    ":channelmanager",
+    ":cp_diskserver_cfg",
+    ":modem_control_cfg",
+    ":channelmanager_cfg",
+    ":ueventd_confg",
+    ":channelmanager_para",
+    ":modem_control_para",
+    ":nvitem_para",
+    ":tele_adapter_para_dac",
+    ":tele_adapter_para"
+   ]
+}

@@ -1,0 +1,37 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { set } for parameter=persist.hiviewdfx.priv.sysevent.backup_time pid=359 uid=1201 gid=1000 scontext=u:r:hiview:s0 tcontext=u:object_r:persist_param:s0 tclass=parameter_service permissive=1
+allow hiview persist_param:parameter_service { set };
+
+# avc:  denied  { get } for service=3303 sid=u:r:hiview:s0 scontext=u:r:hiview:s0 tcontext=u:object_r:sa_powermgr_thermal_service:s0 tclass=samgr_class permissive=1
+allow hiview sa_powermgr_thermal_service:samgr_class { get };
+
+# avc:  denied  { call } for  pid=383 comm="OS_FFRT_2_0" scontext=u:r:hiview:s0 tcontext=u:r:multimodalinput:s0 tclass=binder permissive=0
+# avc:  denied  { transfer } for  pid=382 comm="OS_FFRT_2_0" scontext=u:r:hiview:s0 tcontext=u:r:multimodalinput:s0 tclass=binder permissive=0
+allow hiview multimodalinput:binder { call transfer };
+
+# avc:  denied  { read } for  pid=383 comm="hiview" name="cmdline" dev="proc" ino=4026532038 scontext=u:r:hiview:s0 tcontext=u:object_r:proc_cmdline_file:s0 tclass=file permissive=0
+allow hiview proc_cmdline_file:file { read };
+
+# avc:  denied  { use } for  pid=479 comm="OS_IPC_3_1156" path="socket:[29551]" dev="sockfs" ino=29551 scontext=u:r:hiview:s0 tcontext=u:r:multimodalinput:s0 tclass=fd permissive=0
+allow hiview multimodalinput:fd { use };
+
+# avc:  denied  { getattr } for  pid=379 comm="OS_IPC_6_2042" path="/proc/meminfo" dev="proc" ino=4026532044 scontext=u:r:hiview:s0 tcontext=u:object_r:proc_meminfo_file:s0 tclass=file permissive=0
+allow hiview proc_meminfo_file:file { getattr };
+
+# avc:  denied  { search } for  pid=368 comm="sysevent_store" name="ohos.samples.distributedcalc" dev="sda62" ino=2324 scontext=u:r:hiview:s0 tcontext=u:object_r:system_core_hap_data_file:s0 tclass=dir permissive=0
+allow hiview system_core_hap_data_file:dir { search };
+
+# avc:  denied  { search } for  pid=380 comm="hiview" name="usr" dev="sda46" ino=5061 scontext=u:r:hiview:s0 tcontext=u:object_r:system_usr_file:s0 tclass=dir permissive=0
+allow hiview system_usr_file:dir { search };

@@ -1,0 +1,33 @@
+/*
+ * Copyright 2016-2026 Unisoc (Shanghai) Technologies Co., Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#include "time_util.h"
+#include <sys/time.h>
+#include <cstdio>
+namespace OHOS {
+namespace OMX {
+int64_t systemTime()
+{
+    struct timeval t;
+    t.tv_sec = t.tv_usec = 0;
+    gettimeofday(&t, nullptr);
+    return (t.tv_sec) * 1000000000LL + (t.tv_usec) * 1000LL;
+}
+unsigned long Max(unsigned long a, unsigned long b)
+{
+    return a > b ? a : b;
+}
+};  // namespace OMX
+};  // namespace OHOS

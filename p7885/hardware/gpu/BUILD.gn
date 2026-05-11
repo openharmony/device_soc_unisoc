@@ -1,0 +1,82 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+action("decrypt_gpu") {
+  inputs = [
+    "//device/soc/unisoc/p7885/hardware/gpu/lib64/gpu.tar.gz.gpg",
+  ]
+  outputs = [
+    "$target_out_dir/lib64/liballocator.z.so",
+    "$target_out_dir/lib64/libmapper.z.so",
+    "$target_out_dir/lib64/libGLES_mali.z.so",
+  ]
+  script = "//device/soc/unisoc/p7885/pac/encrypt.sh"
+  args = [
+    rebase_path("//device/soc/unisoc/p7885/hardware/gpu/lib64/gpu.tar.gz.gpg", root_build_dir),
+    rebase_path("$target_out_dir/lib64", root_build_dir),
+  ]
+}
+
+ohos_prebuilt_shared_library( "allocator" ){
+    deps = [ ":decrypt_gpu" ]
+    source = "$target_out_dir/lib64/liballocator.z.so"
+    relative_install_dir = "hw"
+    symlink_target_name = [ "android.hardware.graphics.allocator@4.0-impl.so" ]
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_shared_library( "mapper" ){
+    deps = [ ":decrypt_gpu" ]
+    source = "$target_out_dir/lib64/libmapper.z.so"
+    relative_install_dir = "hw"
+    symlink_target_name = [ "android.hardware.graphics.mapper@4.0-impl.so" ]
+
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_shared_library( "GLES_mali" ){
+    deps = [ ":decrypt_gpu" ]
+    source = "$target_out_dir/lib64/libGLES_mali.z.so"
+    relative_install_dir = "chipsetsdk"
+    symlink_target_name = [
+        "libEGL_impl.so",
+        "libGLESv1_impl.so",
+        "libGLESv2_impl.so",
+        "libGLESv3_impl.so",
+        "libmali.so.0",
+        "libmali.so.1",
+    ]
+    install_enable = true
+    install_images = [ chipset_base_dir ]
+    part_name = "${PART_NAME}"
+    subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+group("gpu_vendor"){
+    deps = [
+        ":decrypt_gpu",
+        ":allocator",
+        ":mapper",
+        ":GLES_mali",
+    ]
+}

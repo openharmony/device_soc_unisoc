@@ -1,0 +1,1142 @@
+# Copyright 2016-2026 Unisoc (Shanghai) Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+CAMERA_TUNING_GC08A3_PATH = "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/tuning/gc08a3"
+
+# 根目录 cfg.xml
+ohos_prebuilt_etc("gc08a3_tuning1") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cfg.xml"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# com 目录 (57个文件)
+ohos_prebuilt_etc("gc08a3_tuning2") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AEM_16398.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning3") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/PYRAMID_OFFL_20615.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning4") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/RGB_GAM_16404.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning5") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/IMBALANCE_20590.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning6") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AE_CTRL_20647_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning7") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/YNR_20576.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning8") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/BAYER_NR_20591_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning9") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/RGB_DITHER_20561.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning10") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/D_ENVI_16437.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning11") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/BLC_16386.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning12") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/UV_CDN_20574.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning13") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/BAYER_NR_20591.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning14") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/YUV_NOISEFILTER_20579.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning15") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/ANTIFL_16443.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning16") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/DCT_20616.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning17") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/CCE_16407.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning18") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/VID_HDR_20645.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning19") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/BCHS_20581.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning20") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/CNR3_20598.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning21") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/ALSC_16431.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning22") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/ALSC_CTRL_20649.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning23") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/PCC_20640.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning24") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/CFAI_20569.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning25") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AI_PRO_20601.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning26") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/RGB_LTM_20587.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning27") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/BPC_20564.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning28") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/3DNR_20571.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning29") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AFL_V1_16409.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning30") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/CCE_UVDIV_20570.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning31") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/MFNR5_20643.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning32") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/HSV_20621.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning33") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/CMC10_V1_20650.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning34") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/RGBGAIN_16391.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning35") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AWBC_16397.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning36") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/POST_CNR_H_20620.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning37") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AF_16435.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning38") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/EE_20577.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning39") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AWB_16434.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning40") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AFT_16432.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning41") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/YNRS_20588.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning42") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/PYRAMID_ONL_20614.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning43") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AE_CTRL_20647.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning44") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/CNR_H_20619.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning45") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/WARP_PRO_20627.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning46") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AE_16433_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning47") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/HIST2_16418.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning48") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/BWUD_20585.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning49") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/HDR4_20641.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning50") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AE_16433.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning51") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/RGB_GTM_20618.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning52") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/AFL_V3_16410.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning53") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/Y_GAMMA_20597.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning54") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/ALSC_16431_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning55") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/RGB_AFM_20565.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning56") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/MFNR_SD_20652.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning57") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/XTM_20642.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning58") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/com/PPE_20595.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/com"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# other 目录 (5个文件)
+ohos_prebuilt_etc("gc08a3_tuning59") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/other/resolution_info.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning60") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/other/libuse_info.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning61") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/other/version_info.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning62") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/other/captureinfo.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning63") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/other/raw_ioctrl.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/other"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# cap0_flash 目录 (6个文件)
+ohos_prebuilt_etc("gc08a3_tuning64") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_flash/YNR_20576.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning65") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_flash/DCT_20616.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning66") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_flash/CNR3_20598.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning67") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_flash/POST_CNR_H_20620.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning68") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_flash/EE_20577.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning69") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_flash/CNR_H_20619.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# cap0_hdr 目录 (2个文件)
+ohos_prebuilt_etc("gc08a3_tuning70") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_hdr/YNR_20576.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_hdr"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning71") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/cap0_hdr/EE_20577.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/cap0_hdr"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# prv0 目录 (22个文件)
+ohos_prebuilt_etc("gc08a3_tuning72") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/PYRAMID_OFFL_20615.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning73") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/IMBALANCE_20590.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning74") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/YNR_20576.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning75") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/BAYER_NR_20591_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning76") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/RGB_DITHER_20561.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning77") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/UV_CDN_20574.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning78") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/BAYER_NR_20591.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning79") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/YUV_NOISEFILTER_20579.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning80") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/DCT_20616.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning81") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/CNR3_20598.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning82") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/CFAI_20569.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning83") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/BPC_20564.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning84") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/3DNR_20571.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning85") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/CCE_UVDIV_20570.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning86") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/POST_CNR_H_20620.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning87") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/EE_20577.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning88") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/YNRS_20588.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning89") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/PYRAMID_ONL_20614.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning90") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/CNR_H_20619.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning91") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/BWUD_20585.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning92") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/RGB_AFM_20565.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning93") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0/PPE_20595.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# prv0_flash 目录 (3个文件)
+ohos_prebuilt_etc("gc08a3_tuning94") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0_flash/BAYER_NR_20591_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning95") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0_flash/BAYER_NR_20591.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning96") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0_flash/PPE_20595.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0_flash"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# prv0_hdr 目录 (3个文件)
+ohos_prebuilt_etc("gc08a3_tuning97") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0_hdr/BAYER_NR_20591_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0_hdr"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning98") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0_hdr/BAYER_NR_20591.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0_hdr"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning99") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/prv0_hdr/PPE_20595.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/prv0_hdr"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# video0 目录 (12个文件)
+ohos_prebuilt_etc("gc08a3_tuning100") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/RGB_GAM_16404.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning101") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/AE_CTRL_20647_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning102") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/YNR_20576.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning103") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/BAYER_NR_20591_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning104") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/BAYER_NR_20591.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning105") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/3DNR_20571.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning106") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/EE_20577.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning107") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/AWB_16434.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning108") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/AE_CTRL_20647.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning109") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/AE_16433_uiinput.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning110") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/AE_16433.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+ohos_prebuilt_etc("gc08a3_tuning111") {
+  source = "${CAMERA_TUNING_GC08A3_PATH}/video0/XTM_20642.bin"
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware/gc08a3/video0"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  install_enable = true
+}
+
+# 汇总 group
+group("tuning_gc08a3") {
+  deps = [
+    ":gc08a3_tuning1",
+    ":gc08a3_tuning2",
+    ":gc08a3_tuning3",
+    ":gc08a3_tuning4",
+    ":gc08a3_tuning5",
+    ":gc08a3_tuning6",
+    ":gc08a3_tuning7",
+    ":gc08a3_tuning8",
+    ":gc08a3_tuning9",
+    ":gc08a3_tuning10",
+    ":gc08a3_tuning11",
+    ":gc08a3_tuning12",
+    ":gc08a3_tuning13",
+    ":gc08a3_tuning14",
+    ":gc08a3_tuning15",
+    ":gc08a3_tuning16",
+    ":gc08a3_tuning17",
+    ":gc08a3_tuning18",
+    ":gc08a3_tuning19",
+    ":gc08a3_tuning20",
+    ":gc08a3_tuning21",
+    ":gc08a3_tuning22",
+    ":gc08a3_tuning23",
+    ":gc08a3_tuning24",
+    ":gc08a3_tuning25",
+    ":gc08a3_tuning26",
+    ":gc08a3_tuning27",
+    ":gc08a3_tuning28",
+    ":gc08a3_tuning29",
+    ":gc08a3_tuning30",
+    ":gc08a3_tuning31",
+    ":gc08a3_tuning32",
+    ":gc08a3_tuning33",
+    ":gc08a3_tuning34",
+    ":gc08a3_tuning35",
+    ":gc08a3_tuning36",
+    ":gc08a3_tuning37",
+    ":gc08a3_tuning38",
+    ":gc08a3_tuning39",
+    ":gc08a3_tuning40",
+    ":gc08a3_tuning41",
+    ":gc08a3_tuning42",
+    ":gc08a3_tuning43",
+    ":gc08a3_tuning44",
+    ":gc08a3_tuning45",
+    ":gc08a3_tuning46",
+    ":gc08a3_tuning47",
+    ":gc08a3_tuning48",
+    ":gc08a3_tuning49",
+    ":gc08a3_tuning50",
+    ":gc08a3_tuning51",
+    ":gc08a3_tuning52",
+    ":gc08a3_tuning53",
+    ":gc08a3_tuning54",
+    ":gc08a3_tuning55",
+    ":gc08a3_tuning56",
+    ":gc08a3_tuning57",
+    ":gc08a3_tuning58",
+    ":gc08a3_tuning59",
+    ":gc08a3_tuning60",
+    ":gc08a3_tuning61",
+    ":gc08a3_tuning62",
+    ":gc08a3_tuning63",
+    ":gc08a3_tuning64",
+    ":gc08a3_tuning65",
+    ":gc08a3_tuning66",
+    ":gc08a3_tuning67",
+    ":gc08a3_tuning68",
+    ":gc08a3_tuning69",
+    ":gc08a3_tuning70",
+    ":gc08a3_tuning71",
+    ":gc08a3_tuning72",
+    ":gc08a3_tuning73",
+    ":gc08a3_tuning74",
+    ":gc08a3_tuning75",
+    ":gc08a3_tuning76",
+    ":gc08a3_tuning77",
+    ":gc08a3_tuning78",
+    ":gc08a3_tuning79",
+    ":gc08a3_tuning80",
+    ":gc08a3_tuning81",
+    ":gc08a3_tuning82",
+    ":gc08a3_tuning83",
+    ":gc08a3_tuning84",
+    ":gc08a3_tuning85",
+    ":gc08a3_tuning86",
+    ":gc08a3_tuning87",
+    ":gc08a3_tuning88",
+    ":gc08a3_tuning89",
+    ":gc08a3_tuning90",
+    ":gc08a3_tuning91",
+    ":gc08a3_tuning92",
+    ":gc08a3_tuning93",
+    ":gc08a3_tuning94",
+    ":gc08a3_tuning95",
+    ":gc08a3_tuning96",
+    ":gc08a3_tuning97",
+    ":gc08a3_tuning98",
+    ":gc08a3_tuning99",
+    ":gc08a3_tuning100",
+    ":gc08a3_tuning101",
+    ":gc08a3_tuning102",
+    ":gc08a3_tuning103",
+    ":gc08a3_tuning104",
+    ":gc08a3_tuning105",
+    ":gc08a3_tuning106",
+    ":gc08a3_tuning107",
+    ":gc08a3_tuning108",
+    ":gc08a3_tuning109",
+    ":gc08a3_tuning110",
+    ":gc08a3_tuning111",
+  ]
+}

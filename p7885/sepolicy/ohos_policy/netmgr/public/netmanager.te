@@ -1,0 +1,45 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { ioctl } for  pid=596 comm="OS_FFRT_2_2" path="/data/service/el1/public/netmanager/net_stats_data.db" dev="sda62" ino=301 ioctlcmd=0xf502 scontext=u:r:netmanager:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=1
+allow netmanager data_service_el1_file:file { ioctl };
+
+# avc:  denied  { get } for service=1153 sid=u:r:netmanager:s0 scontext=u:r:netmanager:s0 tcontext=u:object_r:sa_comm_net_stats_manager_service:s0 tclass=samgr_class permissive=1
+allow netmanager sa_comm_net_stats_manager_service:samgr_class { get };
+
+# avc:  denied  { get } for service=180 sid=u:r:netmanager:s0 scontext=u:r:netmanager:s0 tcontext=u:object_r:sa_foundation_abilityms:s0 tclass=samgr_class permissive=1
+allow netmanager sa_foundation_abilityms:samgr_class { get };
+
+# avc:  denied  { get } for service=1152 sid=u:r:netmanager:s0 scontext=u:r:netmanager:s0 tcontext=u:object_r:sa_net_policy_manager:s0 tclass=samgr_class permissive=1
+allow netmanager sa_net_policy_manager:samgr_class { get };
+
+# avc:  denied  { ioctl } for  pid=596 comm="OS_FFRT_2_2" path="/data/service/el1/public/netmanager/net_stats_data.db" dev="sda62" ino=301 ioctlcmd=0xf501 scontext=u:r:netmanager:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=1
+# avc:  denied  { ioctl } for  pid=596 comm="OS_FFRT_2_2" path="/data/service/el1/public/netmanager/net_stats_data.db" dev="sda62" ino=301 ioctlcmd=0xf502 scontext=u:r:netmanager:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=1
+# avc:  denied  { ioctl } for  pid=596 comm="OS_FFRT_2_2" path="/data/service/el1/public/netmanager/net_stats_data.db" dev="sda62" ino=301 ioctlcmd=0xf50c scontext=u:r:netmanager:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=1
+allowxperm netmanager data_service_el1_file:file ioctl { 0xf501 0xf502 0xf50c };
+
+# avc:  denied  { read } for  pid=638 comm="netmanager" name="online" dev="sysfs" ino=8387 scontext=u:r:netmanager:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+# avc:  denied  { getattr } for  pid=623 comm="netmanager" path="/sys/devices/system/cpu/online" dev="sysfs" ino=8387 scontext=u:r:netmanager:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
+allow netmanager sysfs_devices_system_cpu:file { read open map getattr };
+
+# avc:  denied  { open } for  pid=619 comm="sa_main" path="/dev/kmsg" dev="tmpfs" ino=63 scontext=u:r:netmanager:s0 tcontext=u:object_r:dev_kmsg_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { write } for  pid=643 comm="sa_main" name="kmsg" dev="tmpfs" ino=63 scontext=u:r:netmanager:s0 tcontext=u:object_r:dev_kmsg_file:s0 tclass=chr_file permissive=0
+allow netmanager dev_kmsg_file:chr_file { open write };
+
+# avc:  denied  { map } for  pid=636 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:netmanager:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=619 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:netmanager:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=643 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:netmanager:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow netmanager hiviewdfx_hiview_param:file { map open read };
+
+# avc:  denied  { search } for  pid=622 comm="OS_FFRT_2_3" name="etc" dev="sda47" ino=24 scontext=u:r:netmanager:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=dir permissive=0
+#allow netmanager vendor_etc_file:dir { search };

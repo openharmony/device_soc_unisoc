@@ -1,0 +1,41 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+typeattribute media_service devinfo_type_allow_attr;
+
+# avc:  denied  { read } for  pid=899 comm="media_service" name="u:object_r:devinfo_type_param:s0" dev="tmpfs" ino=137 scontext=u:r:media_service:s0 tcontext=u:object_r:devinfo_type_param:s0 tclass=file permissive=0
+allow media_service devinfo_type_param:file { open read };
+
+# avc:  denied  { read } for  pid=899 comm="media_service" name="u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:media_service:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
+allow media_service arkcompiler_param:file { open read };
+
+# avc:  denied  { write } for  pid=793 comm="OS_IPC_2_1605" path=*** dev="sda62" ino=10375 scontext=u:r:media_service:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+#allow media_service data_file:file { read open map write };
+
+# avc:  denied  { ioctl } for  pid=865 comm="PlayerEngine" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:media_service:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allow media_service dev_at_file:chr_file { ioctl };
+allowxperm media_service dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { search } for  pid=941 comm="OS_IPC_0_994" name="service" dev="sda62" ino=8 scontext=u:r:media_service:s0 tcontext=u:object_r:data_service_file:s0 tclass=dir permissive=0
+allow media_service data_service_file:dir { search };
+
+# avc:  denied  { ioctl } for  pid=842 comm="PlayerEngine" path="/system/etc/dynamic.wav" dev="sda46" ino=808 ioctlcmd=0xf207 scontext=u:r:media_service:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=0
+allow media_service system_etc_file:file { ioctl };
+allowxperm media_service system_etc_file:file ioctl { 0xf207 };
+
+# avc:  denied  { ioctl } for  pid=839 comm="PlayerEngine" path="/system/app/com.ohos.updateapp/UpdateApp.hap" dev="sda46" ino=127 ioctlcmd=0xf207 scontext=u:r:media_service:s0 tcontext=u:object_r:system_file:s0 tclass=file permissive=0
+allow media_service system_file:file { ioctl };
+allowxperm media_service system_file:file ioctl { 0xf207 };
+
+# avc:  denied  { read write } for  pid=950 comm="OS_HCodecLoop" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3834332D5858584B4B41504E4E202864656C6574656429 dev="sda62" ino=17916 scontext=u:r:media_service:s0 tcontext=u:object_r:data_ashmem_file:s0 tclass=file permissive=1
+allow media_service data_ashmem_file:file { open read write map };

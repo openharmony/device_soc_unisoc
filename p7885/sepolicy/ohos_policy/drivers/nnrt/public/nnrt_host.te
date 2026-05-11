@@ -1,0 +1,35 @@
+type nnrt_host, hdfdomain, domain;
+type hdf_nnrt_device_service, hdf_service_attr;
+
+# avc:  denied  { transition } for  pid=3031 comm="init" path="/vendor/bin/hdf_devhost" dev="sda47" ino=15 scontext=u:r:chipset_init:s0 tcontext=u:r:nnrt_host:s0 tclass=process permissive=0
+allow chipset_init nnrt_host:process { transition };
+
+# avc:  denied  { search } for  pid=3134 comm="hdf_devhost" name="socket" dev="tmpfs" ino=65 scontext=u:r:nnrt_host:s0 tcontext=u:object_r:dev_unix_socket:s0 tclass=dir permissive=0
+allow nnrt_host dev_unix_socket:dir { search };
+
+# avc:  denied  { call } for  pid=3134 comm="nnrt_host" scontext=u:r:nnrt_host:s0 tcontext=u:r:samgr:s0 tclass=binder permissive=0
+allow nnrt_host samgr:binder { call };
+
+# avc:  denied  { read } for  pid=1543 comm="hdf_devhost" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:nnrt_host:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow nnrt_host hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { read } for  pid=1662 comm="hdf_devhost" name="u:object_r:persist_param:s0" dev="tmpfs" ino=92 scontext=u:r:nnrt_host:s0 tcontext=u:object_r:persist_param:s0 tclass=file permissive=0
+allow nnrt_host persist_param:file { read open map };
+
+# avc:  denied  { call } for  pid=781 comm="nnrt_host" scontext=u:r:nnrt_host:s0 tcontext=u:r:hdf_devmgr:s0 tclass=binder permissive=1
+allow nnrt_host hdf_devmgr:binder { call };
+
+# add by xqb
+allow nnrt_host hdf_device_manager:hdf_devmgr_class { get };
+allow nnrt_host hdf_devmgr:binder { call };
+allow nnrt_host hdf_devmgr:binder { transfer };
+allow nnrt_host hdf_nnrt_device_service:hdf_devmgr_class { add };
+allow nnrt_host sa_device_service_manager:samgr_class { get };
+allow nnrt_host vendor_etc_file:dir { search };
+allow nnrt_host vendor_etc_file:file { getattr };
+allow nnrt_host vendor_etc_file:file { open };
+allow nnrt_host vendor_etc_file:file { read };
+allow nnrt_host dev_hdf_kevent:chr_file { read write };
+allow nnrt_host dev_hdf_kevent:chr_file { open };
+allow nnrt_host dev_hdf_kevent:chr_file { ioctl };
+allowxperm nnrt_host dev_hdf_kevent:chr_file ioctl 0x6203;

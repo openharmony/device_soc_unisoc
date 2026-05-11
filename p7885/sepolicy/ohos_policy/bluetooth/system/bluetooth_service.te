@@ -1,0 +1,31 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { ioctl } for  pid=457 comm="AdapterManager" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:bluetooth_service:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+allow bluetooth_service dev_at_file:chr_file { ioctl };
+allowxperm bluetooth_service dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { transfer } for  pid=457 comm="AvrcpTgService" scontext=u:r:bluetooth_service:s0 tcontext=u:r:av_session:s0 tclass=binder permissive=1
+allow bluetooth_service av_session:binder { transfer call };
+
+# avc:  denied  { search } for  pid=571 comm="bluetooth_servi" name="usr" dev="sda46" ino=5061 scontext=u:r:bluetooth_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=dir permissive=0
+allow bluetooth_service system_usr_file:dir { search };
+
+# avc:  denied  { getattr } for  pid=592 comm="bluetooth_servi" path="/system/usr/ohos_locale_config/supported_locales.xml" dev="sda46" ino=5134 scontext=u:r:bluetooth_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { map } for  pid=568 comm="bluetooth_servi" path="/system/usr/ohos_icu/icudt72l.dat" dev="sda46" ino=5120 scontext=u:r:bluetooth_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=571 comm="bluetooth_servi" path="/system/usr/ohos_icu/icudt72l.dat" dev="sda46" ino=5120 scontext=u:r:bluetooth_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=574 comm="bluetooth_servi" name="icudt72l.dat" dev="sda46" ino=5120 scontext=u:r:bluetooth_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+allow bluetooth_service system_usr_file:file { getattr map open read };
+
+# avc:  denied  { search } for  pid=571 comm="bluetooth_servi" name="etc" dev="sda47" ino=24 scontext=u:r:bluetooth_service:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=dir permissive=0
+#allow bluetooth_service vendor_etc_file:dir { search };

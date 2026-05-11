@@ -1,0 +1,91 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+ohos_prebuilt_etc("audio_param_audio_structure") {
+  source = "param/audio_structure"
+  relative_install_dir = "audio"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("audio_param_cvs") {
+  source = "param/cvs"
+  relative_install_dir = "audio"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("audio_param_dsp_smartamp") {
+  source = "param/dsp_smartamp"
+  relative_install_dir = "audio"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_prebuilt_etc("audio_param_dsp_vbc") {
+  source = "param/dsp_vbc"
+  relative_install_dir = "audio"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+ohos_shared_library("sprd_mock_effect") {
+  sources = [
+    "src/audio_param.c",
+    "src/voice_param.c"
+  ]
+
+  include_dirs = [
+    "//drivers/peripheral/audio/hdi_service/primary_impl/include",
+    "//drivers/peripheral/audio/hdi_service/vendor_interface/utils",
+    "//drivers/peripheral/audio/supportlibs/interfaces/include",
+    "//drivers/peripheral/audio/supportlibs/alsa_adapter/include",
+    "//third_party/bounds_checking_function/include",
+    "//third_party/alsa-lib/include",
+  ]
+
+  defines += [ "AUDIO_HDF_LOG" ]
+
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_audio:audio_idl_headers",
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+  ]
+
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
+group("audio_unsioc"){
+    deps = [
+        ":audio_param_audio_structure",
+        ":audio_param_cvs",
+        ":audio_param_dsp_smartamp",
+        ":audio_param_dsp_vbc",
+        ":sprd_mock_effect",
+    ]
+}

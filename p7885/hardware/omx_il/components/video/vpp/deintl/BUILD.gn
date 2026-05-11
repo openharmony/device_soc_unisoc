@@ -1,0 +1,64 @@
+#
+# Copyright (C) 2023 Shenzhen Kaihong DID Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/hardware/omx_il/sprd_omx.gni")
+import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+ohos_shared_library("libstagefright_sprd_deintl") {
+  sources = [
+    "component/SPRDDeinterlace.cpp",
+    "core/vsp/vsp_deint_api.cpp",
+    "core/vsp/vsp_drv.cpp",
+  ]
+
+  include_dirs = openmax_include_dirs
+  include_dirs += [
+    "//device/soc/unisoc/p7885/hardware/omx_il/components/video/vpp/deintl/core/vsp",
+    "//device/soc/unisoc/p7885/hardware/omx_il/libmemion",
+    "//device/soc/unisoc/p7885/hardware/omx_il/libstagefrighthw/include",
+  ]
+
+  cflags = [
+    "-Wall",
+    "-Wextra",
+    "-Wno-unused-variable",
+    "-Wno-parentheses-equality",
+    "-std=c11",
+  ]
+
+  cflags_cc = [
+    "-Wall",
+    "-Wextra",
+    "-Wno-unused-variable",
+    "-Wno-parentheses-equality",
+    "-Wno-header-hygiene",
+    "-std=c++11"
+  ]
+
+  deps = [
+    "//device/soc/unisoc/p7885/hardware/omx_il/libstagefrighthw:libstagefrighthw",
+    "//device/soc/unisoc/p7885/hardware/omx_il/libutils:libomx_utils",
+  ]
+  external_deps = [ 
+    "hilog:libhilog",
+    "c_utils:utils",
+  ]
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+  install_enable = true
+}

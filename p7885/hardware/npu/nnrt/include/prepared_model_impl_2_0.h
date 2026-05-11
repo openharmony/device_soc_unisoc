@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef PREPARED_MODEL_IMPL_2_0_H
+#define PREPARED_MODEL_IMPL_2_0_H
+
+#include <vector>
+#include <memory>
+#include <ashmem.h>
+#include "v2_0/iprepared_model.h"
+#include "v2_0/nnrt_types.h"
+#include "IUniAI.h"
+
+namespace OHOS {
+namespace HDI {
+namespace Nnrt {
+namespace V2_0 {
+
+class PreparedModelImpl final : public IPreparedModel {
+public:
+    PreparedModelImpl(unisoc::IUniAIPtr uniAI, unisoc::NetworkId networkId, sptr<Ashmem> modelAshmem);
+    ~PreparedModelImpl();
+
+    int32_t ExportModelCache(std::vector<SharedBuffer> &modelCache) override;
+    int32_t GetInputDimRanges(std::vector<std::vector<uint32_t>> &minInputDims,
+        std::vector<std::vector<uint32_t>> &maxInputDims) override;
+    int32_t Run(const std::vector<IOTensor> &inputs, const std::vector<IOTensor> &outputs,
+        std::vector<std::vector<int32_t>> &outputDims) override;
+
+private:
+    unisoc::IUniAIPtr uniAI_;
+    unisoc::NetworkId networkId_;
+    sptr<Ashmem> modelAshmem_;
+};
+
+namespace internal {
+int32_t ToNnrtResult(unisoc::Status status);
+size_t ElementSizeOfUniAI(unisoc::DataType type);
+int32_t WriteUniAIOutputToAshmem(const IOTensor& outDesc,
+    const unisoc::UniAITensor& outTensor, const sptr<Ashmem>& ash);
+int32_t AppendUniAITensorFromIoTensor(const IOTensor& ioTensor, bool writable, std::vector<sptr<Ashmem>>& ashmems,
+    std::vector<unisoc::UniAITensor>& out);
+} // namespace internal
+
+} // namespace V2_0
+} // namespace Nnrt
+} // namespace HDI
+} // namespace OHOS
+
+#endif // PREPARED_MODEL_IMPL_2_0_H

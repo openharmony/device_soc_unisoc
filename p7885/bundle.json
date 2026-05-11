@@ -1,0 +1,95 @@
+{
+  "name": "@ohos/p7885",
+  "description": "device unisoc for p7885 component",
+  "version": "3.1",
+  "license": "Apache 2.0",
+  "publishAs": "code-segment",
+  "segment": {
+    "destPath": "device/soc/unisoc/p7885"
+  },
+  "dirs": {},
+  "scripts": {},
+  "component": {
+    "name": "soc_p7885",
+    "subsystem": "soc_p7885",
+    "syscap": [],
+    "features": [],
+    "adapted_system_type": [
+      "standard"
+    ],
+    "rom": "",
+    "ram": "",
+    "hisysevent_config": [],
+    "deps": {
+      "components": [
+        "hilog",
+        "graphic_2d",
+        "c_utils",
+        "hitrace",
+        "drivers_interface_location_gnss",
+        "drivers_interface_nnrt",
+        "drivers_interface_audio",
+        "hdf_core",
+        "ipc",
+        "ability_base",
+        "ability_runtime",
+        "bundle_framework",
+        "p7885_event_service",
+        "drivers_interface_light",
+        "eventhandler",
+        "hicollie",
+        "hisysevent",
+        "image_framework",
+        "power_manager",
+        "safwk",
+        "samgr",
+        "window_manager",
+        "graphic_chipsetsdk",
+        "graphic_surface",
+        "memory_utils",
+        "libdmabufheap",
+        "drivers_interface_display",
+        "init",
+        "ril_adapter"
+      ],
+      "third_party": [
+        "libdrm",
+        "libxml2"
+      ]
+    },
+    "build": {
+      "sub_component": [
+        "//device/soc/unisoc/p7885/hardware/display:display_composer_model",
+        "//device/soc/unisoc/p7885/hardware/display:display_buffer_model",
+        "//device/soc/unisoc/p7885/hardware/gpu:gpu_vendor",
+        "//device/soc/unisoc/p7885/hardware/modem/telephony:radio",
+        "//device/soc/unisoc/p7885/hardware/npu:npu_vendor",
+        "//device/soc/unisoc/p7885/hardware/bluetooth:bluetooth_group",
+        "//device/soc/unisoc/p7885/hardware/wcn:wcn_group",
+        "//device/soc/unisoc/p7885/hardware/audio:audio_unsioc",
+        "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/camera_hal:cameraHalSo",
+        "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/etc:sensor_etc",
+        "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/isp_lib:isp3A",
+        "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/tuning/gc08a3:tuning_gc08a3",
+        "//device/soc/unisoc/p7885/hardware/omx_il:lib_omx",
+        "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/tuning/gc05a2_f:tuning_gc05a2_f",
+        "//device/soc/unisoc/p7885/modules:modules",
+        "//device/soc/unisoc/p7885/pac:pac",
+        "//device/soc/unisoc/p7885/hardware/location:location_group",
+        "//device/soc/unisoc/p7885/unisoc_wrapper:unisoc_wrapper"
+      ],
+      "inner_api": [
+        {
+          "name": "//device/soc/unisoc/p7885/hardware/omx_il/components/video/avc/enc/hw:libomx_avcenc_hw_sprd",
+          "header": {
+            "header_base": [],
+            "header_files": []
+          }
+        }
+      ],
+      "test": [
+        "//device/soc/unisoc/p7885/hardware/npu/nnrt/test:unittest"
+      ]
+    }
+  }
+}

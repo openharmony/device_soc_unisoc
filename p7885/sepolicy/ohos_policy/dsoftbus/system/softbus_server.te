@@ -1,0 +1,38 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { getattr } for  pid=1021 comm="OS_FFRT_2_1" path="/data/service/el1/public/dsoftbus/dsoftbus.db3" dev="sda62" ino=1095 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+# avc:  denied  { lock } for  pid=1111 comm="OS_FFRT_2_4" path="/data/service/el1/public/dsoftbus/dsoftbus.db3" dev="sda62" ino=1182 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+# avc:  denied  { unlink } for  pid=1111 comm="OS_FFRT_2_4" name="dbKey" dev="sda62" ino=1183 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+allow softbus_server data_service_el1_file:file { ioctl getattr lock unlink };
+
+# avc:  denied  { ioctl } for  pid=884 comm="SaInit6" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:softbus_server:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allow softbus_server dev_at_file:chr_file { ioctl };
+allowxperm softbus_server dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { ioctl } for  pid=887 comm="OS_FFRT_2_4" path="/data/service/el1/public/dsoftbus" dev="sda62" ino=200 ioctlcmd=0xf546 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { read } for  pid=851 comm="TaskExecutor_KV" name="backup" dev="sda62" ino=995 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { open } for  pid=834 comm="OS_IPC_1_910" path="/data/service/el1/public/database/dsoftbus/kvdb/4cee433d3b0a6fca315f8eff4d59b13eaa177772d85bde578b7bf9fe1ea3a4dc" dev="sda62" ino=965 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { setattr } for  pid=834 comm="OS_IPC_1_910" name="dsoftbus_kv_db" dev="sda62" ino=996 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+# avc:  denied  { remove_name } for  pid=1021 comm="OS_FFRT_2_1" name="dbKey" dev="sda62" ino=1098 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+allow softbus_server data_service_el1_file:dir { ioctl read open setattr remove_name };
+
+# avc:  denied  { ioctl } for  pid=887 comm="OS_FFRT_2_4" path="/data/service/el1/public/dsoftbus" dev="sda62" ino=200 ioctlcmd=0xf546 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+allowxperm softbus_server data_service_el1_file:dir ioctl { 0xf546 };
+
+# avc:  denied  { ioctl } for  pid=890 comm="OS_FFRT_2_2" path="/data/service/el1/public/dsoftbus/dsoftbus.db3" dev="sda62" ino=1182 ioctlcmd=0xf501 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+# avc:  denied  { ioctl } for  pid=820 comm="OS_FFRT_2_1" path="/data/service/el1/public/dsoftbus/dsoftbus.db3" dev="sda62" ino=1182 ioctlcmd=0xf502 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+# avc:  denied  { ioctl } for  pid=820 comm="OS_FFRT_2_1" path="/data/service/el1/public/dsoftbus/dsoftbus.db3" dev="sda62" ino=1182 ioctlcmd=0xf505 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+# avc:  denied  { ioctl } for  pid=1111 comm="OS_FFRT_2_4" path="/data/service/el1/public/dsoftbus/dsoftbus.db3" dev="sda62" ino=1182 ioctlcmd=0xf546 scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+# avc:  denied  { ioctl } for  pid=1111 comm="OS_FFRT_2_4" path="/data/service/el1/public/dsoftbus/dsoftbus.db3" dev="sda62" ino=1182 ioctlcmd=0xf50c scontext=u:r:softbus_server:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+allowxperm softbus_server data_service_el1_file:file ioctl { 0xf501 0xf502 0xf505 0xf546 0xf50c };
