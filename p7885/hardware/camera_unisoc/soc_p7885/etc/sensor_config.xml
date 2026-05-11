@@ -1,0 +1,77 @@
+  <root>
+<!--
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+-->
+  <!-->
+  sensor id 0
+  <-->
+   <CameraModuleCfg>
+        <SlotId>0</SlotId>
+        <SensorName>gc08a3_n100</SensorName>
+        <Facing>BACK</Facing>
+        <Orientation>90</Orientation>
+        <Resource_cost>100</Resource_cost>
+        <TuningParameter>
+            <TuningName>gc08a3</TuningName>
+        </TuningParameter>
+        <VCM>
+            <AfName>dw9714</AfName>
+            <Mode>0</Mode>
+        </VCM>
+    </CameraModuleCfg>
+   <CameraModuleCfg>
+        <SlotId>0</SlotId>
+        <SensorName>gc08a3_22_n100</SensorName>
+        <Facing>BACK</Facing>
+        <Orientation>90</Orientation>
+        <Resource_cost>100</Resource_cost>
+        <TuningParameter>
+            <TuningName>gc08a3</TuningName>
+        </TuningParameter>
+        <VCM>
+            <AfName>dw9714</AfName>
+            <Mode>0</Mode>
+        </VCM>
+    </CameraModuleCfg>
+
+ 
+  <!-->
+  sensor id 1
+  <-->    
+       <CameraModuleCfg>
+        <SlotId>1</SlotId>
+        <SensorName>gc05a2_f_n100</SensorName>
+        <Facing>FRONT</Facing>
+        <Orientation>270</Orientation>
+        <Resource_cost>100</Resource_cost>
+        <TuningParameter>
+            <TuningName>gc05a2_f</TuningName>
+        </TuningParameter>
+      </CameraModuleCfg>
+  <!-->
+  sensor id 2
+  <-->  
+    <CameraModuleCfg>
+        <SlotId>2</SlotId>
+        <SensorName>gc02m1_n100</SensorName>
+        <Facing>BACK</Facing>
+        <Orientation>90</Orientation>
+        <Resource_cost>100</Resource_cost>
+        <SensorRole>single_macro</SensorRole>
+        <TuningParameter>
+        <TuningName>gc02m1</TuningName>
+        </TuningParameter>
+    </CameraModuleCfg>
+  </root>

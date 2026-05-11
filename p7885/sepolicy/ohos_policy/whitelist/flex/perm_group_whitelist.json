@@ -1,0 +1,12 @@
+{
+    "whitelist": [
+        {
+            "name": "execute and execute_no_trans",
+            "user": [
+                "chipset_init vendor_bin_file"
+            ],
+            "developer": [
+            ]
+        }
+    ]
+}

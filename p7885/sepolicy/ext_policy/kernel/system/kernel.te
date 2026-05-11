@@ -1,0 +1,21 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { sys_nice } for  pid=351 comm="sdiohal_tx_thre" capability=23  scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=capability permissive=0
+# avc:  denied  { sys_nice } for  pid=352 comm="sdiohal_rx_thre" capability=23  scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=capability permissive=0
+# avc:  denied  { sys_nice } for  pid=357 comm="audio_sblock-1-" capability=23  scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=capability permissive=0
+#allow kernel kernel:capability { sys_nice };
+
+# avc:  denied  { read } for  pid=81 comm="kworker/7:2" name="gnssmodem.bin" dev="sda47" ino=237 scontext=u:r:kernel:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=206 comm="kworker/7:20" path="/vendor/firmware/gnssmodem.bin" dev="sda47" ino=237 scontext=u:r:kernel:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=0
+allow kernel vendor_file:file { read open };

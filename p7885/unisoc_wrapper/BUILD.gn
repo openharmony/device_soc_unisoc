@@ -1,0 +1,44 @@
+# Copyright 2023 Shenzhen Kaihong DID Co., Ltd..
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#       http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/unisoc_wrapper/unisoc_wrapper.gni")
+
+group("unisoc_wrapper"){
+    deps = [
+        "system/core/libcutils:aosp_cutils",
+        "system/core/libutils:aosp_utils",
+        "system/core/libsync:sync_adapter",
+        "system/libhwbinder:hwbinder",
+        "wrapper:utils_wrapper",
+        "system/libbase:aosp_base",
+        "system/libhidl:hidlbase",
+        "hardware/interfaces/graphics/common:common-impl",
+        "hardware/interfaces/graphics/mapper:mapper-impl",
+        "hardware/interfaces/graphics/allocator:allocator-impl",
+        "hardware/libhardware:hardware",
+        "hardware/interfaces/graphics/common/aidl/android/hardware/graphics/common:common-V3-ndk",
+        "frameworks/native/libs/gralloc/types:gralloctypes",
+        "system/core/libgrallocusage:grallocusage",
+        "frameworks/native/libs/nativewindow:nativewindow",
+        "frameworks/native/libs/ui:ui",
+        "hardware/libhardware/modules/gralloc:gralloc.default",
+        "system/memory/libion:libion",
+        "system/memory/libdmabufheap:libaosp_dmabufheap",
+        "system/memory/libmemion:libmemion",
+        "system/memory/libvideosharememory:libvideo_share_memory",
+    ]
+}
+
+
+

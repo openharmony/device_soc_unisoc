@@ -1,0 +1,54 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+typeattribute distributedsche devinfo_type_allow_attr;
+
+# avc:  denied  { ioctl } for  pid=1550 comm="OS_IPC_1_1554" path="/data/service/el1/public/database/distributed_device_profile_service" dev="sda62" ino=608 ioctlcmd=0xf546 scontext=u:r:distributedsche:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=1
+allow distributedsche data_service_el1_file:dir { ioctl setattr };
+
+# avc:  denied  { ioctl } for  pid=1550 comm="OS_IPC_1_1554" path="/dev/access_token_id" dev="tmpfs" ino=358 ioctlcmd=0x5413 scontext=u:r:distributedsche:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { setattr } for  pid=1757 comm="OS_IPC_1_1778" name="main" dev="sda62" ino=1519 scontext=u:r:distributedsche:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=0
+allow distributedsche dev_at_file:chr_file { ioctl };
+
+# avc:  denied  { map } for  pid=1528 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:distributedsche:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=1528 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:distributedsche:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=1
+# avc:  denied  { read } for  pid=1528 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:distributedsche:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=1
+allow distributedsche hiviewdfx_hiview_param:file { map open read };
+
+# avc:  denied  { ioctl } for  pid=1550 comm="OS_IPC_1_1554" path="/data/service/el1/public/database/distributed_device_profile_service" dev="sda62" ino=608 ioctlcmd=0xf546 scontext=u:r:distributedsche:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=1
+allowxperm distributedsche data_service_el1_file:dir ioctl { 0xf546 };
+
+# avc:  denied  { ioctl } for  pid=1550 comm="OS_IPC_1_1554" path="/dev/access_token_id" dev="tmpfs" ino=358 ioctlcmd=0x5413 scontext=u:r:distributedsche:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+allowxperm distributedsche dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { append } for  pid=1693 comm="TaskExecutorRDB" name="dp_rdb.db-compare" dev="sda62" ino=822 scontext=u:r:distributedsche:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+# avc:  denied  { append } for  pid=1693 comm="TaskExecutorRDB" name="profile_data.db-compare" dev="sda62" ino=834 scontext=u:r:distributedsche:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
+allow distributedsche data_service_el1_file:file { append };
+
+# avc:  denied  { transfer } for  pid=2347 comm="SaInit7" scontext=u:r:distributedsche:s0 tcontext=u:r:wifi_manager_service:s0 tclass=binder permissive=0
+allow distributedsche wifi_manager_service:binder { transfer };
+
+# avc:  denied  { read } for  pid=2737 comm="distributedsche" name="u:object_r:devinfo_type_param:s0" dev="tmpfs" ino=137 scontext=u:r:distributedsche:s0 tcontext=u:object_r:devinfo_type_param:s0 tclass=file permissive=0
+allow distributedsche devinfo_type_param:file { read };
+
+# avc:  denied  { search } for  pid=2737 comm="distributedsche" name="usr" dev="sda46" ino=5061 scontext=u:r:distributedsche:s0 tcontext=u:object_r:system_usr_file:s0 tclass=dir permissive=0
+allow distributedsche system_usr_file:dir { search };
+
+# avc:  denied  { getattr } for  pid=2762 comm="distributedsche" path="/system/usr/ohos_locale_config/dialect_languages.xml" dev="sda46" ino=5126 scontext=u:r:distributedsche:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { map } for  pid=2363 comm="distributedsche" path="/system/usr/ohos_icu/icudt72l.dat" dev="sda46" ino=5120 scontext=u:r:distributedsche:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=2415 comm="distributedsche" path="/system/usr/ohos_icu/icudt72l.dat" dev="sda46" ino=5120 scontext=u:r:distributedsche:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+# avc:  denied  { read } for  pid=2762 comm="distributedsche" name="supported_regions.xml" dev="sda46" ino=5133 scontext=u:r:distributedsche:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=0
+allow distributedsche system_usr_file:file { getattr map open read };
+
+# avc:  denied  { search } for  pid=1718 comm="deviceprofile" name="etc" dev="sda47" ino=24 scontext=u:r:distributedsche:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=dir permissive=0
+#allow distributedsche vendor_etc_file:dir { search };

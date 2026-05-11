@@ -1,0 +1,530 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+MODULES_KO_PATH="//device/soc/unisoc/p7885/modules"
+
+action("decrypt_modules") {
+  inputs = [
+    "//device/soc/unisoc/p7885/modules/modules.tar.gz.gpg",
+  ]
+  outputs = [
+    "$target_out_dir/modules/mali_kbase.ko",
+    "$target_out_dir/modules/unisoc_wcn_bsp.ko",
+    "$target_out_dir/modules/sprd_wlan_combo.ko",
+    "$target_out_dir/modules/sprdbt_tty.ko",
+    "$target_out_dir/modules/unisoc_gnss_common_ctl_all.ko",
+    "$target_out_dir/modules/unisoc_gnss_dbg.ko",
+    "$target_out_dir/modules/unisoc_gnss_pmnotify_ctl.ko",
+    "$target_out_dir/modules/npu_img_vha.ko",
+  ]
+  script = "//device/soc/unisoc/p7885/pac/encrypt.sh"
+  args = [
+    rebase_path("//device/soc/unisoc/p7885/modules/modules.tar.gz.gpg", root_build_dir),
+    rebase_path("$target_out_dir/modules", root_build_dir),
+  ]
+}
+
+group("modules") {
+  deps = [
+    ":decrypt_modules",
+    ### gpu
+    ":mali_kbase",
+    ### wcn
+    ":unisoc_wcn_bsp",
+    ":sprd_wlan_combo",
+    ":sprdbt_tty",
+    ### gnss
+    ":unisoc_gnss_common_ctl_all",
+    ":unisoc_gnss_dbg",
+    ":unisoc_gnss_pmnotify_ctl",
+    ### tp
+    ":gslx680",
+    ### vpu
+    ":vpu",
+    ### npu
+    ":npu_img_vha",
+    ### audio
+    ":agdsp_pd",
+    ":audio_mem",
+    ":audio_sipc",
+    ":audio-dsp-dump",
+    ":sprd_audio_usb_offload",
+    ":sprd_apipe",
+    ":audio-pipe",
+    ":mcdt_hw_r2p0",
+    ":sprd_audcp_dvfs",
+    ":sprd_audcp_boot",
+    ":voice_trigger_irq",
+    ":snd-soc-sprd-card",
+    ":snd-soc-sprd-codec-ump9620-power",
+    ":snd-soc-sprd-codec-ump9620-power-dev",
+    ":snd-soc-sprd-codec-ump9620",
+    ":snd-soc-unisoc-dp-codec",
+    ":snd-soc-sprd-dummy-codec",
+    ":snd-soc-sprd-pa-ucp1301",
+    ":smp_aw87xxx",
+    ":snd-soc-sprd-pdm-r2p0",
+    ":snd-soc-sprd-tdm",
+    ":sprd-platform-pcm-routing",
+    ":snd-soc-sprd-vbc-v4",
+    ":snd-soc-sprd-vbc-fe",
+    ":snd-soc-sprd-dai",
+    ":sprd-dmaengine-pcm",
+    ":sprd-compr-2stage-dma",
+    ":aw87xxx_acf",
+    ### ws73
+    ":plat_soc",
+    ":sle_soc",
+    ":ws73_cfg",
+    ":ws73",
+    ":btc_cali",
+    ":wifi_cali",
+    ":wow",
+    ":sle_client_sample",
+    ":sle_server_sample",
+  ]
+}
+###### gpu
+ohos_prebuilt_executable("mali_kbase") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/mali_kbase.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+###### wcn
+ohos_prebuilt_executable("unisoc_wcn_bsp") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/unisoc_wcn_bsp.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd_wlan_combo") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/sprd_wlan_combo.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprdbt_tty") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/sprdbt_tty.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+###### sprd_gnss
+ohos_prebuilt_executable("unisoc_gnss_common_ctl_all") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/unisoc_gnss_common_ctl_all.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("unisoc_gnss_dbg") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/unisoc_gnss_dbg.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("unisoc_gnss_pmnotify_ctl") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/unisoc_gnss_pmnotify_ctl.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+###### touchscreen
+ohos_prebuilt_executable("gslx680") {
+  source = "${MODULES_KO_PATH}/input/touchscreen/gslx680.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+###### vpu
+ohos_prebuilt_executable("vpu") {
+  source = "${MODULES_KO_PATH}/vpu/vpu.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+###### npu
+ohos_prebuilt_executable("npu_img_vha") {
+  deps = [ ":decrypt_modules" ]
+  source = "$target_out_dir/modules/npu_img_vha.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+###### audio
+ohos_prebuilt_executable("agdsp_pd") {
+  source = "${MODULES_KO_PATH}/audio/agdsp_pd.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("audio_mem") {
+  source = "${MODULES_KO_PATH}/audio/audio_mem.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("audio_sipc") {
+  source = "${MODULES_KO_PATH}/audio/audio_sipc.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("audio-dsp-dump") {
+  source = "${MODULES_KO_PATH}/audio/audio-dsp-dump.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd_audio_usb_offload") {
+  source = "${MODULES_KO_PATH}/audio/sprd_audio_usb_offload.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd_apipe") {
+  source = "${MODULES_KO_PATH}/audio/sprd_apipe.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("audio-pipe") {
+  source = "${MODULES_KO_PATH}/audio/audio-pipe.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("mcdt_hw_r2p0") {
+  source = "${MODULES_KO_PATH}/audio/mcdt_hw_r2p0.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd_audcp_dvfs") {
+  source = "${MODULES_KO_PATH}/audio/sprd_audcp_dvfs.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd_audcp_boot") {
+  source = "${MODULES_KO_PATH}/audio/sprd_audcp_boot.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("voice_trigger_irq") {
+  source = "${MODULES_KO_PATH}/audio/voice_trigger_irq.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-card") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-card.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-codec-ump9620-power") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-codec-ump9620-power.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-codec-ump9620-power-dev") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-codec-ump9620-power-dev.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-codec-ump9620") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-codec-ump9620.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-unisoc-dp-codec") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-unisoc-dp-codec.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-dummy-codec") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-dummy-codec.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-pa-ucp1301") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-pa-ucp1301.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("smp_aw87xxx") {
+  source = "${MODULES_KO_PATH}/audio/smp_aw87xxx.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-pdm-r2p0") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-pdm-r2p0.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-tdm") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-tdm.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd-platform-pcm-routing") {
+  source = "${MODULES_KO_PATH}/audio/sprd-platform-pcm-routing.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-vbc-v4") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-vbc-v4.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-vbc-fe") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-vbc-fe.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("snd-soc-sprd-dai") {
+  source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-dai.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd-dmaengine-pcm") {
+  source = "${MODULES_KO_PATH}/audio/sprd-dmaengine-pcm.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sprd-compr-2stage-dma") {
+  source = "${MODULES_KO_PATH}/audio/sprd-compr-2stage-dma.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("aw87xxx_acf") {
+  source = "${MODULES_KO_PATH}/audio/aw87xxx_acf.bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+###### ws73
+ohos_prebuilt_executable("plat_soc") {
+  source = "${MODULES_KO_PATH}/ws73/plat_soc.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sle_soc") {
+  source = "${MODULES_KO_PATH}/ws73/sle_soc.ko"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "modules"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("ws73_cfg") {
+  source = "${MODULES_KO_PATH}/ws73/ws73_cfg.ini"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc/firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("ws73") {
+  source = "${MODULES_KO_PATH}/ws73/ws73.bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc/firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("btc_cali") {
+  source = "${MODULES_KO_PATH}/ws73/btc_cali.bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc/firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("wifi_cali") {
+  source = "${MODULES_KO_PATH}/ws73/wifi_cali.bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc/firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("wow") {
+  source = "${MODULES_KO_PATH}/ws73/wow.bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc/firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sle_client_sample") {
+  source = "${MODULES_KO_PATH}/ws73/sle_client_sample"
+  install_enable = true
+  install_images = [ "system" ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("sle_server_sample") {
+  source = "${MODULES_KO_PATH}/ws73/sle_server_sample"
+  install_enable = true
+  install_images = [ "system" ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+

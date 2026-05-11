@@ -1,0 +1,114 @@
+# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+ 
+
+import("//build/ohos.gni")
+import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
+import("//device/soc/unisoc/p7885/soc_common.gni")
+
+WCN_PATH="//device/soc/unisoc/p7885/hardware/wcn"
+
+action("decrypt_wcn") {
+  inputs = [
+    "//device/soc/unisoc/p7885/hardware/wcn/bin/wcn.tar.gz.gpg",
+  ]
+  outputs = [
+    "$target_out_dir/bin/wcnmodem.bin",
+  ]
+  script = "//device/soc/unisoc/p7885/pac/encrypt.sh"
+  args = [
+    rebase_path("//device/soc/unisoc/p7885/hardware/wcn/bin/wcn.tar.gz.gpg", root_build_dir),
+    rebase_path("$target_out_dir/bin", root_build_dir),
+  ]
+}
+
+group("wcn_group") {
+  deps = [
+    ":decrypt_wcn",
+    ":wcnmodem",
+    ":wifi_board_config",
+    ":bt_configure_pskey",
+    ":bt_configure_rf",
+    ":bt_configure_pskey_aa",
+    ":bt_configure_rf_aa",
+    ":regulatory.db",
+    ":regulatory.db.p7s",
+  ]
+}
+
+ohos_prebuilt_executable("wcnmodem") {
+  deps = [ ":decrypt_wcn" ]
+  source = "$target_out_dir/bin/wcnmodem.bin"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_executable("wifi_board_config") {
+  source = "$WCN_PATH/wifi_board_config.ini"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "firmware"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("bt_configure_pskey_aa") {
+  source = "$WCN_PATH/bt_configure_pskey_aa.ini"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("bt_configure_rf_aa") { 
+  source = "$WCN_PATH/bt_configure_rf_aa.ini"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("bt_configure_pskey") {
+  source = "$WCN_PATH/bt_configure_pskey.ini"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("bt_configure_rf") {
+  source = "$WCN_PATH/bt_configure_rf.ini"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("regulatory.db") {
+  source = "$WCN_PATH/regulatory.db"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("regulatory.db.p7s") {
+  source = "$WCN_PATH/regulatory.db.p7s"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}

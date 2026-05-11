@@ -1,0 +1,22 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc:  denied  { ioctl } for  pid=3121 comm="rmissionmanager" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:permissionmanager_hap:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allow permissionmanager_hap dev_at_file:chr_file { ioctl };
+
+# avc:  denied  { open } for  pid=3317 comm="RSRenderThread" path="/vendor/lib64/hw" dev="sda47" ino=249 scontext=u:r:permissionmanager_hap:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
+# avc:  denied  { read } for  pid=3206 comm="RSRenderThread" name="hw" dev="sda47" ino=249 scontext=u:r:permissionmanager_hap:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
+allow permissionmanager_hap vendor_lib_file:dir { open read };
+
+# avc:  denied  { ioctl } for  pid=3121 comm="rmissionmanager" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:permissionmanager_hap:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
+allowxperm permissionmanager_hap dev_at_file:chr_file ioctl { 0x5413 };

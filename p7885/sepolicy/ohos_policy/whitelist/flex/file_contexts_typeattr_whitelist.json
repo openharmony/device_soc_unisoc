@@ -1,0 +1,13 @@
+{
+    "whitelist": [
+        {
+            "path": "/vendor/etc",
+            "permissive_list": {
+                "user": [
+                    "/vendor/etc/cgroup_sched(/.*)?"
+                ],
+                "developer": []
+            }
+        }
+    ]
+}

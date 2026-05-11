@@ -1,0 +1,73 @@
+#
+# Copyright 2016-2026 Unisoc (Shanghai) Technologies Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+ro.vendor.chm.start.sim.num=2
+ro.vendor.chm.modem.path=/dev/stty_nr
+ro.vendor.modem.eth=seth_lte
+persist.vendor.chm.log.level.config=4
+ro.vendor.chm.radio.modem.workmode1=131
+ro.vendor.chm.radio.modem.workmode2=131
+ro.vendor.chm.sys.netInterface.enable=0
+ro.vendor.chm.kernel.5.15.prop=1
+ro.vendor.chm.set.iptype.flag=1
+ro.vendor.chm.modem.sim.num.ctrl=2
+ro.vendor.chm.chmpty.max.num=22
+ro.vendor.chm.ofono.channel=0,1,2,3,4,5
+ro.vendor.chm.mbim.channel=6,7,8,9
+ro.vendor.chm.atrouter.channel=10,11,12,13
+ro.vendor.chm.chat.channel=14,15
+ro.vendor.chm.s-app1.channel=16,17
+ro.vendor.chm.app1.channel=18,19,20,21
+ro.vendor.chm.chmpty0.type=IND_SIM1
+ro.vendor.chm.chmpty1.type=AT_SIM1
+ro.vendor.chm.chmpty2.type=AT_SIM1
+ro.vendor.chm.chmpty3.type=IND_SIM2
+ro.vendor.chm.chmpty4.type=AT_SIM2
+ro.vendor.chm.chmpty5.type=AT_SIM2
+ro.vendor.chm.chmpty6.type=IND_SIM1
+ro.vendor.chm.chmpty7.type=AT_SIM1
+ro.vendor.chm.chmpty8.type=IND_SIM2
+ro.vendor.chm.chmpty9.type=AT_SIM2
+ro.vendor.chm.chmpty10.type=IND_SIM1
+ro.vendor.chm.chmpty11.type=AT_SIM1
+ro.vendor.chm.chmpty12.type=IND_SIM2
+ro.vendor.chm.chmpty13.type=AT_SIM2
+ro.vendor.chm.chmpty14.type=AT_SIM1
+ro.vendor.chm.chmpty15.type=AT_SIM2
+ro.vendor.chm.chmpty16.type=AT_SIM1
+ro.vendor.chm.chmpty17.type=AT_SIM2
+ro.vendor.chm.chmpty18.type=IND_SIM1
+ro.vendor.chm.chmpty19.type=AT_SIM1
+ro.vendor.chm.chmpty20.type=IND_SIM2
+ro.vendor.chm.chmpty21.type=AT_SIM2
+#single sim card config
+#ro.vendor.chm.chmpty.max.num=11
+#ro.vendor.chm.ofono.channel=0,1,2
+#ro.vendor.chm.mbim.channel=3,4
+#ro.vendor.chm.atrouter.channel=5,6
+#ro.vendor.chm.chat.channel=7
+#ro.vendor.chm.s-app1.channel=8
+#ro.vendor.chm.app1.channel=9,10
+#ro.vendor.chm.chmpty0.type=IND
+#ro.vendor.chm.chmpty1.type=AT
+#ro.vendor.chm.chmpty2.type=AT
+#ro.vendor.chm.chmpty3.type=IND
+#ro.vendor.chm.chmpty4.type=AT
+#ro.vendor.chm.chmpty5.type=IND
+#ro.vendor.chm.chmpty6.type=AT
+#ro.vendor.chm.chmpty7.type=AT
+#ro.vendor.chm.chmpty8.type=AT
+#ro.vendor.chm.chmpty9.type=IND
+#ro.vendor.chm.chmpty10.type=AT
