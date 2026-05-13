@@ -31,7 +31,7 @@ allow riladapter_host persist_param:parameter_service { set };
 
 # by chris: Identifying the SIM card is necessary.
 # avc:  denied  { dac_override } for  pid=792 comm="riladapter_host" capability=1  scontext=u:r:riladapter_host:s0 tcontext=u:r:riladapter_host:s0 tclass=capability permissive=0
-allow riladapter_host riladapter_host:capability { dac_override };
+#allow riladapter_host riladapter_host:capability { dac_override };
 
 # avc:  denied  { set } for parameter=ril.sys.usb.tether.iface pid=799 uid=3032 gid=3032 scontext=u:r:riladapter_host:s0 tcontext=u:object_r:default_param:s0 tclass=parameter_service permissive=1
 allow riladapter_host sys_usb_param:parameter_service { set };
@@ -40,18 +40,18 @@ allow riladapter_host sys_usb_param:parameter_service { set };
 allow riladapter_host dev_block_volfile:dir { search };
 
 # add data 0326 : SIM card recognition 
-typeattribute riladapter_host dev_attr_violator;
+#typeattribute riladapter_host dev_attr_violator;
 # avc:  denied  { open } for  pid=820 comm="riladapter_host" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:riladapter_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
 # avc:  denied  { read write } for  pid=820 comm="riladapter_host" name="sda6" dev="tmpfs" ino=300 scontext=u:r:riladapter_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
-allow riladapter_host dev_block_file:blk_file { open read write };
-#allow riladapter_host sml_block_file:blk_file { open read write };
+#allow riladapter_host dev_block_file:blk_file { open read write };
+allow riladapter_host sml_block_file:blk_file { open read write };
 
 # avc:  denied  { search } for  pid=820 comm="riladapter_host" name="by-name" dev="tmpfs" ino=14 scontext=u:r:riladapter_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
 allow riladapter_host dev_block_file:dir { search };
 
 # avc:  denied  { read } for  pid=820 comm="riladapter_host" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:riladapter_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
-allow riladapter_host dev_block_file:lnk_file { read };
-#allow riladapter_host sml_block_file:lnk_file { read };
+#allow riladapter_host dev_block_file:lnk_file { read };
+allow riladapter_host sml_block_file:lnk_file { read };
 
 # add by xqb
 allow riladapter_host proc_cmdline_file:file { read open map };

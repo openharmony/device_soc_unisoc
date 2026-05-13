@@ -154,7 +154,9 @@ allow camera_host data_ashmem_file:file { read write map };
 
 # avc:  denied  { read } for  pid=787 comm="jpeg_async" name="sda6" dev="tmpfs" ino=300 scontext=u:r:camera_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
 # avc:  denied  { open } for  pid=787 comm="jpeg_async" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:camera_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
-allow camera_host dev_block_file:blk_file { read open };
+#allow camera_host dev_block_file:blk_file { read open };
+allow camera_host sml_block_file:blk_file { read open };
 
 # avc:  denied  { read } for  pid=826 comm="RSUniRenderThre" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:camera_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
-allow camera_host dev_block_file:lnk_file { read };
+#allow camera_host dev_block_file:lnk_file { read };
+allow camera_host sml_block_file:lnk_file { read };

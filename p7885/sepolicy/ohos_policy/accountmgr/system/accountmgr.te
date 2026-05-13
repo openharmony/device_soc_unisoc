@@ -20,3 +20,7 @@ allowxperm accountmgr data_service_el1_file:dir ioctl { 0xf546 };
 
 # avc:  denied  { ioctl } for  pid=848 comm="OS_IPC_1_963" path="/data/service/el1/public/database/os_account_mgr_service/kvdb/***/single_ver/main/gen_natural_store.db" dev="sda62" ino=470 ioctlcmd=0xf546 scontext=u:r:accountmgr:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=file permissive=0
 allowxperm accountmgr data_service_el1_file:file ioctl { 0xf546 };
+
+# avc:  denied  { open } for  pid=915 comm="commonEvent" path="/sys/devices/system/cpu" dev="sysfs" ino=8385 scontext=u:r:accountmgr:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=dir permissive=1
+# avc:  denied  { read } for  pid=915 comm="commonEvent" name="cpu" dev="sysfs" ino=8385 scontext=u:r:accountmgr:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=dir permissive=1
+allow accountmgr sysfs_devices_system_cpu:dir { open read };
