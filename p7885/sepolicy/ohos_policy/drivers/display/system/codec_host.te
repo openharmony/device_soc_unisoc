@@ -22,10 +22,6 @@ allow codec_host dev_block_volfile:dir { search };
 # avc::  denied  { search } for  pid=788 comm="OS_IPC_1_841" name="by-name" dev="tmpfs" ino=14 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
 allow codec_host dev_block_file:dir { search };
 
-# avc::  denied  { read } for  pid=788 comm="OS_IPC_1_841" name="sml_a" dev="tmpfs" ino=300 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
-allow codec_host dev_block_file:lnk_file { read };
-#allow codec_host sml_block_file:lnk_file { read };
-
 # avc::  denied  { search } for  pid=788 comm="OS_IPC_1_841" name="dma_heap" dev="tmpfs" ino=346 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=dir permissive=1
 allow codec_host dev_dma_heap_file:dir { search };
 
@@ -77,8 +73,11 @@ allow codec_host data_ashmem_file:file { read write map };
 allow codec_host dev_vpu_file:chr_file { open read write map ioctl };
 allowxperm codec_host dev_vpu_file:chr_file ioctl { 0x6d05 0x6d0a };
 
-typeattribute codec_host dev_attr_violator;
 # avc::  denied  { read write } for  pid=788 comm="OS_IPC_1_841" name="sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
 # avc::  denied  { open } for  pid=788 comm="OS_IPC_1_841" path="/dev/block/sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
-allow codec_host dev_block_file:blk_file { open read write };
-#allow codec_host sml_block_file:blk_file { open read write };
+#allow codec_host dev_block_file:blk_file { open read write };
+allow codec_host sml_block_file:blk_file { open read write };
+
+# avc::  denied  { read } for  pid=788 comm="OS_IPC_1_841" name="sml_a" dev="tmpfs" ino=300 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
+#allow codec_host dev_block_file:lnk_file { read };
+allow codec_host sml_block_file:lnk_file { read };

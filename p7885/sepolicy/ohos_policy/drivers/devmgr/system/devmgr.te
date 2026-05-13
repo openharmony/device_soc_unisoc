@@ -15,7 +15,7 @@
 allow hdf_devmgr hiviewdfx_hiview_param:file { open read map };
 
 # avc:  denied  { call } for  pid=358 comm="OS_IPC_1_371" scontext=u:r:hdf_devmgr:s0 tcontext=u:r:nnrt_host:s0 tclass=binder permissive=0
-allow hdf_devmgr nnrt_host:binder { call transfer };
+#allow hdf_devmgr nnrt_host:binder { call transfer };
 
 # avc:  denied  { transfer } for  pid=377 comm="OS_IPC_1_386" scontext=u:r:hdf_devmgr:s0 tcontext=u:r:nfc_host:s0 tclass=binder permissive=1
 # avc:  denied  { call } for  pid=377 comm="OS_IPC_1_386" scontext=u:r:hdf_devmgr:s0 tcontext=u:r:nfc_host:s0 tclass=binder permissive=1

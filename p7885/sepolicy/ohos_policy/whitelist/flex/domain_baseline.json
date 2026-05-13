@@ -4,9 +4,7 @@
         "rgm_violator_sadomain": [],
         "hap_domain": [],
         "native_system_domain": [],
-        "hdfdomain": [
-            "nnrt_host"
-        ],
+        "hdfdomain": [],
         "native_chipset_domain": []
     },
     "developer": {
