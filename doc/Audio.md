@@ -316,8 +316,8 @@ audio-framework作为通用代码，WUKONG100不涉及对此仓库的修改
 
 ### 相关仓
 
-[**device_board_revoview**](https://gitcode.com/openharmony-sig/device_board_revoview)
+[**device_board_revoview**](https://gitcode.com/openharmony/device_board_revoview)
 
-[**vendor_revoview**](https://gitcode.com/openharmony-sig/vendor_revoview)
+[**vendor_revoview**](https://gitcode.com/openharmony/vendor_revoview)
 
 [**drivers_peripheral**](https://gitcode.com/openharmony/drivers_peripheral)
