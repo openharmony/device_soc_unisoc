@@ -33,9 +33,6 @@ allow location_host dev_block_volfile:dir { search };
 # avc:  denied  { search } for  pid=3765 comm="OS_IPC_0_3771" name="by-name" dev="tmpfs" ino=14 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
 allow location_host dev_block_file:dir { search };
 
-# avc:  denied  { read } for  pid=3765 comm="OS_IPC_0_3771" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
-allow location_host dev_block_file:lnk_file { read };
-
 # avc:  denied  { read write open } for  pid=3765 comm="OS_IPC_0_3771" path="/data/vendor/gnss/config/config.xml" dev="sda62" ino=4206 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=file permissive=1
 # avc:  denied  { getattr } for  pid=3207 comm="OS_IPC_2_3216" path="/data/vendor/gnss/config/config.xml" dev="sda62" ino=4206 scontext=u:r:location_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=file permissive=1
 allow location_host data_vendor:file { read write open getattr };
@@ -68,4 +65,9 @@ allow location_host location_host:udp_socket { connect };
 
 # avc:  denied  { read } for  pid=3633 comm="OS_IPC_1_3641" name="sda6" dev="tmpfs" ino=300 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
 # avc:  denied  { open } for  pid=3633 comm="OS_IPC_1_3641" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
-allow location_host dev_block_file:blk_file { read open };
+#allow location_host dev_block_file:blk_file { read open };
+allow location_host sml_block_file:blk_file { read open };
+
+# avc:  denied  { read } for  pid=3765 comm="OS_IPC_0_3771" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
+#allow location_host dev_block_file:lnk_file { read };
+allow location_host sml_block_file:lnk_file { read };

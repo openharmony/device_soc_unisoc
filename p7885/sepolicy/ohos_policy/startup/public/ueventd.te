@@ -45,7 +45,14 @@ allow ueventd dev_gnss_file:chr_file { create getattr relabelto setattr };
 allow ueventd dev_sprd_file:chr_file { getattr setattr };
 
 # avc:  denied  { relabelto } for  pid=324 comm="ueventd" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:ueventd:s0 tcontext=u:object_r:sml_block_file:s0 tclass=lnk_file permissive=0
-#allow ueventd sml_block_file:blk_file { getattr relabelfrom setattr relabelto };
-#allow ueventd sml_block_file:lnk_file { getattr relabelto};
+allow ueventd sml_block_file:blk_file { getattr relabelfrom setattr relabelto };
+allow ueventd sml_block_file:lnk_file { getattr relabelto};
 
-#allow ueventd dev_modem_file:chr_file { relabelto };
+allow ueventd dev_modem_file:chr_file { relabelto };
+allow ueventd dev_pmsys_file:chr_file { relabelto };
+allow ueventd dev_phycp_file:chr_file { relabelto };
+allow ueventd dev_spipe_file:chr_file { relabelto };
+allow ueventd dev_snv_file:chr_file { relabelto };
+allow ueventd dev_sctl_file:chr_file { relabelto };
+allow ueventd dev_chsys_file:chr_file { relabelto };
+allow ueventd dev_stty_file:chr_file { relabelto };

@@ -20,5 +20,14 @@ type dev_gnss_file, dev_attr;
 type dev_vpu_file, dev_attr;
 type dev_sprd_file, dev_attr;
 type dev_modem_file, dev_attr;
+type dev_pmsys_file, dev_attr;
+type dev_phycp_file, dev_attr;
+type dev_spipe_file, dev_attr;
+type dev_snv_file, dev_attr;
+type dev_sctl_file, dev_attr;
+type dev_chsys_file, dev_attr;
+type dev_stty_file, dev_attr;
+
 type data_ashmem_file, file_attr, data_file_attr;
+
 # type vendor_module_file, vendor_file_attr, file_attr;
