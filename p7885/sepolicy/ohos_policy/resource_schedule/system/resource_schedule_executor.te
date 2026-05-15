@@ -17,7 +17,7 @@
 allow resource_schedule_executor hiviewdfx_hiview_param:file { map open read };
 
 # avc:  denied  { setsched } for  pid=553 comm="resource_schedu" scontext=u:r:resource_schedule_executor:s0 tcontext=u:r:normal_hap:s0 tclass=process permissive=0
-allow resource_schedule_executor normal_hap:process { setsched };
+allow resource_schedule_executor normal_hap_attr:process { setsched };
 
 # avc:  denied  { setsched } for  pid=563 comm="OS_IPC_1_566" scontext=u:r:resource_schedule_executor:s0 tcontext=u:r:permissionmanager_hap:s0 tclass=process permissive=0
 allow resource_schedule_executor permissionmanager_hap:process { setsched };
