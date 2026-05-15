@@ -19,7 +19,7 @@ allow ui_service dev_at_file:chr_file { ioctl };
 allowxperm ui_service dev_at_file:chr_file ioctl { 0x5413 };
 
 # avc:  denied  { transfer } for  pid=873 comm="OS_FFRT_2_0" scontext=u:r:ui_service:s0 tcontext=u:r:normal_hap:s0 tclass=binder permissive=1
-allow ui_service normal_hap:binder { transfer };
+allow ui_service normal_hap_attr:binder { transfer };
 
 # avc:  denied  { search } for  pid=868 comm="ui_service" name="etc" dev="sda47" ino=24 scontext=u:r:ui_service:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=dir permissive=0
 #allow ui_service vendor_etc_file:dir { search };
