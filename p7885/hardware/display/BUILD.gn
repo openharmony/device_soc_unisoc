@@ -95,6 +95,7 @@ ohos_shared_library("libdisplay_buffer_vdi_impl") {
 
   install_enable = true
   install_images = [ chipset_base_dir ]
+  innerapi_tags = [ "passthrough" ]
   subsystem_name = "soc_p7885"
   part_name = "soc_p7885"
 }
