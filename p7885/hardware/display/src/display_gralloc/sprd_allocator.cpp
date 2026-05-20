@@ -55,23 +55,23 @@ int32_t SprdAllocator::Init()
 int32_t SprdAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle **handle)
 {
     DISPLAY_LOGD("");
-    if (!bufferInfo.width || !bufferInfo.height) {
+    if (!bufferInfo.width_ || !bufferInfo.height_) {
         DISPLAY_LOGE("param error, width or height error!");
         return DISPLAY_FAILURE;
     }
 
-    mUsage = ConvertUsageToGpu(bufferInfo.usage);
+    mUsage = ConvertUsageToGpu(bufferInfo.usage_);
     DISPLAY_CHK_RETURN((mUsage == 0), DISPLAY_FAILURE, DISPLAY_LOGE("usage is error"));
-    mFormat = ConvertFormatToGpu(bufferInfo.format);
+    mFormat = ConvertFormatToGpu(bufferInfo.format_);
     DISPLAY_CHK_RETURN((mFormat == ADAPTER_PIXEL_FORMAT_UNKNOWN), DISPLAY_PARAM_ERR, DISPLAY_LOGE("format is error"));
 
     DISPLAY_LOGD("bufferInfo %{public}d x %{public}d, "
         "stride:%{public}d x %{public}d",
-        bufferInfo.width, bufferInfo.height,
-        bufferInfo.widthStride, bufferInfo.heightStride);
+        bufferInfo.width_, bufferInfo.height_,
+        bufferInfo.widthStride_, bufferInfo.heightStride_);
     std::lock_guard<std::mutex> lock(m);
 
-    void *gbuffer = AdapterGraphicBufferAllocate(bufferInfo.widthStride, bufferInfo.heightStride,
+    void *gbuffer = AdapterGraphicBufferAllocate(bufferInfo.widthStride_, bufferInfo.heightStride_,
         mFormat, mUsage, "SprdAllocMem");
     if (gbuffer == nullptr) {
         DISPLAY_LOGE("memory allocate failed.");
@@ -150,12 +150,12 @@ int32_t SprdAllocator::InitBufferhandle(const BufferInfo &bufferInfo, BufferHand
         return DISPLAY_NOMEM;
     }
 
-    priBuffer->width    = bufferInfo.width;
-    priBuffer->height   = bufferInfo.height;
-    priBuffer->stride   = bufferInfo.widthStride * bufferInfo.bytesPerPixel;
-    priBuffer->size     = bufferInfo.size;
-    priBuffer->format   = bufferInfo.format;
-    priBuffer->usage    = bufferInfo.usage;
+    priBuffer->width    = bufferInfo.width_;
+    priBuffer->height   = bufferInfo.height_;
+    priBuffer->stride   = bufferInfo.widthStride_ * bufferInfo.bytesPerPixel_;
+    priBuffer->size     = bufferInfo.size_;
+    priBuffer->format   = bufferInfo.format_;
+    priBuffer->usage    = bufferInfo.usage_;
     priBuffer->reserveFds  = mHandle->numFds;
     priBuffer->reserveInts = mHandle->numInts;
     for (int i = 0; i < mHandle->numFds; i++) {

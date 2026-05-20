@@ -24,33 +24,25 @@
 #undef HDF_LOG_TAG
 #endif
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 #undef LOG_TAG
 #undef LOG_DOMAIN
 #define LOG_TAG "DISP"
 #define LOG_DOMAIN 0xD001400
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
-
 #ifndef DISPLAY_UNUSED
-#if defined(__cplusplus)
-} // extern "C"
-template <typename T>
-inline void DISPLAY_UNUSED(T &&) {}
-extern "C" {
-#else
-static inline void DISPLAY_UNUSED(const void *x) { (void)x; }
+#define DISPLAY_UNUSED(x) (void)(x)
 #endif
-#endif
-
 
 #define DISP_FILENAME (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__)
-
+                             
 #ifndef DISPLAY_DEBUG_ENABLE
 #define DISPLAY_DEBUG_ENABLE 1
 #endif
-
+                             
 #ifndef DISPLAY_LOGD
 #define DISPLAY_LOGD(format, ...)                                                                                     \
     do {                                                                                                              \
@@ -61,7 +53,7 @@ static inline void DISPLAY_UNUSED(const void *x) { (void)x; }
         }                                                                                                             \
     } while (0)
 #endif
-
+                             
 #ifndef DISPLAY_LOGI
 #define DISPLAY_LOGI(format, ...)                                                                                     \
     do {                                                                                                              \
@@ -69,7 +61,7 @@ static inline void DISPLAY_UNUSED(const void *x) { (void)x; }
             ##__VA_ARGS__);                                                                                           \
     } while (0)
 #endif
-
+                             
 #ifndef DISPLAY_LOGW
 #define DISPLAY_LOGW(format, ...)                                                                                     \
     do {                                                                                                              \
@@ -77,7 +69,7 @@ static inline void DISPLAY_UNUSED(const void *x) { (void)x; }
             ##__VA_ARGS__);                                                                                           \
     } while (0)
 #endif
-
+                             
 #ifndef DISPLAY_LOGE
 #define DISPLAY_LOGE(format, ...)                                 \
     do {                                                          \
@@ -89,8 +81,25 @@ static inline void DISPLAY_UNUSED(const void *x) { (void)x; }
     } while (0)
 #endif
 
-// CHECK_NULLPOINTER_RETURN_VALUE and CHECK_NULLPOINTER_RETURN are removed to comply with G.PRE.02-CPP.
-// Use explicit if checks and DISPLAY_LOGE instead.
+#ifndef CHECK_NULLPOINTER_RETURN_VALUE
+#define CHECK_NULLPOINTER_RETURN_VALUE(pointer, ret)          \
+    do {                                                      \
+        if ((pointer) == NULL) {                              \
+            DISPLAY_LOGE("pointer is null and return ret\n"); \
+            return (ret);                                     \
+        }                                                     \
+    } while (0)
+#endif
+
+#ifndef CHECK_NULLPOINTER_RETURN
+#define CHECK_NULLPOINTER_RETURN(pointer)                 \
+    do {                                                  \
+        if ((pointer) == NULL) {                          \
+            DISPLAY_LOGE("pointer is null and return\n"); \
+            return;                                       \
+        }                                                 \
+    } while (0)
+#endif
 
 #ifndef DISPLAY_CHK_RETURN
 #define DISPLAY_CHK_RETURN(val, ret, ...) \

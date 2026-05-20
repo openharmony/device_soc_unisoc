@@ -55,10 +55,6 @@ allow chipset_init proc_cmdline_file:file { read open map };
 # avc:  denied  { read } for  pid=591 comm="cp_diskserver.b" name="bootconfig" dev="proc" ino=4026532053 scontext=u:r:chipset_init:s0 tcontext=u:object_r:proc_file:s0 tclass=file permissive=0
 allow chipset_init proc_file:file { read open map };
 
-# avc:  denied  { rlimitinh } for  pid=3236 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nfc_host:s0 tclass=process permissive=0
-# avc:  denied  { siginh } for  pid=777 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nfc_host:s0 tclass=process permissive=0
-# allow chipset_init nfc_host:process { rlimitinh siginh };
-
 # avc:  denied  { ioctl } for  pid=548 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d03 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=548 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d06 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=548 comm="modem_control.b" path="/dev/pmsys" dev="tmpfs" ino=410 ioctlcmd=0x4d04 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
@@ -91,6 +87,57 @@ allow chipset_init dev_pts_file:dir { search };
 
 # avc:  denied  { read write } for  pid=571 comm="channelmanager." name="69" dev="devpts" ino=72 scontext=u:r:chipset_init:s0 tcontext=u:object_r:devpts:s0 tclass=chr_file permissive=0
 allow chipset_init devpts:chr_file { read write open setattr };
+
+# avc:  denied  { getattr } for  pid=570 comm="slogmodem.bin" path="/proc/cmdline" dev="proc" ino=4026532036 scontext=u:r:chipset_init:s0 tcontext=u:object_r:proc_cmdline_file:s0 tclass=file permissive=1
+allow chipset_init proc_cmdline_file:file { getattr };
+
+# avc:  denied  { read } for  pid=570 comm="slogmodem.bin" name="slog_modem.conf" dev="sda47" ino=711 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=570 comm="slogmodem.bin" path="/vendor/soc_platform/etc/slog_modem.conf" dev="sda47" ino=711 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=1
+# avc:  denied  { getattr } for  pid=570 comm="slogmodem.bin" path="/vendor/soc_platform/etc/slog_modem.conf" dev="sda47" ino=711 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=1
+
+# avc:  denied  { create } for  pid=570 comm="slogmodem.bin" scontext=u:r:chipset_init:s0 tcontext=u:r:chipset_init:s0 tclass=netlink_kobject_uevent_socket permissive=1
+# avc:  denied  { bind } for  pid=570 comm="slogmodem.bin" scontext=u:r:chipset_init:s0 tcontext=u:r:chipset_init:s0 tclass=netlink_kobject_uevent_socket permissive=1
+# avc:  denied  { read } for  pid=592 comm="slogmodem.bin" scontext=u:r:chipset_init:s0 tcontext=u:r:chipset_init:s0 tclass=netlink_kobject_uevent_socket permissive=0
+allow chipset_init chipset_init:netlink_kobject_uevent_socket { read create bind };
+
+# avc:  denied  { ioctl } for  pid=570 comm="slogmodem.bin" path="/dev/audio_dsp_log" dev="tmpfs" ino=538 ioctlcmd=0x5800 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=570 comm="slogmodem.bin" path="/dev/audio_dsp_pcm" dev="tmpfs" ino=539 ioctlcmd=0x5804 scontext=u:r:chipset_init:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+allow chipset_init dev_file:chr_file { ioctl };
+allowxperm chipset_init dev_file:chr_file ioctl { 0x5800 0x5804 };
+
+# avc:  denied  { set } for parameter=ro.bootmode pid=603 uid=0 gid=0 scontext=u:r:chipset_init:s0 tcontext=u:object_r:default_param:s0 tclass=parameter_service permissive=1
+# avc:  denied  { set } for parameter=vendor.ro.bootmode pid=631 uid=0 gid=0 scontext=u:r:chipset_init:s0 tcontext=u:object_r:default_param:s0 tclass=parameter_service permissive=1
+allow chipset_init boot_mode_param:parameter_service { set };
+
+# avc:  denied  { read } for  pid=599 comm="slogmodem.bin" name="slog_modem.conf" dev="sda47" ino=711 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=599 comm="slogmodem.bin" path="/vendor/soc_platform/etc/slog_modem.conf" dev="sda47" ino=711 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=1
+# avc:  denied  { getattr } for  pid=599 comm="slogmodem.bin" path="/vendor/soc_platform/etc/slog_modem.conf" dev="sda47" ino=711 scontext=u:r:chipset_init:s0 tcontext=u:object_r:vendor_file:s0 tclass=file permissive=1
+allow chipset_init vendor_file:file { read open getattr };
+
+# avc:  denied  { create } for  pid=599 comm="slogmodem.bin" name="rate_statistic.txt" scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=file permissive=1
+# avc:  denied  { append open } for  pid=599 comm="slogmodem.bin" path="/mnt/data/rate_statistic.txt" dev="tmpfs" ino=6 scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=file permissive=1
+# avc:  denied  { getattr } for  pid=599 comm="slogmodem.bin" path="/mnt/data/rate_statistic.txt" dev="tmpfs" ino=6 scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=file permissive=1
+# avc:  denied  { create } for  pid=570 comm="slogmodem.bin" name="rate_statistic.txt" scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=file permissive=1
+# avc:  denied  { create } for  pid=349 comm="chipset_init" name="engpc.ini" scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=349 comm="chipset_init" path="/mnt/data/engpc.ini" dev="tmpfs" ino=2 scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=file permissive=1
+# avc:  denied  { setattr } for  pid=349 comm="chipset_init" name="engpc.ini" dev="tmpfs" ino=2 scontext=u:r:chipset_init:s0 tcontext=u:object_r:tmpfs:s0 tclass=file permissive=1
+allow chipset_init tmpfs:file { create append open getattr setattr create };
+
+# avc:  denied  { create } for  pid=592 comm="slogmodem.bin" name="ag_20260324-155829.log" scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+allow chipset_init data_ylog_file:file { create };
+
+# avc:  denied  { search } for  pid=602 comm="slogmodem.bin" name="ylog" dev="sda62" ino=3206 scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=dir permissive=1
+# avc:  denied  { write } for  pid=602 comm="slogmodem.bin" name="audio" dev="sda62" ino=3208 scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=dir permissive=1
+# avc:  denied  { remove_name } for  pid=602 comm="slogmodem.bin" name="ag_20260324-162135.log" dev="sda62" ino=9113 scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=dir permissive=1
+# avc:  denied  { read } for  pid=602 comm="slogmodem.bin" name="ylog" dev="sda62" ino=3206 scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=dir permissive=1
+# avc:  denied  { add_name } for  pid=602 comm="slogmodem.bin" name="ag_20260324-162159.log" scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=dir permissive=1
+allow chipset_init data_ylog_file:dir { search open read write remove_name add_name };
+
+# avc:  denied  { unlink } for  pid=602 comm="slogmodem.bin" name="ag_20260324-162135.log" dev="sda62" ino=9113 scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=602 comm="slogmodem.bin" path="/data/ylog/audio/ag_20260324-162159.log" dev="sda62" ino=9383 scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=file permissive=1
+# avc:  denied  { read write } for  pid=602 comm="slogmodem.bin" name="ag_20260324-162159.log" dev="sda62" ino=9383 scontext=u:r:chipset_init:s0 tcontext=u:object_r:data_ylog_file:s0 tclass=file permissive=1
+allow chipset_init data_ylog_file:file { unlink open read write };
+
 
 # add by xqb
 allow chipset_init cgroup:dir { search };

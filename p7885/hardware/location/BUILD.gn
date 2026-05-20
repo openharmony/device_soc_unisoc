@@ -44,6 +44,7 @@ group("location_group") {
   deps = [
     ":decrypt_location",
     ":sprd_gnss_config_xml",
+    ":sprd_gnss_spirentroot_cer",
     ":sprd_gnss_supl_xml",
     ":sprd_gnss_prop_ini",
     "gnss:vendorGnssAdapter",
@@ -65,6 +66,15 @@ group("location_group") {
 
 ohos_prebuilt_etc("sprd_gnss_config_xml") {
   source = "etc/config.xml"
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  module_install_dir = "etc"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+  part_name = "${PART_NAME}"
+}
+
+ohos_prebuilt_etc("sprd_gnss_spirentroot_cer") {
+  source = "etc/spirentroot.cer"
   install_enable = true
   install_images = [ chipset_base_dir ]
   module_install_dir = "etc"

@@ -30,9 +30,9 @@ int32_t DrmAllocator::Init()
 {
     DISPLAY_LOGD();
     int32_t ret;
-    drmFd_ = open(filePath, O_RDWR);
+    drmFd_ = open(FILE_PATH, O_RDWR);
     DISPLAY_CHK_RETURN((drmFd_ < 0), DISPLAY_FAILURE,
-        DISPLAY_LOGE("can not open drm file : %{public}s errno: %{public}d ", filePath, errno));
+        DISPLAY_LOGE("can not open drm file : %{public}s errno: %{public}d ", FILE_PATH, errno));
     ret = drmDropMaster(drmFd_);
     if (ret != 0) {
         DISPLAY_LOGW("can not drop master");
@@ -46,10 +46,10 @@ int32_t DrmAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle &handl
     int32_t fd;
     struct drm_mode_create_dumb dumb = {0};
     // create_dumb
-    dumb.width = bufferInfo.widthStride;
-    dumb.height = bufferInfo.heightStride;
+    dumb.width = bufferInfo.widthStride_;
+    dumb.height = bufferInfo.heightStride_;
     dumb.flags = 0;
-    dumb.bpp = bufferInfo.bitsPerPixel;
+    dumb.bpp = bufferInfo.bitsPerPixel_;
     DISPLAY_LOGD();
     ret = drmIoctl(drmFd_, DRM_IOCTL_MODE_CREATE_DUMB, &dumb);
     DISPLAY_LOGI("fmt 0x%{public}x create dumb width: %{public}d  height: %{public}d bpp: %{public}u pitch %{public}d "
@@ -63,7 +63,7 @@ int32_t DrmAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle &handl
         (ret != 0), DISPLAY_FAILURE, DISPLAY_LOGE("can not get fd from prime handle errno: %{public}d", errno));
     handle.fd = fd;
     handle.size = dumb.size;
-    handle.format = bufferInfo.format;    //PIXEL_FMT_BGRA_8888
+    handle.format = bufferInfo.format_;    //PIXEL_FMT_BGRA_8888
 
     struct drm_mode_destroy_dumb destoryDumb = {0};
     destoryDumb.handle = dumb.handle;

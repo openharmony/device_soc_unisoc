@@ -167,45 +167,57 @@ static void StatusCallback(uint16_t* status)
 static void SvStatusCallback(GnssSatelliteStatus* svInfo)
 {
     HDF_LOGE("%{public}s: entered.", __func__);
-
+    printf("%s: entered.\n", __func__);
     if (svInfo == nullptr) {
         HDF_LOGE("%{public}s:sv_info is null.", __func__);
+        printf("%s:sv_info is null.\n", __func__);
         return;
     }
     if (svInfo->satellitesNum == 0) {
         HDF_LOGE("%{public}s:satellites_num == 0.", __func__);
+        printf("%s:satellites_num == 0.\n", __func__);
         return;
     }
 
     HDF_LOGE("%{public}s: the satellites_num is %{public}d.", __func__, svInfo->satellitesNum);
+    printf("%s: the satellites_num is %d.\n", __func__, svInfo->satellitesNum);
 
     for (int i = 0; i < svInfo->satellitesNum; i++) {
         HDF_LOGE("%{public}s: the %{public}dth satellite Id is %{public}d.",
                  __func__,
                  i,
                  svInfo->satellitesList[i].satelliteId);
+        printf("%s: the %dth satellite Id is %d.\n", __func__, i, svInfo->satellitesList[i].satelliteId);
     }
     for (int i = 0; i < svInfo->satellitesNum; i++) {
         HDF_LOGE("%{public}s: the %{public}dth satellite type is %{public}u.",
                  __func__,
                  i,
                  svInfo->satellitesList[i].constellationCategory);
+        printf("%s: the %dth satellite type is %u.\n", __func__, i, svInfo->satellitesList[i].constellationCategory);
         HDF_LOGE("%{public}s: the %{public}dth satellite elevation is %{public}f.",
                  __func__,
                  i,
                  svInfo->satellitesList[i].elevation);
+        printf("%s: the %dth satellite elevation is %f.\n", __func__, i, svInfo->satellitesList[i].elevation);
         HDF_LOGE("%{public}s: the %{public}dth satellite azimuth is %{public}f.",
                  __func__,
                  i,
                  svInfo->satellitesList[i].azimuth);
+        printf("%s: the %dth satellite azimuth is %f.\n", __func__, i, svInfo->satellitesList[i].azimuth);
         HDF_LOGE("%{public}s: the %{public}dth satellite carrierFrequency is %{public}f.",
                  __func__,
                  i,
                  svInfo->satellitesList[i].carrierFrequency);
+        printf("%s: the %dth satellite carrierFrequency is %f.\n",
+               __func__,
+               i,
+               svInfo->satellitesList[i].carrierFrequency);
         HDF_LOGE("%{public}s: the %{public}dth satellite cn0 is %{public}f.",
                  __func__,
                  i,
                  svInfo->satellitesList[i].cn0);
+        printf("%s: the %dth satellite cn0 is %f.\n", __func__, i, svInfo->satellitesList[i].cn0);
     }
 }
 

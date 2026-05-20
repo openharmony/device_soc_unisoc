@@ -45,19 +45,6 @@ public:
     }
 
     template<typename... Args>
-    int32_t CallDisplayFunction(uint32_t devId, int32_t (HdiDisplay::*member)(Args...) const, Args... args)
-    {
-        DISPLAY_LOGD("device Id : %{public}d", devId);
-        DISPLAY_CHK_RETURN((devId == INVALIDE_DISPLAY_ID), DISPLAY_FAILURE, DISPLAY_LOGE("invalid device id"));
-        std::lock_guard<std::mutex> lock(mMutex);
-        auto iter = mHdiDisplays.find(devId);
-        DISPLAY_CHK_RETURN((iter == mHdiDisplays.end()), DISPLAY_FAILURE,
-            DISPLAY_LOGE("can not find display %{public}d", devId));
-        auto display = iter->second.get();
-        return (display->*member)(std::forward<Args>(args)...);
-    }
-
-    template<typename... Args>
     int32_t CallLayerFunction(uint32_t devId, uint32_t layerId, int32_t (HdiLayer::*member)(Args...), Args... args)
     {
         DISPLAY_LOGD("device Id : %{public}d", devId);

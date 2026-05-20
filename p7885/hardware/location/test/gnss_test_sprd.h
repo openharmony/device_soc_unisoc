@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef GNSS_TEST_SPRD_H_
-#define GNSS_TEST_SPRD_H_
 
 #include "location_log.h"
 
@@ -64,15 +62,15 @@ typedef struct {
     size_t size;
     int16_t svid;
     GnssConstellationType constellation;
-    float cN0Dbhz;
+    float c_n0_dbhz;
     float elevation;
     float zaimuth;
     GnssSvFlags flags;
-    float carrierFreq;
+    float carrier_freq;
 } GnssSvInfo;
 typedef struct {
     size_t size;
-    int numbSvs;
+    int numb_svs;
     GnssSvInfo gnss_sv_list[GNSS_MAX_SVS];
 } GnssSvStatus;
 
@@ -88,5 +86,3 @@ typedef struct {
 } GnssSystemInfo;
 
 typedef unsigned long int pthread_t;
-
-#endif // GNSS_TEST_SPRD_H_

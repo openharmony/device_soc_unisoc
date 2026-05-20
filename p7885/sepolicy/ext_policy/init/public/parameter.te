@@ -12,3 +12,4 @@
 # limitations under the License.
 
 type modem_param, parameter_attr;
+type boot_mode_param, parameter_attr;

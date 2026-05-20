@@ -23,13 +23,13 @@ namespace HDI {
 namespace DISPLAY {
 class FbComposition : public HdiComposition {
 public:
-    explicit FbComposition(const std::vector<int> &fbs);
+    explicit FbComposition(std::vector<int> &fbs);
     virtual ~FbComposition();
     int32_t Init();
     int32_t SetLayers(std::vector<HdiLayer *> &layers, HdiLayer &clientLayer);
     int32_t Apply(bool modeSet);
 private:
-    int32_t FbFresh(int fd, HdiLayer &clientlayer, int *fence);
+    int32_t FbFresh(int fd, HdiLayer &clientlayer, int &fence);
     std::vector<int> fds_;
 };
 } // namespace DISPLAY

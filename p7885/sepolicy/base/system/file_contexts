@@ -28,4 +28,8 @@
 
 /data/ashmem                     u:object_r:data_ashmem_file:s0
 /data/ashmem/(.*)?               u:object_r:data_ashmem_file:s0
+
+/data/ylog                  u:object_r:data_ylog_file:s0
+/data/ylog/(.*)?            u:object_r:data_ylog_file:s0
+
 # /vendor/modules(/.*)?            u:object_r:vendor_module_file:s0
