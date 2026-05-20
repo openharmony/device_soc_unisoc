@@ -24,7 +24,6 @@ namespace HDI {
 namespace DISPLAY {
 int32_t AllocatorManager::Init()
 {
-    int32_t ret;
     DISPLAY_LOGD("AllocatorManager::Init");
     if (init_) {
         DISPLAY_LOGW("allocator has initialized");
@@ -32,13 +31,13 @@ int32_t AllocatorManager::Init()
     }
     // first use sprd allocator
     std::shared_ptr<Allocator> sprdAllocator = std::make_shared<SprdAllocator>();
-    ret = sprdAllocator->Init();
+    int ret = sprdAllocator->Init();
     if (ret == DISPLAY_SUCCESS) {
         frameBufferAllocator_ = sprdAllocator;
         allocator_ = sprdAllocator;
     } else {
         std::shared_ptr<Allocator> drmAllocator = std::make_shared<DrmAllocator>();
-        ret = drmAllocator->Init();
+        int ret = drmAllocator->Init();
         if (ret == DISPLAY_SUCCESS) {
             frameBufferAllocator_ = drmAllocator;
             allocator_ = drmAllocator;

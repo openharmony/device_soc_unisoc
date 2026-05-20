@@ -35,13 +35,13 @@ inline void HDI_UNUSED(T&&) {}
 
 class VsyncCallBack {
 public:
-    VsyncCallBack(VBlankCallback cb, const void *data);
+    VsyncCallBack(VBlankCallback cb, void *data);
     virtual void Vsync(unsigned int sequence, uint64_t ns);
     virtual ~VsyncCallBack() {}
 
 private:
     VBlankCallback mVBlankCb;
-    const void *mData;
+    void *mData;
 };
 
 
@@ -51,27 +51,27 @@ public:
     {
         return mId;
     }
-    virtual int32_t Init() const;
+    virtual int32_t Init();
     virtual void DeInit() {}
     HdiDisplay() {}
     virtual ~HdiDisplay();
-    virtual int32_t GetDisplayCapability(DisplayCapability *info) const
+    virtual int32_t GetDisplayCapability(DisplayCapability *info)
     {
         return DISPLAY_NOT_SUPPORT;
     }
-    virtual int32_t GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes) const
+    virtual int32_t GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes)
     {
         return DISPLAY_NOT_SUPPORT;
     }
-    virtual int32_t GetDisplayMode(uint32_t *modeId) const
+    virtual int32_t GetDisplayMode(uint32_t *modeId)
     {
         return DISPLAY_NOT_SUPPORT;
     }
-    virtual int32_t SetDisplayMode(uint32_t modeId) const
+    virtual int32_t SetDisplayMode(uint32_t modeId)
     {
         return DISPLAY_NOT_SUPPORT;
     }
-    virtual int32_t GetDisplayPowerStatus(DispPowerStatus *status) const
+    virtual int32_t GetDisplayPowerStatus(DispPowerStatus *status)
     {
         return DISPLAY_NOT_SUPPORT;
     }
@@ -79,11 +79,11 @@ public:
     {
         return DISPLAY_NOT_SUPPORT;
     }
-    virtual int32_t GetDisplayBacklight(uint32_t *value) const
+    virtual int32_t GetDisplayBacklight(uint32_t *value)
     {
         return DISPLAY_NOT_SUPPORT;
     }
-    virtual int32_t SetDisplayBacklight(uint32_t value) const
+    virtual int32_t SetDisplayBacklight(uint32_t value)
     {
         return DISPLAY_NOT_SUPPORT;
     }
@@ -93,11 +93,11 @@ public:
     virtual int32_t Commit(int32_t *fence);
     virtual int32_t GetDisplayCompChange(uint32_t *num, uint32_t *layers, int32_t *type);
     virtual int32_t SetLayerZorder(uint32_t layerId, uint32_t zorder);
-    virtual bool IsConnected() const
+    virtual bool IsConnected()
     {
         return false;
     }
-    virtual int32_t RegDisplayVBlankCallback(VBlankCallback cb, const void *data)
+    virtual int32_t RegDisplayVBlankCallback(VBlankCallback cb, void *data)
     {
         return DISPLAY_NOT_SUPPORT;
     }
@@ -114,16 +114,16 @@ public:
     HdiLayer *GetHdiLayer(uint32_t id);
 
 protected:
-    virtual std::unique_ptr<HdiLayer> CreateHdiLayer(LayerType type) const;
-    mutable std::unique_ptr<HdiComposer> mComposer;
+    virtual std::unique_ptr<HdiLayer> CreateHdiLayer(LayerType type);
+    std::unique_ptr<HdiComposer> mComposer;
 
     static uint32_t GetIdleId();
     static uint32_t mIdleId;
     static std::unordered_set<uint32_t> mIdSets;
-    mutable uint32_t mId = INVALIDE_DISPLAY_ID;
+    uint32_t mId = INVALIDE_DISPLAY_ID;
     std::unordered_map<uint32_t, std::unique_ptr<HdiLayer>> mLayersMap;
     std::multiset<HdiLayer *, SortLayersByZ> mLayers;
-    mutable std::unique_ptr<HdiLayer> mClientLayer;
+    std::unique_ptr<HdiLayer> mClientLayer;
     std::vector<HdiLayer *> mChangeLayers;
 };
 } // namespace OHOS

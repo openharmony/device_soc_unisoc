@@ -26,7 +26,7 @@ public:
     int32_t Allocate(const BufferInfo &bufferInfo, BufferHandle **handle) override;
     ~DrmAllocator() override;
 private:
-    static constexpr const char* filePath = "/dev/dri/card0";
+    static constexpr const char* FILE_PATH = "/dev/dri/card0";
     uint64_t GetPhysicalAddr(int primeFd);
     int32_t drmFd_ = -1;
 };

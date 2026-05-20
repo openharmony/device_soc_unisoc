@@ -1,0 +1,13 @@
+{
+    "whitelist": {
+        "user": {
+            "parameter_attr": [
+                "modem_param",
+                "boot_mode_param"
+            ]
+        },
+        "developer": {
+            "parameter_attr": []
+        }
+    }
+}

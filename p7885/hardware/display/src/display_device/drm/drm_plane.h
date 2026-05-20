@@ -32,7 +32,7 @@ class DrmDevice;
 
 class DrmPlane {
 public:
-    explicit DrmPlane(const drmModePlane &p);
+    explicit DrmPlane(drmModePlane &p);
     virtual ~DrmPlane();
     int32_t Init(DrmDevice &drmDevice);
     uint32_t GetId() const
@@ -72,19 +72,19 @@ public:
         return (mPipe == 0);
     }
 
-    uint32_t propertyCrtcX;
-    uint32_t propertyCrtcY;
-    uint32_t propertyCrtcW;
-    uint32_t propertyCrtcH;
+    uint32_t property_crtc_x;
+    uint32_t property_crtc_y;
+    uint32_t property_crtc_w;
+    uint32_t property_crtc_h;
 
     uint32_t propertySrcX;
     uint32_t propertySrcY;
     uint32_t propertySrcW;
     uint32_t propertySrcH;
-    uint32_t propertyBlendMode;
-    uint32_t propertyRotation;
-    uint32_t propertyAlpha;
-    uint32_t propertyY2rCoef;
+    uint32_t property_blend_mode;
+    uint32_t property_rotation;
+    uint32_t property_alpha;
+    uint32_t property_y2r_coef;
 
 private:
     uint32_t mId = 0;
