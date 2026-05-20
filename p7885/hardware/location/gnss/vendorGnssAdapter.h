@@ -70,16 +70,16 @@ typedef struct {
     size_t size;
     int16_t svid;
     GnssConstellationType constellation;
-    float cN0Dbhz;
+    float c_n0_dbhz;
     float elevation;
     float zaimuth;
     GnssSvFlags flags;
-    float carrierFreq;
+    float carrier_freq;
 } GnssSvInfo;
 
 typedef struct {
     size_t size;
-    int numbSvs;
+    int numb_svs;
     GnssSvInfo gnss_sv_list[GNSS_MAX_SVS];
 } GnssSvStatus;
 

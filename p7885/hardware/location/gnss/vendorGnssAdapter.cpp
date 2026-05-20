@@ -134,6 +134,9 @@ bool AGnssSetRefLocation(const AgnssReferenceInfo* refLoc);
 bool AGnssSetSetId(uint16_t type, const char* setid, size_t len);
 bool AGnssSetAgnssServer(uint16_t type, const char* server, size_t len, int32_t port);
 
+// // so vendorinface entry
+// GnssVendorDevice syml_GnssVendorInterface = {sizeof(GnssVendorDevice),
+//                                              GetGnssInterface};
 GnssVendorInterfaceType g_gnssVendorIfc = {
     sizeof(GnssVendorInterfaceType),
     GnssEnable,
@@ -154,46 +157,6 @@ AgnssModuleInterface g_AGMI_ = {
 
 void* g_vendorLibHandle = nullptr;
 GnssCallbackStruct g_GCS_ = {0};
-
-void LoadVendorSymbs()
-{
-    g_gpsInitPrvFn = (PFnGnssmgtInit)dlsym(g_vendorLibHandle, "gnssmgt_init");
-    LBSLOGE(GNSS, "%{public}s g_gpsInitPrvFn addr is %{public}x", GNSSMGT, g_gpsInitPrvFn);
-    g_gpsStartPrvFn = (PFnGnssmgtStart)dlsym(g_vendorLibHandle, "gnssmgt_start");
-    LBSLOGE(GNSS, "%{public}s g_gpsStartPrvFn addr is %{public}x", GNSSMGT, g_gpsStartPrvFn);
-    g_gpsStopPrvFn = (PFnGnssmgtStop)dlsym(g_vendorLibHandle, "gnssmgt_stop");
-    LBSLOGE(GNSS, "%{public}s g_gpsStopPrvFn addr is %{public}x", GNSSMGT, g_gpsStopPrvFn);
-    g_gpsCleanupPrvFn = (PFnGnssmgtCleanup)dlsym(g_vendorLibHandle, "gnssmgt_cleanup");
-    LBSLOGE(GNSS, "%{public}s g_gpsCleanupPrvFn addr is %{public}x", GNSSMGT, g_gpsCleanupPrvFn);
-    g_agpsInitPrvFn = (PFnAGnssmgtInit)dlsym(g_vendorLibHandle, "gnssmgt_agps_init");
-    LBSLOGE(GNSS, "%{public}s g_agpsInitPrvFn addr is %{public}x", GNSSMGT, g_agpsInitPrvFn);
-    g_agpsSetPosModePrvFn = (PFnAGnssmgtSetPosMode)dlsym(g_vendorLibHandle, "gnssmgt_setPosMode");
-    LBSLOGE(GNSS, "%{public}s g_agpsSetPosModePrvFn addr is %{public}x", GNSSMGT, g_agpsSetPosModePrvFn);
-    g_agpsSetServerPrvFn = (PFnAGnssmgtSetServer)dlsym(g_vendorLibHandle, "gnssmgt_agps_setServer");
-    LBSLOGE(GNSS, "%{public}s g_agpsSetServerPrvFn addr is %{public}x", GNSSMGT, g_agpsSetServerPrvFn);
-    g_agpsOpenConnPrvFn = (PFnAGnssmgtOpenConn)dlsym(g_vendorLibHandle, "gnssmgt_agps_openConn");
-    LBSLOGE(GNSS, "%{public}s g_agpsOpenConnPrvFn addr is %{public}x", GNSSMGT, g_agpsOpenConnPrvFn);
-    g_agpsCloseConnPrvFn = (PFnAGnssmgtAgpsCloseConn)dlsym(g_vendorLibHandle, "gnssmgt_agps_closeConn");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsCloseConnPrvFn addr is %{public}x", GNSSMGT, g_agpsCloseConnPrvFn);
-    g_agpsOpenFailedPrvFn = (PFnAGnssmgtAgpsOpenFailed)dlsym(g_vendorLibHandle, "gnssmgt_agps_openFailed");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsOpenFailedPrvFn addr is %{public}x", GNSSMGT, g_agpsOpenFailedPrvFn);
-    g_agpsOpenWithApnPrvFn = (PFnAGnssmgtAgpsOpenWithApnIpType)dlsym(g_vendorLibHandle,
-                                                                     "gnssmgt_agps_openWithApnIpType");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsOpenWithApnPrvFn addr is %{public}x", GNSSMGT, g_agpsOpenWithApnPrvFn);
-    g_agpsRilInitPrvFn = (PFnAGnssmgtRilInit)dlsym(g_vendorLibHandle, "gnssmgt_agps_ril_init");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilInitPrvFn addr is %{public}x", GNSSMGT, g_agpsRilInitPrvFn);
-    g_agpsRilRefLocationPrvFn = (PFnAGnssmgtRilRefLocation)dlsym(g_vendorLibHandle, "gnssmgt_agps_ril_setRefLoc");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilRefLocationPrvFn addr is %{public}x", GNSSMGT, g_agpsRilRefLocationPrvFn);
-    g_agpsRilSetIdPrvFn = (PFnAGnssmgtRilSetId)dlsym(g_vendorLibHandle, "gnssmgt_agps_ril_setSetID");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilSetIdPrvFn addr is %{public}x", GNSSMGT, g_agpsRilSetIdPrvFn);
-    g_agpsRilNetAbilityPrvFn = (PFnAGnssmgtRilUpdateNetworkAvailability)dlsym(g_vendorLibHandle,
-                                                                              "gnssmgt_agps_ril_updateNwAvailability");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilNetAbilityPrvFn addr is %{public}x", GNSSMGT, g_agpsRilNetAbilityPrvFn);
-    g_agpsRilNetStatePrvFn = (PFnAGnssmgtRilUpdateNetworkState)dlsym(g_vendorLibHandle,
-                                                                     "gnssmgt_agps_ril_updateNwState");
-    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilNetStatePrvFn addr is %{public}x", GNSSMGT, g_agpsRilNetStatePrvFn);
-}
-
 int GnssEnable(GnssCallbackStruct* callbacks)
 {
     LBSLOGE(GNSS, "%{public}s entered", GNSSMGT);
@@ -211,7 +174,56 @@ int GnssEnable(GnssCallbackStruct* callbacks)
         return LOAD_NOK;
     }
 
-    LoadVendorSymbs();
+    g_gpsInitPrvFn = (PFnGnssmgtInit)dlsym(g_vendorLibHandle, "gnssmgt_init");
+    LBSLOGE(GNSS, "%{public}s g_gpsInitPrvFn addr is %{public}x", GNSSMGT, g_gpsInitPrvFn);
+
+    g_gpsStartPrvFn = (PFnGnssmgtStart)dlsym(g_vendorLibHandle, "gnssmgt_start");
+    LBSLOGE(GNSS, "%{public}s g_gpsStartPrvFn addr is %{public}x", GNSSMGT, g_gpsStartPrvFn);
+
+    g_gpsStopPrvFn = (PFnGnssmgtStop)dlsym(g_vendorLibHandle, "gnssmgt_stop");
+    LBSLOGE(GNSS, "%{public}s g_gpsStopPrvFn addr is %{public}x", GNSSMGT, g_gpsStopPrvFn);
+
+    g_gpsCleanupPrvFn = (PFnGnssmgtCleanup)dlsym(g_vendorLibHandle, "gnssmgt_cleanup");
+    LBSLOGE(GNSS, "%{public}s g_gpsCleanupPrvFn addr is %{public}x", GNSSMGT, g_gpsCleanupPrvFn);
+
+    g_agpsInitPrvFn = (PFnAGnssmgtInit)dlsym(g_vendorLibHandle, "gnssmgt_agps_init");
+    LBSLOGE(GNSS, "%{public}s g_agpsInitPrvFn addr is %{public}x", GNSSMGT, g_agpsInitPrvFn);
+
+    g_agpsSetPosModePrvFn = (PFnAGnssmgtSetPosMode)dlsym(g_vendorLibHandle, "gnssmgt_setPosMode");
+    LBSLOGE(GNSS, "%{public}s g_agpsSetPosModePrvFn addr is %{public}x", GNSSMGT, g_agpsSetPosModePrvFn);
+
+    g_agpsSetServerPrvFn = (PFnAGnssmgtSetServer)dlsym(g_vendorLibHandle, "gnssmgt_agps_setServer");
+    LBSLOGE(GNSS, "%{public}s g_agpsSetServerPrvFn addr is %{public}x", GNSSMGT, g_agpsSetServerPrvFn);
+
+    g_agpsOpenConnPrvFn = (PFnAGnssmgtOpenConn)dlsym(g_vendorLibHandle, "gnssmgt_agps_openConn");
+    LBSLOGE(GNSS, "%{public}s g_agpsOpenConnPrvFn addr is %{public}x", GNSSMGT, g_agpsOpenConnPrvFn);
+
+    g_agpsCloseConnPrvFn = (PFnAGnssmgtAgpsCloseConn)dlsym(g_vendorLibHandle, "gnssmgt_agps_closeConn");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsCloseConnPrvFn addr is %{public}x", GNSSMGT, g_agpsCloseConnPrvFn);
+
+    g_agpsOpenFailedPrvFn = (PFnAGnssmgtAgpsOpenFailed)dlsym(g_vendorLibHandle, "gnssmgt_agps_openFailed");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsOpenFailedPrvFn addr is %{public}x", GNSSMGT, g_agpsOpenFailedPrvFn);
+
+    g_agpsOpenWithApnPrvFn = (PFnAGnssmgtAgpsOpenWithApnIpType)dlsym(g_vendorLibHandle,
+                                                                     "gnssmgt_agps_openWithApnIpType");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsOpenWithApnPrvFn addr is %{public}x", GNSSMGT, g_agpsOpenWithApnPrvFn);
+
+    g_agpsRilInitPrvFn = (PFnAGnssmgtRilInit)dlsym(g_vendorLibHandle, "gnssmgt_agps_ril_init");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilInitPrvFn addr is %{public}x", GNSSMGT, g_agpsRilInitPrvFn);
+
+    g_agpsRilRefLocationPrvFn = (PFnAGnssmgtRilRefLocation)dlsym(g_vendorLibHandle, "gnssmgt_agps_ril_setRefLoc");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilRefLocationPrvFn addr is %{public}x", GNSSMGT, g_agpsRilRefLocationPrvFn);
+
+    g_agpsRilSetIdPrvFn = (PFnAGnssmgtRilSetId)dlsym(g_vendorLibHandle, "gnssmgt_agps_ril_setSetID");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilSetIdPrvFn addr is %{public}x", GNSSMGT, g_agpsRilSetIdPrvFn);
+
+    g_agpsRilNetAbilityPrvFn = (PFnAGnssmgtRilUpdateNetworkAvailability)dlsym(g_vendorLibHandle,
+                                                                              "gnssmgt_agps_ril_updateNwAvailability");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilNetAbilityPrvFn addr is %{public}x", GNSSMGT, g_agpsRilNetAbilityPrvFn);
+
+    g_agpsRilNetStatePrvFn = (PFnAGnssmgtRilUpdateNetworkState)dlsym(g_vendorLibHandle,
+                                                                     "gnssmgt_agps_ril_updateNwState");
+    LBSLOGE(GNSS_TEST, "%{public}s g_agpsRilNetStatePrvFn addr is %{public}x", GNSSMGT, g_agpsRilNetStatePrvFn);
 
     if (g_gpsInitPrvFn == nullptr || g_gpsStartPrvFn == nullptr || g_gpsStopPrvFn == nullptr ||
         g_gpsCleanupPrvFn == nullptr) {
@@ -430,16 +442,16 @@ static void GnssSvStatusCallbackTest(GnssSvStatus* svInfo)
     LBSLOGI(GNSS, "enter function %{public}s \n", __func__);
     GnssSatelliteStatus status;
     status.size = svInfo->size;
-    status.satellitesNum = svInfo->numbSvs;
-    for (int i = 0; i < svInfo->numbSvs; i++) {
+    status.satellitesNum = svInfo->numb_svs;
+    for (int i = 0; i < svInfo->numb_svs; i++) {
         status.satellitesList[i] = {
             svInfo->gnss_sv_list[i].size,
             svInfo->gnss_sv_list[i].svid,
             svInfo->gnss_sv_list[i].constellation,
-            svInfo->gnss_sv_list[i].cN0Dbhz,
+            svInfo->gnss_sv_list[i].c_n0_dbhz,
             svInfo->gnss_sv_list[i].elevation,
             svInfo->gnss_sv_list[i].zaimuth,
-            svInfo->gnss_sv_list[i].carrierFreq,
+            svInfo->gnss_sv_list[i].carrier_freq,
             (uint32_t)svInfo->gnss_sv_list[i].flags,
         };
     }

@@ -36,9 +36,9 @@ class DrmCrtc {
 public:
     DrmCrtc(drmModeCrtcPtr c, uint32_t pipe);
     virtual ~DrmCrtc() {}
-    int32_t BindToDisplay(uint32_t id) const;
+    int32_t BindToDisplay(uint32_t id);
     void UnBindDisplay(uint32_t id);
-    bool CanBind() const;
+    bool CanBind();
     uint32_t GetId() const
     {
         return mId;
@@ -85,7 +85,7 @@ private:
     uint32_t mOutFencePropId = 0;
     uint32_t mActivePropId = 0;
     uint32_t mFpsChangePropId = 0;
-    mutable uint32_t mDisplayId = INVALIDE_DISPLAY_ID;
+    uint32_t mDisplayId = INVALIDE_DISPLAY_ID;
     uint32_t mPipe = 0;
     int32_t mActiveModeId = INVALID_MODE_ID;
     bool mNeedModeSet = false;

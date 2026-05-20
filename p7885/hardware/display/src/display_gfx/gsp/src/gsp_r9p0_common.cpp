@@ -1,10 +1,10 @@
 /*
- * Copyright (C) 2023 HiHope Open Source Organization.
+ * Copyright (C) 2018 Spreadtrum Communications Inc.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,7 @@ using namespace OHOS::HDI::Display::Composer::V1_0;
 #define GSP_QOGIRN6PRO "qogirn6pro"
 #define GSP_QOGIRN6L "qogirn6l"
 
-struct UisocGspCapa mCapability;
+struct GspR9p0Capability mCapability;
 uint16_t mLayerCount = 0;
 bool g_mInputRotMode = false;
 
@@ -80,12 +80,12 @@ bool checkRangeSize(IRect *srcRect, IRect *dstRect)
 {
     bool result = true;
     // Source and destination rectangle size check.
-    if (srcRect->w < mCapability.base.cropMin.w ||
-        srcRect->h < mCapability.base.cropMin.h ||
-        srcRect->w > mCapability.base.cropMax.w ||
-        srcRect->h > mCapability.base.cropMax.h || dstRect->w < mCapability.base.outMin.w ||
-        dstRect->h < mCapability.base.outMin.h || dstRect->w > mCapability.base.outMax.w ||
-        dstRect->h > mCapability.base.outMax.h) {
+    if (srcRect->w < mCapability.common.cropMin.rectW ||
+        srcRect->h < mCapability.common.cropMin.rectH ||
+        srcRect->w > mCapability.common.cropMax.rectW ||
+        srcRect->h > mCapability.common.cropMax.rectH || dstRect->w < mCapability.common.outMin.rectW ||
+        dstRect->h < mCapability.common.outMin.rectH || dstRect->w > mCapability.common.outMax.rectW ||
+        dstRect->h > mCapability.common.outMax.rectH) {
         DISPLAY_LOGD("clip or dst rect is not supported.");
         result = false;
     }
@@ -93,87 +93,87 @@ bool checkRangeSize(IRect *srcRect, IRect *dstRect)
     return result;
 }
 
-UisocRotation rotationTypeConvert(TransformType value)
+enum GspRotAngle rotationTypeConvert(TransformType value)
 {
-    UisocRotation rot = UISOC_ROT_0;
+    enum GspRotAngle rot = GSP_ROT_ANGLE_0;
     switch (value) {
         case ROTATE_NONE:
-            rot = UISOC_ROT_0;
+            rot = GSP_ROT_ANGLE_0;
             break;
         case ROTATE_90:
-            rot = UISOC_ROT_270;
+            rot = GSP_ROT_ANGLE_270;
             break;
         case ROTATE_180:
-            rot = UISOC_ROT_180;
+            rot = GSP_ROT_ANGLE_180;
             break;
         case ROTATE_270:
-            rot = UISOC_ROT_90;
+            rot = GSP_ROT_ANGLE_90;
             break;
         case MIRROR_H:
-            rot = UISOC_ROT_180_FLIP;
+            rot = GSP_ROT_ANGLE_180_M;
             break;
         case MIRROR_V:
-            rot = UISOC_ROT_FLIP_H;
+            rot = GSP_ROT_ANGLE_0_M;
             break;
         case MIRROR_H_ROTATE_90:
-            rot = UISOC_ROT_270_FLIP;
+            rot = GSP_ROT_ANGLE_270_M;
             break;
         case MIRROR_V_ROTATE_90:
-            rot = UISOC_ROT_FLIP_V;
+            rot = GSP_ROT_ANGLE_90_M;
             break;
         default:
-            rot = UISOC_ROT_MAX;
+            rot = GSP_ROT_ANGLE_MAX_NUM;
             break;
     }
 
     return rot;
 }
 
-int convertImgFormat(PixelFormat enColorFmt, struct UisocLayerCfg *common,
-                     struct UisocImgParams *params, uint32_t w, uint32_t h)
+int convertImgFormat(PixelFormat enColorFmt, struct GspLayerUser *common,
+                     struct GspR9p0ImgLayerParams *params, uint32_t w, uint32_t h)
 {
-    int format = UISOC_IMG_MAX;
+    int format = GSP_R9P0_IMG_FMT_MAX_NUM;
     uint32_t pixel_cnt = w * h;
-    common->off.v = common->off.uv = pixel_cnt;
+    common->offset.vOffset = common->offset.uvOffset = pixel_cnt;
 
-    params->endian.uvDWEndn = UISOC_ENDN_DW0;
-    params->endian.uvWEndn = UISOC_ENDN_W0;
-    params->endian.dwEndn = UISOC_ENDN_DW0;
-    params->endian.wEndn = UISOC_ENDN_W0;
-    params->endian.aSwap = UISOC_ALPHA_ARGB;
+    params->endian.uvDwordEndn = GSP_R9P0_DWORD_ENDN_0;
+    params->endian.uvWordEndn = GSP_R9P0_WORD_ENDN_0;
+    params->endian.yRgbDwordEndn = GSP_R9P0_DWORD_ENDN_0;
+    params->endian.yRgbWordEndn = GSP_R9P0_WORD_ENDN_0;
+    params->endian.aSwapMode = GSP_R9P0_A_SWAP_ARGB;
     switch (enColorFmt) {
         case PIXEL_FMT_RGBA_8888:
-            format = UISOC_IMG_ARGB888;
-            params->endian.swap = UISOC_SWAP_BGR;
+            format = GSP_R9P0_IMG_FMT_ARGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_BGR;
             break;
         case PIXEL_FMT_BGRA_8888:
-            format = UISOC_IMG_ARGB888;
-            params->endian.swap = UISOC_SWAP_RGB;
+            format = GSP_R9P0_IMG_FMT_ARGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_RGB;
             break;
         case PIXEL_FMT_RGBX_8888:
-            format = UISOC_IMG_RGB888;
-            params->endian.swap = UISOC_SWAP_BGR;
+            format = GSP_R9P0_IMG_FMT_RGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_BGR;
             break;
         case PIXEL_FMT_RGB_565:
-            format = UISOC_IMG_RGB565;
-            params->endian.swap = UISOC_SWAP_RGB;
+            format = GSP_R9P0_IMG_FMT_RGB565;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_RGB;
             break;
         case PIXEL_FMT_YCBCR_420_SP:
-            format = UISOC_IMG_YUV420_2P;
-            params->endian.uvWEndn = UISOC_ENDN_W0;
-            params->endian.wEndn = UISOC_ENDN_W0;
-            params->endian.aSwap = UISOC_ALPHA_ARGB;
+            format = GSP_R9P0_IMG_FMT_YUV420_2P;
+            params->endian.uvWordEndn = GSP_R9P0_WORD_ENDN_0;
+            params->endian.yRgbWordEndn = GSP_R9P0_WORD_ENDN_0;
+            params->endian.aSwapMode = GSP_R9P0_A_SWAP_ARGB;
             break;
         case PIXEL_FMT_YCRCB_420_SP:
-            format = UISOC_IMG_YUV420_2P;
-            params->endian.uvWEndn = UISOC_ENDN_W3;
+            format = GSP_R9P0_IMG_FMT_YUV420_2P;
+            params->endian.uvWordEndn = GSP_R9P0_WORD_ENDN_3;
             break;
         case PIXEL_FMT_YCRCB_420_P: // YUV420_3P, Y V U
-            format = UISOC_IMG_YV12;
-            common->off.uv += (h + 1) / 2 * ((w + 1) / 2); // (height + 1) / 2 * ALIGN((width + 1) / 2, 16);
-            params->endian.uvWEndn = UISOC_ENDN_W0;
-            params->endian.wEndn = UISOC_ENDN_W0;
-            params->endian.aSwap = UISOC_ALPHA_ARGB;
+            format = GSP_R9P0_IMG_FMT_YV12;
+            common->offset.uvOffset += (h + 1) / 2 * ((w + 1) / 2); // (height + 1) / 2 * ALIGN((width + 1) / 2, 16);
+            params->endian.uvWordEndn = GSP_R9P0_WORD_ENDN_0;
+            params->endian.yRgbWordEndn = GSP_R9P0_WORD_ENDN_0;
+            params->endian.aSwapMode = GSP_R9P0_A_SWAP_ARGB;
             break;
         default:
             return -1;
@@ -181,34 +181,35 @@ int convertImgFormat(PixelFormat enColorFmt, struct UisocLayerCfg *common,
     return format;
 }
 
-int osdFormatConvert(PixelFormat enColorFmt, struct UisocOsdParams *params)
+int osdFormatConvert(PixelFormat enColorFmt, struct GspR9p0OsdLayerParams *params, struct GspLayerUser *common)
 {
-    int format = UISOC_OSD_MAX;
+    int format = GSP_R9P0_OSD_FMT_MAX_NUM;
+    common->offset.vOffset = common->offset.uvOffset = 0;
 
-    params->endian.wEndn = UISOC_ENDN_W0;
-    params->endian.dwEndn = UISOC_ENDN_DW0;
-    params->endian.qwEndn = UISOC_ENDN_QW0;
-    params->endian.aSwap = UISOC_ALPHA_ARGB;
+    params->endian.yRgbWordEndn = GSP_R9P0_WORD_ENDN_0;
+    params->endian.yRgbDwordEndn = GSP_R9P0_DWORD_ENDN_0;
+    params->endian.yRgbQwordEndn = GSP_R9P0_QWORD_ENDN_0;
+    params->endian.aSwapMode = GSP_R9P0_A_SWAP_ARGB;
     switch (enColorFmt) {
         case PIXEL_FMT_RGBA_8888:
-            format = UISOC_OSD_ARGB888;
-            params->endian.swap = UISOC_SWAP_BGR;
+            format = GSP_R9P0_OSD_FMT_ARGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_BGR;
             break;
         case PIXEL_FMT_BGRA_8888:
-            format = UISOC_OSD_ARGB888;
-            params->endian.swap = UISOC_SWAP_RGB;
+            format = GSP_R9P0_OSD_FMT_ARGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_RGB;
             break;
         case PIXEL_FMT_RGBX_8888:
-            format = UISOC_OSD_RGB888;
-            params->endian.swap = UISOC_SWAP_BGR;
+            format = GSP_R9P0_OSD_FMT_RGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_BGR;
             break;
         case PIXEL_FMT_BGRX_8888:
-            format = UISOC_OSD_RGB888;
-            params->endian.swap = UISOC_SWAP_RGB;
+            format = GSP_R9P0_OSD_FMT_RGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_RGB;
             break;
         case PIXEL_FMT_RGB_565:
-            format = UISOC_OSD_RGB565;
-            params->endian.swap = UISOC_SWAP_RGB;
+            format = GSP_R9P0_OSD_FMT_RGB565;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_RGB;
             break;
         default:
             DISPLAY_LOGD("osd configEndian, unsupport format=0x%x.", format);
@@ -218,49 +219,49 @@ int osdFormatConvert(PixelFormat enColorFmt, struct UisocOsdParams *params)
     return format;
 }
 
-int dstFormatConvert(PixelFormat enColorFmt, struct UisocDesParams *params, struct UisocLayerCfg *common,
+int dstFormatConvert(PixelFormat enColorFmt, struct GspR9p0DesLayerParams *params, struct GspLayerUser *common,
                      uint32_t w, uint32_t h)
 {
-    int format = UISOC_DES_MAX;
-    params->endian.uvDWEndn = UISOC_ENDN_DW0;
-    params->endian.uvWEndn = UISOC_ENDN_W0;
-    params->endian.dwEndn = UISOC_ENDN_DW0;
-    params->endian.wEndn = UISOC_ENDN_W0;
-    params->endian.aSwap = UISOC_ALPHA_ARGB;
+    int format = GSP_R9P0_DST_FMT_MAX_NUM;
+    params->endian.uvDwordEndn = GSP_R9P0_DWORD_ENDN_0;
+    params->endian.uvWordEndn = GSP_R9P0_WORD_ENDN_0;
+    params->endian.yRgbDwordEndn = GSP_R9P0_DWORD_ENDN_0;
+    params->endian.yRgbWordEndn = GSP_R9P0_WORD_ENDN_0;
+    params->endian.aSwapMode = GSP_R9P0_A_SWAP_ARGB;
     switch (enColorFmt) {
         case PIXEL_FMT_YCBCR_420_SP:
-            format = UISOC_DES_YUV420_2P;
-            params->endian.aSwap = UISOC_ALPHA_ARGB;
+            format = GSP_R9P0_DST_FMT_YUV420_2P;
+            params->endian.aSwapMode = GSP_R9P0_A_SWAP_ARGB;
             break;
         case PIXEL_FMT_YCBCR_422_P:
-            format = UISOC_DES_YUV422_2P;
+            format = GSP_R9P0_DST_FMT_YUV422_2P;
             break;
         case PIXEL_FMT_YCRCB_420_P:
-            format = UISOC_DES_YUV420_3P;
-            params->endian.uvWEndn = UISOC_ENDN_W3;
+            format = GSP_R9P0_DST_FMT_YUV420_3P;
+            params->endian.uvWordEndn = GSP_R9P0_WORD_ENDN_3;
             break;
         case PIXEL_FMT_RGBA_8888:
-            format = UISOC_DES_ARGB888;
-            params->endian.swap = UISOC_SWAP_BGR;
+            format = GSP_R9P0_DST_FMT_ARGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_BGR;
             break;
         case PIXEL_FMT_RGB_565:
-            format = UISOC_DES_RGB565;
-            params->endian.swap = UISOC_SWAP_RGB;
+            format = GSP_R9P0_DST_FMT_RGB565;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_RGB;
             break;
         case PIXEL_FMT_RGBX_8888:
-            format = UISOC_DES_RGB888;
-            params->endian.swap = UISOC_SWAP_BGR;
+            format = GSP_R9P0_DST_FMT_RGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_BGR;
             break;
         case PIXEL_FMT_BGRA_8888:
-            format = UISOC_DES_ARGB888;
-            params->endian.swap = UISOC_SWAP_RGB;
+            format = GSP_R9P0_DST_FMT_ARGB888;
+            params->endian.rgbSwapMode = GSP_R9P0_RGB_SWP_RGB;
             break;
         default:
             DISPLAY_LOGD("dst configEndian, unsupport format=0x%x.", enColorFmt);
             break;
     }
-    common->off.uv = w * h;
-    common->off.v = w * h;
+    common->offset.uvOffset = w * h;
+    common->offset.vOffset = w * h;
 
     return format;
 }
@@ -269,9 +270,9 @@ bool IsVideoLayerImg(int format)
 {
     bool result = false;
 
-    if ((format >= UISOC_IMG_YUV422_2P &&
-         format <= UISOC_IMG_YUV420_3P) ||
-        (format == UISOC_IMG_YV12)) {
+    if ((format >= GSP_R9P0_IMG_FMT_YUV422_2P &&
+         format <= GSP_R9P0_IMG_FMT_YUV420_3P) ||
+        (format == GSP_R9P0_IMG_FMT_YV12)) {
         result = true;
     }
 
@@ -282,7 +283,7 @@ bool IsVideoLayerOsd(int format)
 {
     bool result = false;
 
-    if (format > UISOC_OSD_RGB565) {
+    if (format > GSP_R9P0_OSD_FMT_RGB565) {
         result = true;
     }
 
@@ -293,8 +294,8 @@ bool imgCheckOddBoundary(IRect *srcRect, int32_t format)
 {
     bool result = true;
 
-    // if yuvEven == 1, gsp do not support odd source layer.
-    if (IsVideoLayerImg(format) == true && !mCapability.yuvEven) {
+    // if yuvXywhEven == 1, gsp do not support odd source layer.
+    if (IsVideoLayerImg(format) == true && !mCapability.yuvXywhEven) {
         if ((srcRect->x & 0x1) || (srcRect->y & 0x1) || (srcRect->w & 0x1) ||
             (srcRect->h & 0x1)) {
             DISPLAY_LOGD("do not support odd source layer xywh.");
@@ -305,12 +306,12 @@ bool imgCheckOddBoundary(IRect *srcRect, int32_t format)
     return result;
 }
 
-bool IsLandScapeTransform(enum UisocRotation rot)
+bool IsLandScapeTransform(enum GspRotAngle rot)
 {
     bool result = false;
 
-    if (rot == UISOC_ROT_90 || rot == UISOC_ROT_270 ||
-        rot == UISOC_ROT_FLIP_V || rot == UISOC_ROT_270_FLIP) {
+    if (rot == GSP_ROT_ANGLE_90 || rot == GSP_ROT_ANGLE_270 ||
+        rot == GSP_ROT_ANGLE_90_M || rot == GSP_ROT_ANGLE_270_M) {
         result = true;
     }
 
@@ -319,15 +320,15 @@ bool IsLandScapeTransform(enum UisocRotation rot)
 
 
 bool checkScaleSize(IRect *srcRect, IRect *dstRect,
-    enum UisocRotation rot, bool inFBC,
+    enum GspRotAngle rot, bool inFBC,
     int protectLayerNum)
 {
     bool result = true;
     constexpr int SCALE_LIMIT_6 = 6;
     constexpr uint32_t SCALE_RATIO_4 = 4;
 
-    uint16_t scaleUpLimit = (inFBC ? 24 : (mCapability.upMax / 4));
-    uint16_t scaleDownLimit = (inFBC ? 4 : (16 / mCapability.dnMax));
+    uint16_t scaleUpLimit = (inFBC ? 24 : (mCapability.scaleRangeUp / 4));
+    uint16_t scaleDownLimit = (inFBC ? 4 : (16 / mCapability.scaleRangeDown));
 
     uint32_t srcw = 0;
     uint32_t srch = 0;
@@ -368,7 +369,7 @@ bool checkScaleSize(IRect *srcRect, IRect *dstRect,
 }
 
 bool checkScale(IRect *srcRect, IRect *dstRect,
-                enum UisocRotation rot, bool inFBC,
+                enum GspRotAngle rot, bool inFBC,
                 int protectLayerNum)
 {
     uint32_t srcw = 0;
@@ -384,7 +385,7 @@ bool checkScale(IRect *srcRect, IRect *dstRect,
         srch = srcRect->h;
     }
 
-    if ((mCapability.dualScale == false) &&
+    if ((mCapability.scaleUpdownSametime == false) &&
         ((srcw < dstw && srch > dsth) || (srcw > dstw && srch < dsth))) {
         DISPLAY_LOGD("need scale up and down at same time, which not support");
         return false;
@@ -400,12 +401,12 @@ bool checkScale(IRect *srcRect, IRect *dstRect,
 static bool checkInputRotationFormat(int32_t format)
 {
     switch (format) {
-        case UISOC_IMG_YUV420_2P:
-        case UISOC_IMG_YV12:
-        case UISOC_IMG_ARGB888:
-        case UISOC_IMG_RGB888:
-        case UISOC_IMG_RGB565:
-        case UISOC_IMG_P010:
+        case GSP_R9P0_IMG_FMT_YUV420_2P:
+        case GSP_R9P0_IMG_FMT_YV12:
+        case GSP_R9P0_IMG_FMT_ARGB888:
+        case GSP_R9P0_IMG_FMT_RGB888:
+        case GSP_R9P0_IMG_FMT_RGB565:
+        case GSP_R9P0_IMG_FMT_YCBCR_P010:
             return true;
         default:
             DISPLAY_LOGD("input rotation unsupport img format:0x%x.", format);
@@ -419,12 +420,12 @@ static bool checkInputRotationScaling(int32_t format, uint32_t srcw, uint32_t sr
         return true;
     }
     switch (format) {
-        case UISOC_IMG_ARGB888:
-        case UISOC_IMG_RGB888:
-        case UISOC_IMG_RGB565:
-        case UISOC_IMG_YUV420_2P:
-        case UISOC_IMG_YV12:
-        case UISOC_IMG_P010:
+        case GSP_R9P0_IMG_FMT_ARGB888:
+        case GSP_R9P0_IMG_FMT_RGB888:
+        case GSP_R9P0_IMG_FMT_RGB565:
+        case GSP_R9P0_IMG_FMT_YUV420_2P:
+        case GSP_R9P0_IMG_FMT_YV12:
+        case GSP_R9P0_IMG_FMT_YCBCR_P010:
             return true;
         default:
             DISPLAY_LOGD("input rotation scaling unsupport img format:0x%x.", format);
@@ -432,7 +433,7 @@ static bool checkInputRotationScaling(int32_t format, uint32_t srcw, uint32_t sr
     }
 }
 
-bool checkInputRotation(IRect *srcRect, IRect *dstRect, enum UisocRotation rot,
+bool checkInputRotation(IRect *srcRect, IRect *dstRect, enum GspRotAngle rot,
     int32_t format, int protectLayerNum)
 {
     uint16_t scaleUpLimit = 24;
@@ -476,7 +477,7 @@ bool checkInputRotation(IRect *srcRect, IRect *dstRect, enum UisocRotation rot,
 }
 
 bool needScale(IRect *srcRect, IRect *dstRect,
-               UisocRotation rot)
+               enum GspRotAngle rot)
 {
     bool result = false;
 
@@ -493,44 +494,44 @@ bool needScale(IRect *srcRect, IRect *dstRect,
     return result;
 }
 
-void configScale(IRect *srcRect, IRect *dstRect, UisocRotation rot,
-                 struct UisocImgParams *params)
+void configScale(IRect *srcRect, IRect *dstRect, enum GspRotAngle rot,
+                 struct GspR9p0ImgLayerParams *params)
 {
     uint32_t dstw = 0;
     uint32_t dsth = 0;
 
     if (needScale(srcRect, dstRect, rot) == true) {
-        params->scaleEn = 1;
-        params->scale.enable = 1;
+        params->scalingEn = 1;
+        params->scalePara.scaleEn = 1;
 
-        params->scale.in.x = srcRect->x;
-        params->scale.in.y = srcRect->y;
-        params->scale.in.w = srcRect->w;
-        params->scale.in.h = srcRect->h;
+        params->scalePara.scaleRectIn.stX = srcRect->x;
+        params->scalePara.scaleRectIn.stY = srcRect->y;
+        params->scalePara.scaleRectIn.rectW = srcRect->w;
+        params->scalePara.scaleRectIn.rectH = srcRect->h;
 
-        params->scale.out.x = dstRect->x;
-        params->scale.out.y = dstRect->y;
-        params->scale.out.w = dstRect->w;
-        params->scale.out.h = dstRect->h;
+        params->scalePara.scaleRectOut.stX = dstRect->x;
+        params->scalePara.scaleRectOut.stY = dstRect->y;
+        params->scalePara.scaleRectOut.rectW = dstRect->w;
+        params->scalePara.scaleRectOut.rectH = dstRect->h;
 
         if (IsLandScapeTransform(rot) == true) {
-            dstw = params->scale.out.h;
-            dsth = params->scale.out.w;
+            dstw = params->scalePara.scaleRectOut.rectH;
+            dsth = params->scalePara.scaleRectOut.rectW;
         } else {
-            dstw = params->scale.out.w;
-            dsth = params->scale.out.h;
+            dstw = params->scalePara.scaleRectOut.rectW;
+            dsth = params->scalePara.scaleRectOut.rectH;
         }
 
-        params->scale.hTap =
-            GetTapVar0(params->scale.in.w, dstw);
+        params->scalePara.htapMod =
+            GetTapVar0(params->scalePara.scaleRectIn.rectW, dstw);
 
-        params->scale.vTap =
-            GetTapVar0(params->scale.in.h, dsth);
+        params->scalePara.vtapMod =
+            GetTapVar0(params->scalePara.scaleRectIn.rectH, dsth);
     }
 
     /* for output rotation dst coordinate calucuate, "rotAdjustSingle" */
-    params->scale.out.w = dstRect->w;
-    params->scale.out.h = dstRect->h;
+    params->scalePara.scaleRectOut.rectW = dstRect->w;
+    params->scalePara.scaleRectOut.rectH = dstRect->h;
 }
 
 
@@ -592,23 +593,23 @@ static int rotAdjustSingle(RotRect *rect, uint32_t pitch,
     return 0;
 }
 
-static int imgLayerRotAdjust(struct UisocGspConfig *cmdInfo, uint32_t transform)
+static int imgLayerRotAdjust(struct GspR9p0CfgUser *cmdInfo, uint32_t transform)
 {
     int32_t ret = 0;
-    struct UisocImgCfg *imgInfo = cmdInfo->img;
-    for (int icnt = 0; icnt < UISOC_R9P0_IMGL_MAX; icnt++) {
-        if (imgInfo[icnt].base.enable == 1) {
+    struct GspR9p0ImgLayerUser *imgInfo = cmdInfo->limg;
+    for (int icnt = 0; icnt < R9P0_IMGL_NUM; icnt++) {
+        if (imgInfo[icnt].common.enable == 1) {
             RotRect rect = {
-                imgInfo[icnt].params.dst.x,
-                imgInfo[icnt].params.dst.y,
-                imgInfo[icnt].params.scale.out.w,
-                imgInfo[icnt].params.scale.out.h
+                imgInfo[icnt].params.desRect.stX,
+                imgInfo[icnt].params.desRect.stY,
+                imgInfo[icnt].params.scalePara.scaleRectOut.rectW,
+                imgInfo[icnt].params.scalePara.scaleRectOut.rectH
             };
-            ret = rotAdjustSingle(&rect, cmdInfo->dst.params.pitch, cmdInfo->dst.params.height, transform);
-            imgInfo[icnt].params.dst.x = rect.x;
-            imgInfo[icnt].params.dst.y = rect.y;
-            imgInfo[icnt].params.scale.out.w = rect.w;
-            imgInfo[icnt].params.scale.out.h = rect.h;
+            ret = rotAdjustSingle(&rect, cmdInfo->ld1.params.pitch, cmdInfo->ld1.params.height, transform);
+            imgInfo[icnt].params.desRect.stX = rect.x;
+            imgInfo[icnt].params.desRect.stY = rect.y;
+            imgInfo[icnt].params.scalePara.scaleRectOut.rectW = rect.w;
+            imgInfo[icnt].params.scalePara.scaleRectOut.rectH = rect.h;
             if (ret) {
                 DISPLAY_LOGD("rotAdjust img layer[%d] rotation adjust failed, ret=%d.", icnt, ret);
                 return ret;
@@ -618,28 +619,28 @@ static int imgLayerRotAdjust(struct UisocGspConfig *cmdInfo, uint32_t transform)
     return 0;
 }
 
-static int osdLayerRotAdjust(struct UisocGspConfig *cmdInfo, uint32_t transform)
+static int osdLayerRotAdjust(struct GspR9p0CfgUser *cmdInfo, uint32_t transform)
 {
     int32_t ret = 0;
-    struct UisocOsdCfg *osdInfo = cmdInfo->osd;
-    for (int icnt = 0; icnt < UISOC_R9P0_OSDL_MAX; icnt++) {
-        if (osdInfo[icnt].base.enable == 1) {
-            uint16_t w = osdInfo[icnt].params.clip.w;
-            uint16_t h = osdInfo[icnt].params.clip.h;
+    struct GspR9p0OsdLayerUser *osdInfo = cmdInfo->losd;
+    for (int icnt = 0; icnt < R9P0_OSDL_NUM; icnt++) {
+        if (osdInfo[icnt].common.enable == 1) {
+            uint16_t w = osdInfo[icnt].params.clipRect.rectW;
+            uint16_t h = osdInfo[icnt].params.clipRect.rectH;
             if (transform & ROTATE_90) {
                 uint16_t tmp = w;
                 w = h;
                 h = tmp;
             }
             RotRect rect = {
-                osdInfo[icnt].params.pos.x,
-                osdInfo[icnt].params.pos.y,
+                osdInfo[icnt].params.desPos.ptX,
+                osdInfo[icnt].params.desPos.ptY,
                 w,
                 h
             };
-            ret = rotAdjustSingle(&rect, cmdInfo->dst.params.pitch, cmdInfo->dst.params.height, transform);
-            osdInfo[icnt].params.pos.x = rect.x;
-            osdInfo[icnt].params.pos.y = rect.y;
+            ret = rotAdjustSingle(&rect, cmdInfo->ld1.params.pitch, cmdInfo->ld1.params.height, transform);
+            osdInfo[icnt].params.desPos.ptX = rect.x;
+            osdInfo[icnt].params.desPos.ptY = rect.y;
             // Note: w and h are discarded as original logic
             if (ret) {
                 DISPLAY_LOGD("rotAdjust OSD[%d] rotation adjust failed, ret=%d.", icnt, ret);
@@ -650,7 +651,7 @@ static int osdLayerRotAdjust(struct UisocGspConfig *cmdInfo, uint32_t transform)
     return 0;
 }
 
-int rotAdjust(struct UisocGspConfig *cmdInfo, uint32_t transform)
+int rotAdjust(struct GspR9p0CfgUser *cmdInfo, uint32_t transform)
 {
     int32_t ret = imgLayerRotAdjust(cmdInfo, transform);
     if (ret) return ret;
@@ -659,52 +660,52 @@ int rotAdjust(struct UisocGspConfig *cmdInfo, uint32_t transform)
     if (ret) return ret;
 
     if (transform & ROTATE_90) {
-        uint16_t tmp = cmdInfo->dst.params.pitch;
-        cmdInfo->dst.params.pitch = cmdInfo->dst.params.height;
-        cmdInfo->dst.params.height = tmp;
-        tmp = cmdInfo->common.workSrc.w;
-        cmdInfo->common.workSrc.w = cmdInfo->common.workSrc.h;
-        cmdInfo->common.workSrc.h = tmp;
+        uint16_t tmp = cmdInfo->ld1.params.pitch;
+        cmdInfo->ld1.params.pitch = cmdInfo->ld1.params.height;
+        cmdInfo->ld1.params.height = tmp;
+        tmp = cmdInfo->misc.workareaSrcRect.rectW;
+        cmdInfo->misc.workareaSrcRect.rectW = cmdInfo->misc.workareaSrcRect.rectH;
+        cmdInfo->misc.workareaSrcRect.rectH = tmp;
     }
     return ret;
 }
 
 
-bool miscCfgParcel(struct UisocCommonCfg *miscCfg, int modeType, uint32_t transform,
+bool miscCfgParcel(struct GspR9p0MiscCfgUser *miscCfg, int modeType, uint32_t transform,
     uint32_t w, uint32_t h)
 {
     bool status = false;
-    uint32_t freq = UISOC_FREQ_256M;
+    uint32_t freq = GSP_R9P0_FREQ_256M;
 
     switch (modeType) {
         case 0: {
             /* run_mod = 0, scale_seq = 0 */
-            miscCfg->mode = 0;
-            miscCfg->cores = 0;
+            miscCfg->workMod = 0;
+            miscCfg->coreNum = 0;
 
-            miscCfg->workSrc.x = 0;
-            miscCfg->workSrc.y = 0;
-            miscCfg->workSrc.w = w;
-            miscCfg->workSrc.h = h;
+            miscCfg->workareaSrcRect.stX = 0;
+            miscCfg->workareaSrcRect.stY = 0;
+            miscCfg->workareaSrcRect.rectW = w;
+            miscCfg->workareaSrcRect.rectH = h;
 
-            miscCfg->secure = 0;
+            miscCfg->secureEn = 0;
 
-            freq = UISOC_FREQ_512M;
+            freq = GSP_R9P0_FREQ_512M;
 
             /* set gsp freq = 512M when gsp open dual core */
-            if (miscCfg->cores) {
-                freq = UISOC_FREQ_512M;
+            if (miscCfg->coreNum) {
+                freq = GSP_R9P0_FREQ_512M;
             }
 
             if (strcmp(GSP_QOGIRN6L, mCapability.board) == 0) {
-                freq = UISOC_FREQ_614M;
+                freq = GSP_R9P0_FREQ_614_4M;
             }
 
-            miscCfg->freq = freq;
+            miscCfg->workFreq = freq;
             DISPLAY_LOGD("config frequency Index : 0x%d", freq);
         }
-            miscCfg->workDst.x = 0;
-            miscCfg->workDst.y = 0;
+            miscCfg->workareaDesPos.ptX = 0;
+            miscCfg->workareaDesPos.ptY = 0;
             status = true;
             break;
         default:

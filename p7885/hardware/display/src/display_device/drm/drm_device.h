@@ -46,11 +46,11 @@ public:
 
     std::vector<std::shared_ptr<DrmPlane>> GetDrmPlane(uint32_t pipe, uint32_t type);
 
-    int32_t GetCrtcProperty(const DrmCrtc &crtc, const std::string &name, DrmProperty *prop) const;
-    int32_t GetConnectorProperty(const DrmConnector &connector, const std::string &name, DrmProperty *prop) const;
-    int32_t GetPlaneProperty(const DrmPlane &plane, const std::string &name, DrmProperty *prop) const;
+    int32_t GetCrtcProperty(const DrmCrtc &crtc, const std::string &name, DrmProperty &prop) const;
+    int32_t GetConnectorProperty(const DrmConnector &connector, const std::string &name, DrmProperty &prop) const;
+    int32_t GetPlaneProperty(const DrmPlane &plane, const std::string &name, DrmProperty &prop) const;
 
-    int32_t GetProperty(uint32_t objId, uint32_t objType, const std::string &name, DrmProperty *prop) const;
+    int32_t GetProperty(uint32_t objId, uint32_t objType, const std::string &name, DrmProperty &prop) const;
     std::shared_ptr<DrmEncoder> GetDrmEncoderFromId(uint32_t id);
     std::shared_ptr<DrmConnector> GetDrmConnectorFromId(uint32_t id);
     std::shared_ptr<DrmCrtc> GetDrmCrtcFromId(uint32_t id);
@@ -66,7 +66,6 @@ private:
     void FindAllEncoder(const drmModeResPtr &res);
     void FindAllConnector(const drmModeResPtr &res);
     void FindAllPlane();
-    void CreateDisplays(const std::vector<std::shared_ptr<DrmConnector>> &connectors);
     int InitNetLink();
     IdMapPtr<HdiDisplay> mDisplays;
     IdMapPtr<DrmCrtc> mCrtcs;

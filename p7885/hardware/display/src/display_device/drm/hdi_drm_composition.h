@@ -32,9 +32,8 @@ public:
     explicit AtomicReqPtr(drmModeAtomicReqPtr ptr) : mPtr(ptr) {}
     virtual ~AtomicReqPtr()
     {
-        if (mPtr != nullptr) {
+        if (mPtr != nullptr)
             drmModeAtomicFree(mPtr);
-        }
     }
     drmModeAtomicReqPtr Get() const
     {
@@ -47,29 +46,26 @@ private:
 
 class HdiDrmComposition : public HdiComposition {
 public:
-    HdiDrmComposition(const std::shared_ptr<DrmConnector> &connector, const std::shared_ptr<DrmCrtc> &crtc,
-        const std::shared_ptr<DrmDevice> &drmDevice);
+    HdiDrmComposition(std::shared_ptr<DrmConnector> &connector, std::shared_ptr<DrmCrtc> &crtc,
+        std::shared_ptr<DrmDevice> &drmDevice);
     virtual ~HdiDrmComposition() {}
     int32_t Init();
     int32_t SetLayers(std::vector<HdiLayer *> &layers, HdiLayer &clientLayer);
     int32_t Apply(bool modeSet);
-    int32_t UpdateMode(std::unique_ptr<DrmModeBlock> &modeBlock, const drmModeAtomicReq &pset);
-    int32_t powerOff = 0;
+    int32_t UpdateMode(std::unique_ptr<DrmModeBlock> &modeBlock, drmModeAtomicReq &pset);
+    int32_t PowerOff = 0;
     HdiLayer *mClientLayer;
 
 private:
-    int32_t ApplyPlane(HdiDrmLayer &layer, DrmPlane &drmPlane, drmModeAtomicReqPtr pset) const;
-    void UpdateFps();
-    void SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer) const;
-    int32_t PrepareAtomicReq(AtomicReqPtr *atomicReqPtr, uint64_t *crtcOutFence) const;
-    void UpdateReleaseFences(uint64_t crtcOutFence);
+    int32_t ApplyPlane(HdiDrmLayer &layer, DrmPlane &drmPlane, drmModeAtomicReqPtr pset);
+    void SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer);
     std::shared_ptr<DrmDevice> mDrmDevice;
     std::shared_ptr<DrmConnector> mConnector;
     std::shared_ptr<DrmCrtc> mCrtc;
     std::vector<std::shared_ptr<DrmPlane>> mPrimPlanes;
     std::vector<std::shared_ptr<DrmPlane>> mOverlayPlanes;
     std::vector<std::shared_ptr<DrmPlane>> mPlanes;
-    int frameNum = 0;
+    int frame_num = 0;
     uint64_t frameTimeStart = 0;
     uint64_t frameTimeEnd = 0;
 };

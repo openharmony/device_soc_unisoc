@@ -30,9 +30,8 @@ constexpr uint32_t DRM_MODE_SRC_POS_SHIFT = 16;
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
-HdiDrmComposition::HdiDrmComposition(const std::shared_ptr<DrmConnector>& connector,
-                                     const std::shared_ptr<DrmCrtc>& crtc,
-                                     const std::shared_ptr<DrmDevice>& drmDevice)
+HdiDrmComposition::HdiDrmComposition(std::shared_ptr<DrmConnector>& connector, std::shared_ptr<DrmCrtc>& crtc,
+                                     std::shared_ptr<DrmDevice>& drmDevice)
     : mDrmDevice(drmDevice),
       mConnector(connector),
       mCrtc(crtc)
@@ -84,7 +83,7 @@ int32_t HdiDrmComposition::SetLayers(std::vector<HdiLayer*>& layers, HdiLayer& c
     return DISPLAY_SUCCESS;
 }
 
-int32_t HdiDrmComposition::ApplyPlane(HdiDrmLayer& layer, DrmPlane& drmPlane, drmModeAtomicReqPtr pset) const
+int32_t HdiDrmComposition::ApplyPlane(HdiDrmLayer& layer, DrmPlane& drmPlane, drmModeAtomicReqPtr pset)
 {
 #ifdef HIHOPE_OS_DEBUG
     HITRACE_METER(HITRACE_TAG_GRAPHIC_AGP);
@@ -126,7 +125,7 @@ int32_t HdiDrmComposition::ApplyPlane(HdiDrmLayer& layer, DrmPlane& drmPlane, dr
     DISPLAY_CHK_RETURN((ret < 0), DISPLAY_FAILURE, DISPLAY_LOGE("set crtc id fialed errno : %{public}d", errno));
 
     DrmMode mode;
-    mConnector->GetModeFromId(mCrtc->GetActiveModeId(), &mode);
+    mConnector->GetModeFromId(mCrtc->GetActiveModeId(), mode);
     if (&layer == mClientLayer) {
         IRect tmpRect = {0, 0, mode.GetModeInfoPtr()->hdisplay, mode.GetModeInfoPtr()->vdisplay};
         layer.SetLayerCrop(&tmpRect);
@@ -144,15 +143,15 @@ int32_t HdiDrmComposition::ApplyPlane(HdiDrmLayer& layer, DrmPlane& drmPlane, dr
     return DISPLAY_SUCCESS;
 }
 
-void HdiDrmComposition::SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer) const
+void HdiDrmComposition::SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer)
 {
     IRect rect = layer.GetLayerDisplayRect();
     IRect crop = layer.GetLayerCrop();
 
-    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyCrtcX, rect.x);
-    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyCrtcY, rect.y);
-    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyCrtcW, rect.w);
-    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyCrtcH, rect.h);
+    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_crtc_x, rect.x);
+    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_crtc_y, rect.y);
+    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_crtc_w, rect.w);
+    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_crtc_h, rect.h);
     drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertySrcX, (uint64_t)crop.x << DRM_MODE_SRC_POS_SHIFT);
     drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertySrcY, (uint64_t)crop.y << DRM_MODE_SRC_POS_SHIFT);
     drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertySrcW, (uint64_t)crop.w << DRM_MODE_SRC_POS_SHIFT);
@@ -173,20 +172,20 @@ void HdiDrmComposition::SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqP
             rotation = DRM_MODE_ROTATE_0;
             break;
     }
-    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyRotation, rotation);
-    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyBlendMode, 0);
+    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_rotation, rotation);
+    drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_blend_mode, 0);
 
     if (layer.GetAlpha().enGlobalAlpha) {
-        drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyAlpha, layer.GetAlpha().gAlpha);
+        drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_alpha, layer.GetAlpha().gAlpha);
     }
 
     if ((layer.GetCurrentBuffer()->GetFormat() >= PIXEL_FMT_YUV_422_I) &&
         (layer.GetCurrentBuffer()->GetFormat() <= PIXEL_FMT_VYUY_422_PKG)) {
-        drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.propertyY2rCoef, 1);
+        drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_y2r_coef, 1);
     }
 }
 
-int32_t HdiDrmComposition::UpdateMode(std::unique_ptr<DrmModeBlock>& modeBlock, const drmModeAtomicReq& pset)
+int32_t HdiDrmComposition::UpdateMode(std::unique_ptr<DrmModeBlock>& modeBlock, drmModeAtomicReq& pset)
 {
     (void)pset;
     // set the mode
@@ -198,7 +197,8 @@ int32_t HdiDrmComposition::UpdateMode(std::unique_ptr<DrmModeBlock>& modeBlock, 
             // set to active
             DISPLAY_LOGD("set crtc to active id %{public}d ", mCrtc->GetId());
 
-            drmModeAtomicReq* req = drmModeAtomicAlloc();
+            drmModeAtomicReq* req;
+            req = drmModeAtomicAlloc();
             ret =
                 drmModeAtomicAddProperty(req, mCrtc->GetId(), mCrtc->GetActivePropId(), 1); // (&pset, mCrtc->GetId(),
                                                                                             // mCrtc->GetActivePropId(),
@@ -245,25 +245,71 @@ int32_t HdiDrmComposition::UpdateMode(std::unique_ptr<DrmModeBlock>& modeBlock, 
     return DISPLAY_SUCCESS;
 }
 
-int32_t HdiDrmComposition::PrepareAtomicReq(AtomicReqPtr *atomicReqPtr, uint64_t *crtcOutFence) const
+int32_t HdiDrmComposition::Apply(bool modeSet)
 {
-    int ret = drmModeAtomicAddProperty(atomicReqPtr->Get(), mCrtc->GetId(), mCrtc->GetOutFencePropId(),
-                                       (uint64_t)crtcOutFence);
+    (void)modeSet;
+    uint64_t crtcOutFence = -1;
+    HdiDrmLayer* layer = nullptr;
+    int ret;
+    std::unique_ptr<DrmModeBlock> modeBlock;
+    int drmFd = mDrmDevice->GetDrmFd();
+    DISPLAY_LOGD();
+    DISPLAY_CHK_RETURN((mPlanes.size() < mCompLayers.size()), DISPLAY_FAILURE, DISPLAY_LOGE("plane not enough"));
+
+    if (frame_num % COUNT_FRAMES_NUM == 0) {
+        struct timeval tv;
+        gettimeofday(&tv, nullptr);
+        frameTimeEnd = tv.tv_sec * TIME_BASE + tv.tv_usec / TIME_BASE;
+        if (frameTimeStart > 0) {
+            DISPLAY_LOGE("Drm fps %{public}lu", COUNT_FRAMES_NUM * TIME_BASE / (frameTimeEnd - frameTimeStart));
+        }
+        frameTimeStart = frameTimeEnd;
+    }
+    frame_num++;
+
+    drmModeAtomicReqPtr pset = drmModeAtomicAlloc();
+    DISPLAY_CHK_RETURN((pset == nullptr),
+                       DISPLAY_NULL_PTR,
+                       DISPLAY_LOGE("drm atomic alloc failed errno %{public}d", errno));
+    AtomicReqPtr atomicReqPtr = AtomicReqPtr(pset);
+
+    // set the outFence property
+    ret = drmModeAtomicAddProperty(atomicReqPtr.Get(),
+                                   mCrtc->GetId(),
+                                   mCrtc->GetOutFencePropId(),
+                                   (uint64_t)&crtcOutFence);
+
+    DISPLAY_LOGD("Apply Set OutFence crtc id: %{public}d, fencePropId %{public}d",
+                 mCrtc->GetId(),
+                 mCrtc->GetOutFencePropId());
     DISPLAY_CHK_RETURN((ret < 0), DISPLAY_FAILURE, DISPLAY_LOGE("set the outfence property of crtc failed "));
 
+    // set the plane info.
+    DISPLAY_LOGD("mCompLayers size %{public}zd", mCompLayers.size());
     for (uint32_t i = 0; i < mCompLayers.size(); i++) {
-        HdiDrmLayer* layer = static_cast<HdiDrmLayer*>(mCompLayers[i]);
+        layer = static_cast<HdiDrmLayer*>(mCompLayers[i]);
         auto& drmPlane = mPlanes[i];
-        ret = ApplyPlane(*layer, *drmPlane, atomicReqPtr->Get());
-        DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("apply plane failed"));
+        ret = ApplyPlane(*layer, *drmPlane, atomicReqPtr.Get());
+        if (ret != DISPLAY_SUCCESS) {
+            DISPLAY_LOGE("apply plane failed");
+            break;
+        }
     }
-    return DISPLAY_SUCCESS;
-}
+    ret = UpdateMode(modeBlock, *(atomicReqPtr.Get()));
+    DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("update mode failed"));
+    uint32_t flags = DRM_MODE_ATOMIC_ALLOW_MODESET | DRM_MODE_ATOMIC_NONBLOCK;
+    if (PowerOff != 0) {
+        // do nothing
+    } else {
+        ret = drmModeAtomicCommit(drmFd, atomicReqPtr.Get(), flags, nullptr);
+        DISPLAY_CHK_RETURN((ret != 0),
+                           DISPLAY_FAILURE,
+                           DISPLAY_LOGE("drmModeAtomicCommit failed %{public}d errno %{public}d", ret, errno));
+    }
 
-void HdiDrmComposition::UpdateReleaseFences(uint64_t crtcOutFence)
-{
+    // set the release fence
     for (uint32_t i = 0; i < mCompLayers.size(); i++) {
-        HdiDrmLayer* layer = static_cast<HdiDrmLayer*>(mCompLayers[i]);
+        layer = static_cast<HdiDrmLayer*>(mCompLayers[i]);
         if (i == 0) {
             layer->SetReleaseFence(crtcOutFence);
         } else {
@@ -274,52 +320,7 @@ void HdiDrmComposition::UpdateReleaseFences(uint64_t crtcOutFence)
     if (mClientLayer->GetAcceleratorType() != ACCELERATOR_DPU) {
         mClientLayer->SetReleaseFence(dup(crtcOutFence));
     }
-}
-
-int32_t HdiDrmComposition::Apply(bool modeSet)
-{
-    (void)modeSet;
-    uint64_t crtcOutFence = -1;
-    std::unique_ptr<DrmModeBlock> modeBlock;
-    int drmFd = mDrmDevice->GetDrmFd();
-
-    DISPLAY_CHK_RETURN((mPlanes.size() < mCompLayers.size()), DISPLAY_FAILURE, DISPLAY_LOGE("plane not enough"));
-    UpdateFps();
-
-    drmModeAtomicReqPtr pset = drmModeAtomicAlloc();
-    DISPLAY_CHK_RETURN((pset == nullptr), DISPLAY_NULL_PTR,
-                       DISPLAY_LOGE("drm atomic alloc failed errno %{public}d", errno));
-    AtomicReqPtr atomicReqPtr = AtomicReqPtr(pset);
-
-    int32_t ret = PrepareAtomicReq(&atomicReqPtr, &crtcOutFence);
-    DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("prepare atomic req failed"));
-
-    ret = UpdateMode(modeBlock, *(atomicReqPtr.Get()));
-    DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("update mode failed"));
-
-    if (powerOff == 0) {
-        uint32_t flags = DRM_MODE_ATOMIC_ALLOW_MODESET | DRM_MODE_ATOMIC_NONBLOCK;
-        ret = drmModeAtomicCommit(drmFd, atomicReqPtr.Get(), flags, nullptr);
-        DISPLAY_CHK_RETURN((ret != 0), DISPLAY_FAILURE,
-                           DISPLAY_LOGE("drmModeAtomicCommit failed %{public}d errno %{public}d", ret, errno));
-    }
-
-    UpdateReleaseFences(crtcOutFence);
     return DISPLAY_SUCCESS;
-}
-
-void HdiDrmComposition::UpdateFps()
-{
-    if (frameNum % COUNT_FRAMES_NUM == 0) {
-        struct timeval tv;
-        gettimeofday(&tv, nullptr);
-        frameTimeEnd = tv.tv_sec * TIME_BASE + tv.tv_usec / TIME_BASE;
-        if (frameTimeStart > 0) {
-            DISPLAY_LOGE("Drm fps %{public}lu", COUNT_FRAMES_NUM * TIME_BASE / (frameTimeEnd - frameTimeStart));
-        }
-        frameTimeStart = frameTimeEnd;
-    }
-    frameNum++;
 }
 
 } // namespace DISPLAY

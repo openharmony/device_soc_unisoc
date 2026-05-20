@@ -1,0 +1,84 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# avc::  denied  { map } for  pid=795 comm="hdf_devhost" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:codec_host:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc::  denied  { open } for  pid=775 comm="hdf_devhost" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:codec_host:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+# avc::  denied  { read } for  pid=787 comm="hdf_devhost" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:codec_host:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
+allow codec_host hiviewdfx_hiview_param:file { map open read };
+
+# avc::  denied  { search } for  pid=788 comm="OS_IPC_1_841" name="block" dev="tmpfs" ino=6 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+allow codec_host dev_block_volfile:dir { search };
+
+# avc::  denied  { search } for  pid=788 comm="OS_IPC_1_841" name="by-name" dev="tmpfs" ino=14 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+allow codec_host dev_block_file:dir { search };
+
+# avc::  denied  { read } for  pid=788 comm="OS_IPC_1_841" name="sml_a" dev="tmpfs" ino=300 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
+allow codec_host dev_block_file:lnk_file { read };
+#allow codec_host sml_block_file:lnk_file { read };
+
+# avc::  denied  { search } for  pid=788 comm="OS_IPC_1_841" name="dma_heap" dev="tmpfs" ino=346 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=dir permissive=1
+allow codec_host dev_dma_heap_file:dir { search };
+
+# avc::  denied  { read } for  pid=788 comm="OS_IPC_1_841" name="system-uncached" dev="tmpfs" ino=349 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=chr_file permissive=1
+# avc::  denied  { open } for  pid=788 comm="OS_IPC_1_841" path="/dev/dma_heap/system-uncached" dev="tmpfs" ino=349 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=chr_file permissive=1
+allow codec_host dev_dma_heap_file:chr_file { read open map };
+
+# avc::  denied  { ioctl } for  pid=788 comm="OS_IPC_1_841" path="/dev/dma_heap/system-uncached" dev="tmpfs" ino=349 ioctlcmd=0x4800 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_dma_heap_file:s0 tclass=chr_file permissive=1
+allow codec_host dev_dma_heap_file:chr_file { ioctl };
+allowxperm codec_host dev_dma_heap_file:chr_file ioctl { 0x4800 };
+
+# avc:  denied  { read write } for  pid=886 comm="OS_HCodecLoop" path=*** dev="sda62" ino=8777 scontext=u:r:codec_host:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=1
+allow codec_host data_file:file { read open map };
+
+# avc:  denied  { search } for  pid=785 comm="OS_IPC_0_879" name="vendor" dev="sda62" ino=117 scontext=u:r:codec_host:s0 tcontext=u:object_r:data_vendor:s0 tclass=dir permissive=1
+allow codec_host data_vendor:dir { search };
+
+# avc:  denied  { search } for  pid=795 comm="OS_IPC_1_855" name="/" dev="sda62" ino=3 scontext=u:r:codec_host:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=1
+allow codec_host data_file:dir { search };
+
+# avc::  denied  { read write } for  pid=788 comm="OS_IPC_1_841" name="sprd_vsp" dev="tmpfs" ino=579 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc::  denied  { open } for  pid=788 comm="OS_IPC_1_841" path="/dev/sprd_vsp" dev="tmpfs" ino=579 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc::  denied  { map } for  pid=788 comm="OS_IPC_1_841" path="/dev/sprd_vsp" dev="tmpfs" ino=579 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+allow codec_host dev_sprd_file:chr_file { read open write map ioctl };
+
+# avc::  denied  { ioctl } for  pid=788 comm="OS_IPC_1_841" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d0a scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d01 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d03 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d08 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d11 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d04 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d06 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d0d scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=804 comm="OS_IPC_1_850" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d0b scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=782 comm="OS_IPC_2_3105" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d0c scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=0
+# avc:  denied  { ioctl } for  pid=803 comm="OS_IPC_1_825" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d0f scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=803 comm="OS_IPC_1_825" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d12 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=803 comm="OS_IPC_1_825" path="/dev/sprd_vsp" dev="tmpfs" ino=579 ioctlcmd=0x6d07 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
+allowxperm codec_host dev_sprd_file:chr_file ioctl { 0x6d0a 0x6d0e 0x6d05 0x6d01 0x6d03 0x6d08 0x6d11 0x6d04 0x6d06 0x6d0d 0x6d0b 0x6d0c 0x6d0f 0x6d12 0x6d07 };
+
+# avc:  denied  { write } for  pid=832 comm="OS_HCodecLoop" path=*** dev="sda62" ino=9382 scontext=u:r:codec_host:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
+allow codec_host data_ashmem_file:file { read write map };
+
+# avc:  denied  { read write } for  pid=753 comm="OS_IPC_0_1082" name="vpu_enc0" dev="tmpfs" ino=555 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { open } for  pid=753 comm="OS_IPC_0_1082" path="/dev/vpu_enc0" dev="tmpfs" ino=555 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { map } for  pid=753 comm="OS_IPC_0_1082" path="/dev/vpu_enc0" dev="tmpfs" ino=555 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=753 comm="OS_IPC_0_1082" path="/dev/vpu_enc0" dev="tmpfs" ino=555 ioctlcmd=0x6d0a scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=753 comm="OS_IPC_8_6664" path="/dev/vpu_enc0" dev="tmpfs" ino=555 ioctlcmd=0x6d05 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+allow codec_host dev_vpu_file:chr_file { open read write map ioctl };
+allowxperm codec_host dev_vpu_file:chr_file ioctl { 0x6d05 0x6d0a };
+
+typeattribute codec_host dev_attr_violator;
+# avc::  denied  { read write } for  pid=788 comm="OS_IPC_1_841" name="sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+# avc::  denied  { open } for  pid=788 comm="OS_IPC_1_841" path="/dev/block/sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+allow codec_host dev_block_file:blk_file { open read write };
+#allow codec_host sml_block_file:blk_file { open read write };
