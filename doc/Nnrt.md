@@ -252,6 +252,6 @@ nnrt_host:x:3311:
 
 ## 相关仓
 
-[**device\_board\_revoview**](https://gitcode.com/openharmony-sig/device_board_revoview)
+[**device\_board\_revoview**](https://gitcode.com/openharmony/device_board_revoview)
 
-[**vendor\_revoview**](https://gitcode.com/openharmony-sig/vendor_revoview)
+[**vendor\_revoview**](https://gitcode.com/openharmony/vendor_revoview)
