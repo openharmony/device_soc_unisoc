@@ -56,12 +56,12 @@ int32_t HdiGfxComposition::Init(void)
 int32_t HdiGfxComposition::GfxModuleInit(void)
 {
     DISPLAY_LOGD();
-    mGfxModule = dlopen(libHdiGfxName, RTLD_NOW | RTLD_NOLOAD);
+    mGfxModule = dlopen(LIB_HDI_GFX_NAME, RTLD_NOW | RTLD_NOLOAD);
     if (mGfxModule != nullptr) {
-        DISPLAY_LOGI("Module '%{public}s' already loaded", libHdiGfxName);
+        DISPLAY_LOGI("Module '%{public}s' already loaded", LIB_HDI_GFX_NAME);
     } else {
-        DISPLAY_LOGI("Loading module '%{public}s'", libHdiGfxName);
-        mGfxModule = dlopen(libHdiGfxName, RTLD_NOW);
+        DISPLAY_LOGI("Loading module '%{public}s'", LIB_HDI_GFX_NAME);
+        mGfxModule = dlopen(LIB_HDI_GFX_NAME, RTLD_NOW);
         if (mGfxModule == nullptr) {
             DISPLAY_LOGE("Failed to load module: %{public}s", dlerror());
             return DISPLAY_FAILURE;
@@ -69,9 +69,9 @@ int32_t HdiGfxComposition::GfxModuleInit(void)
     }
 
     using InitFunc = int32_t (*)(GfxFuncs **funcs);
-    InitFunc func = reinterpret_cast<InitFunc>(dlsym(mGfxModule, libGfxFuncInit));
+    InitFunc func = reinterpret_cast<InitFunc>(dlsym(mGfxModule, LIB_GFX_FUNC_INIT));
     if (func == nullptr) {
-        DISPLAY_LOGE("Failed to lookup %{public}s function: %s", libGfxFuncInit, dlerror());
+        DISPLAY_LOGE("Failed to lookup %{public}s function: %s", LIB_GFX_FUNC_INIT, dlerror());
         dlclose(mGfxModule);
         return DISPLAY_FAILURE;
     }
@@ -84,9 +84,9 @@ int32_t HdiGfxComposition::GfxModuleDeinit(void)
     int32_t ret = DISPLAY_SUCCESS;
     if (mGfxModule == nullptr) {
         using DeinitFunc = int32_t (*)(GfxFuncs *funcs);
-        DeinitFunc func = reinterpret_cast<DeinitFunc>(dlsym(mGfxModule, libGfxFuncDeinit));
+        DeinitFunc func = reinterpret_cast<DeinitFunc>(dlsym(mGfxModule, LIB_GFX_FUNC_DEINIT));
         if (func == nullptr) {
-            DISPLAY_LOGE("Failed to lookup %{public}s function: %s", libGfxFuncDeinit, dlerror());
+            DISPLAY_LOGE("Failed to lookup %{public}s function: %s", LIB_GFX_FUNC_DEINIT, dlerror());
         } else {
             ret = func(mGfxFuncs);
         }
@@ -180,12 +180,12 @@ void HdiGfxComposition::SetLayerAccelerator(HdiLayer *layer, std::vector<HdiLaye
     }
 #endif
     else {
-        SetComplexLayerAccelerator(layer, layers, i, dpuSize);
+        SetComplexLayerAccelerator(layer, layers, i, mask, dpuSize);
     }
 }
 
 void HdiGfxComposition::SetComplexLayerAccelerator(HdiLayer *layer, std::vector<HdiLayer *> &layers,
-                                                   uint32_t i, uint32_t &dpuSize)
+                                                   uint32_t i, int32_t mask, uint32_t &dpuSize)
 {
     // GSP+DPU
     int32_t tempMask = CheckLayers(layers, i);
@@ -193,7 +193,7 @@ void HdiGfxComposition::SetComplexLayerAccelerator(HdiLayer *layer, std::vector<
 #ifdef SPRD_7863
     if (tempMask & MASK_SCALING_TRANSFORM) {
 #else
-    if (tempMask != 0) { // 复杂场景交给GSP
+    if (tempMask) { // 复杂场景交给GSP
 #endif
         layer->SetAcceleratorType(ACCELERATOR_DPU);
         layer->SetDeviceSelect(COMPOSITION_DEVICE);

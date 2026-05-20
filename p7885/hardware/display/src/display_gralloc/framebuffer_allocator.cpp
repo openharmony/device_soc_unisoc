@@ -45,7 +45,7 @@ int32_t FramebufferAllocator::SetFdFormatAndVirtualRes(struct fb_var_screeninfo 
     varInfo.blue.offset = 16; // offset 16 of blue channel
 
     varInfo.xres_virtual = varInfo.xres;
-    varInfo.yres_virtual = varInfo.yres * fbBuffersNum;
+    varInfo.yres_virtual = varInfo.yres * FB_BUFFERS_NUM;
 
     // set framebuffer vary info
     ret = DisplayAdapter::GetInstance()->Ioctl(deviceFd_, FBIOPUT_VSCREENINFO, &varInfo);
@@ -93,7 +93,7 @@ int32_t FramebufferAllocator::Init()
         DISPLAY_LOGE("framebuffer allocator must depend on the display adapter");
         return DISPLAY_FAILURE;
     }
-    deviceFd_ = DisplayAdapter::GetInstance()->OpenDevice(fbdevPath, O_RDWR, 0);
+    deviceFd_ = DisplayAdapter::GetInstance()->OpenDevice(FBDEV_PATH, O_RDWR, 0);
     if (deviceFd_ < 0) {
         DISPLAY_LOGE("Failed to open fbdev %{public}d", deviceFd_);
         return DISPLAY_FAILURE;
@@ -115,11 +115,11 @@ int32_t FramebufferAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandl
     handle.fd = DisplayAdapter::GetInstance()->FbGetDmaBuffer(deviceFd_);
     DISPLAY_LOGD("fd is %{public}d", handle.fd);
     handle.format = PIXEL_FMT_RGBA_8888;
-    handle.width = bufferInfo.width;
-    handle.height = bufferInfo.height;
+    handle.width = bufferInfo.width_;
+    handle.height = bufferInfo.height_;
     handle.stride = fixInfo_.line_length;
     handle.size = bufferSize_;
-    handle.usage = bufferInfo.usage;
+    handle.usage = bufferInfo.usage_;
     freeBuffers_.pop();
     return DISPLAY_SUCCESS;
 }

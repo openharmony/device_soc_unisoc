@@ -30,8 +30,8 @@ public:
     int32_t FreeMem(BufferHandle *handle) override;
     ~FramebufferAllocator() override;
 private:
-    static constexpr uint32_t fbBuffersNum = 3;
-    static constexpr const char *fbdevPath = "/dev/graphics/fb0";
+    static constexpr uint32_t FB_BUFFERS_NUM = 3;
+    static constexpr const char *FBDEV_PATH = "/dev/graphics/fb0";
 
     int32_t SetFdFormatAndVirtualRes(struct fb_var_screeninfo varInfo);
     int32_t InitFb();

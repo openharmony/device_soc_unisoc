@@ -57,9 +57,6 @@
                 <policyitem type="copyright" name="HiHope Open Source Organization." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by HiHope Company"/>
                 <policyitem type="copyright" name="Archermind Technology Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by Archermind"/>
                 <policyitem type="copyright" name="Shenzhen Kaihong DID Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by Kaihong"/>
-                <policyitem type="copyright" name="Spreadtrum Communications Inc." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by Spreadtrum"/>
-                <policyitem type="copyright" name="Rockchip Electronics Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by Rockchip"/>
-                <policyitem type="copyright" name="SuperRed Open Source Organization Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by SuperRed"/>
                 <policyitem type="copyright" name="NXP" path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by NXP Company"/>
                 <policyitem type="copyright" name="Broadcom Corporation" path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by Broadcom Corporation"/>
             </policy>

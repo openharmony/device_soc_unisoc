@@ -37,6 +37,7 @@ group("unisoc_wrapper"){
         "system/memory/libdmabufheap:libaosp_dmabufheap",
         "system/memory/libmemion:libmemion",
         "system/memory/libvideosharememory:libvideo_share_memory",
+        "vendor/sprd/modules/minidump:group_minidump",
     ]
 }
 

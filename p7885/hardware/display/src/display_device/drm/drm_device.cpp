@@ -87,24 +87,23 @@ uint32_t DrmDevice::ConvertToDrmFormat(PixelFormat fmtIn)
 
 DrmDevice::DrmDevice() {}
 
-int32_t DrmDevice::GetCrtcProperty(const DrmCrtc &crtc, const std::string &name, DrmProperty *prop) const
+int32_t DrmDevice::GetCrtcProperty(const DrmCrtc &crtc, const std::string &name, DrmProperty &prop) const
 {
     return GetProperty(crtc.GetId(), DRM_MODE_OBJECT_CRTC, name, prop);
 }
 
-int32_t DrmDevice::GetConnectorProperty(const DrmConnector &connector, const std::string &name, DrmProperty *prop) const
+int32_t DrmDevice::GetConnectorProperty(const DrmConnector &connector, const std::string &name, DrmProperty &prop) const
 {
     return GetProperty(connector.GetId(), DRM_MODE_OBJECT_CONNECTOR, name, prop);
 }
 
-int32_t DrmDevice::GetPlaneProperty(const DrmPlane &plane, const std::string &name, DrmProperty *prop) const
+int32_t DrmDevice::GetPlaneProperty(const DrmPlane &plane, const std::string &name, DrmProperty &prop) const
 {
     return GetProperty(plane.GetId(), DRM_MODE_OBJECT_PLANE, name, prop);
 }
 
-int32_t DrmDevice::GetProperty(uint32_t objId, uint32_t objType, const std::string &name, DrmProperty *prop) const
+int32_t DrmDevice::GetProperty(uint32_t objId, uint32_t objType, const std::string &name, DrmProperty &prop) const
 {
-    DISPLAY_CHK_RETURN((prop == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("prop is null"));
     drmModeObjectPropertiesPtr props = drmModeObjectGetProperties(GetDrmFd(), objId, objType);
     DISPLAY_CHK_RETURN((!props), DISPLAY_FAILURE, DISPLAY_LOGE("can not get properties"));
     bool found = false;
@@ -112,8 +111,8 @@ int32_t DrmDevice::GetProperty(uint32_t objId, uint32_t objType, const std::stri
         drmModePropertyPtr p = drmModeGetProperty(GetDrmFd(), props->props[i]);
         if (strcmp(p->name, name.c_str()) == 0) {
             found = true;
-            prop->propId = p->prop_id;
-            prop->value = props->prop_values[i];
+            prop.propId = p->prop_id;
+            prop.value = props->prop_values[i];
         }
         drmModeFreeProperty(p);
     }
@@ -354,6 +353,7 @@ std::vector<std::shared_ptr<DrmPlane>> DrmDevice::GetDrmPlane(uint32_t pipe, uin
 
 std::unordered_map<uint32_t, std::shared_ptr<HdiDisplay>> DrmDevice::DiscoveryDisplay()
 {
+    int32_t ret;
     mDisplays.clear();
     drmModeResPtr res = drmModeGetResources(GetDrmFd());
     DISPLAY_CHK_RETURN((res == nullptr), mDisplays, DISPLAY_LOGE("can not get drm resource"));
@@ -365,8 +365,7 @@ std::unordered_map<uint32_t, std::shared_ptr<HdiDisplay>> DrmDevice::DiscoveryDi
     FindAllPlane();
     drmModeFreeResources(res);
 
-    DISPLAY_LOGI("DiscoveryDisplay: crtcs=%{public}zu, encoders=%{public}zu, "
-                 "connectors=%{public}zu, planes=%{public}zu",
+    DISPLAY_LOGI("DiscoveryDisplay: crtcs=%{public}zu, encoders=%{public}zu, connectors=%{public}zu, planes=%{public}zu",
         mCrtcs.size(), mEncoders.size(), mConnectors.size(), mPlanes.size());
 
     // 遍历所有 connector 创建 display
@@ -377,7 +376,7 @@ std::unordered_map<uint32_t, std::shared_ptr<HdiDisplay>> DrmDevice::DiscoveryDi
     for (auto &connectorPair : mConnectors) {
         auto &connector = connectorPair.second;
         DisplayCapability cap;
-        connector->GetDisplayCap(&cap);
+        connector->GetDisplayCap(cap);
         if (cap.type == DISP_INTF_MIPI) {
             mipiConnectors.push_back(connector);
         } else {
@@ -390,23 +389,14 @@ std::unordered_map<uint32_t, std::shared_ptr<HdiDisplay>> DrmDevice::DiscoveryDi
     sortedConnectors.insert(sortedConnectors.end(), mipiConnectors.begin(), mipiConnectors.end());
     sortedConnectors.insert(sortedConnectors.end(), otherConnectors.begin(), otherConnectors.end());
 
-    // 创建 display
-    CreateDisplays(sortedConnectors);
-
-    DISPLAY_LOGI("DiscoveryDisplay: found %{public}zd displays", mDisplays.size());
-    return mDisplays;
-}
-
-void DrmDevice::CreateDisplays(const std::vector<std::shared_ptr<DrmConnector>> &connectors)
-{
-    for (auto &connector : connectors) {
+    for (auto &connector : sortedConnectors) {
         DisplayCapability cap;
-        connector->GetDisplayCap(&cap);
+        connector->GetDisplayCap(cap);
         DISPLAY_LOGI("Processing connector id=%{public}d, type=%{public}d, connected=%{public}d",
             connector->GetId(), cap.type, connector->IsConnected());
 
         uint32_t crtcId = 0;
-        int32_t ret = connector->PickIdleCrtcId(mEncoders, mCrtcs, &crtcId);
+        ret = connector->PickIdleCrtcId(mEncoders, mCrtcs, crtcId);
         if (ret != DISPLAY_SUCCESS) {
             DISPLAY_LOGW("Connector %{public}d: no idle CRTC available", connector->GetId());
             continue;
@@ -422,10 +412,14 @@ void DrmDevice::CreateDisplays(const std::vector<std::shared_ptr<DrmConnector>> 
         DISPLAY_LOGI("Connector %{public}d -> CRTC %{public}d (pipe %{public}d)",
             connector->GetId(), crtcId, crtc->GetPipe());
 
+        // 创建 display
         std::shared_ptr<HdiDisplay> display = std::make_shared<DrmDisplay>(connector, crtc, mInstance);
         display->Init();
         mDisplays.emplace(display->GetId(), std::move(display));
     }
+
+    DISPLAY_LOGI("DiscoveryDisplay: found %{public}zd displays", mDisplays.size());
+    return mDisplays;
 }
 } // namespace OHOS
 } // namespace HDI

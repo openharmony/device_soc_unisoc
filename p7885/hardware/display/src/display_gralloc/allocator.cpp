@@ -52,19 +52,19 @@ bool Allocator::IsYuv(PixelFormat format)
 
 uint32_t Allocator::UpdatePixelInfo(BufferInfo &bufferInfo)
 {
-    DISPLAY_LOGD("format is %{public}d", bufferInfo.format);
-    if (IsYuv(bufferInfo.format)) {
-        bufferInfo.bitsPerPixel = 8; // 8 bits per pixel
+    DISPLAY_LOGD("format is %{public}d", bufferInfo.format_);
+    if (IsYuv(bufferInfo.format_)) {
+        bufferInfo.bitsPerPixel_ = 8; // 8 bits per pixel
     } else {
-        switch (bufferInfo.format) {
+        switch (bufferInfo.format_) {
             case PIXEL_FMT_RGBX_8888:
             case PIXEL_FMT_RGBA_8888:
             case PIXEL_FMT_BGRX_8888:
             case PIXEL_FMT_BGRA_8888:
-                bufferInfo.bitsPerPixel = 32; // 32 bits per pixel
+                bufferInfo.bitsPerPixel_ = 32; // 32 bits per pixel
                 break;
             case PIXEL_FMT_RGB_888:
-                bufferInfo.bitsPerPixel = 24; // 24 bits per pixel
+                bufferInfo.bitsPerPixel_ = 24; // 24 bits per pixel
                 break;
             case PIXEL_FMT_RGB_565:
             case PIXEL_FMT_BGR_565:
@@ -74,31 +74,31 @@ uint32_t Allocator::UpdatePixelInfo(BufferInfo &bufferInfo)
             case PIXEL_FMT_RGBX_4444:
             case PIXEL_FMT_BGRX_5551:
             case PIXEL_FMT_BGRA_5551:
-                bufferInfo.bitsPerPixel = 16; // 16 bits per pixel
+                bufferInfo.bitsPerPixel_ = 16; // 16 bits per pixel
                 break;
             case PIXEL_FMT_CLUT8:
-                bufferInfo.bitsPerPixel = 8; // 8 bits per pixel
+                bufferInfo.bitsPerPixel_ = 8; // 8 bits per pixel
                 break;
             default:
-                DISPLAY_LOGE("the format can not support %{public}d", bufferInfo.format);
+                DISPLAY_LOGE("the format can not support %{public}d", bufferInfo.format_);
                 return DISPLAY_NOT_SUPPORT;
         }
     }
 
-    bufferInfo.bytesPerPixel = bufferInfo.bitsPerPixel / bitsPerBytes;
+    bufferInfo.bytesPerPixel_ = bufferInfo.bitsPerPixel_ / BITS_PER_BYTES;
     return DISPLAY_SUCCESS;
 }
 
 void Allocator::FixedWidthStride(BufferInfo &bufferInfo)
 {
-    bufferInfo.widthStride = AlignUp(bufferInfo.width, widthAlign);
+    bufferInfo.widthStride_ = AlignUp(bufferInfo.width_,WIDTH_ALIGN);
 }
 
 int32_t Allocator::UpdateRGBStrideAndSize(BufferInfo &bufferInfo)
 {
     FixedWidthStride(bufferInfo);
-    bufferInfo.heightStride = AlignUp(bufferInfo.height, heightAlign);
-    bufferInfo.size = bufferInfo.widthStride * bufferInfo.heightStride * bufferInfo.bytesPerPixel;
+    bufferInfo.heightStride_ = AlignUp(bufferInfo.height_, HEIGHT_ALIGN);
+    bufferInfo.size_ = bufferInfo.widthStride_ * bufferInfo.heightStride_ * bufferInfo.bytesPerPixel_;
     return DISPLAY_SUCCESS;
 }
 
@@ -109,13 +109,13 @@ int32_t Allocator::UpdateYuvStrideAndSize(BufferInfo &bufferInfo)
     DISPLAY_LOGD();
     constexpr uint32_t yuvPlanarSizeFactor = 3;
     FixedWidthStride(bufferInfo);
-    bufferInfo.heightStride = AlignUp(bufferInfo.height, heightAlignYuv);
-    switch (bufferInfo.format) {
+    bufferInfo.heightStride_ = AlignUp(bufferInfo.height_, HEIGHT_ALIGN_YUV);
+    switch (bufferInfo.format_) {
         case PIXEL_FMT_YCBCR_420_SP:
         case PIXEL_FMT_YCRCB_420_SP:
         case PIXEL_FMT_YCBCR_420_P:
         case PIXEL_FMT_YCRCB_420_P:
-            bufferInfo.size = bufferInfo.widthStride *  bufferInfo.heightStride * yuvPlanarSizeFactor / UV_DIV_420;
+            bufferInfo.size_ = bufferInfo.widthStride_ *  bufferInfo.heightStride_ * yuvPlanarSizeFactor / UV_DIV_420;
             ret = DISPLAY_SUCCESS;
             break;
 
@@ -123,7 +123,7 @@ int32_t Allocator::UpdateYuvStrideAndSize(BufferInfo &bufferInfo)
         case PIXEL_FMT_YCRCB_422_SP:
         case PIXEL_FMT_YCBCR_422_P:
         case PIXEL_FMT_YCRCB_422_P:
-            bufferInfo.size = bufferInfo.widthStride *  bufferInfo.heightStride * UV_DIV_420;
+            bufferInfo.size_ = bufferInfo.widthStride_ *  bufferInfo.heightStride_ * UV_DIV_420;
             ret = DISPLAY_SUCCESS;
             break;
         default:
@@ -134,7 +134,7 @@ int32_t Allocator::UpdateYuvStrideAndSize(BufferInfo &bufferInfo)
 
 int32_t Allocator::UpdateStrideAndSize(BufferInfo &bufferInfo)
 {
-    if (IsYuv(bufferInfo.format)) {
+    if (IsYuv(bufferInfo.format_)) {
         return UpdateYuvStrideAndSize(bufferInfo);
     } else {
         return UpdateRGBStrideAndSize(bufferInfo);
@@ -144,10 +144,10 @@ int32_t Allocator::UpdateStrideAndSize(BufferInfo &bufferInfo)
 int32_t Allocator::ConvertToBufferInfo(BufferInfo &bufferInfo, const AllocInfo &info)
 {
     DISPLAY_LOGD();
-    bufferInfo.width = info.width;
-    bufferInfo.height = info.height;
-    bufferInfo.format = (PixelFormat)info.format;
-    bufferInfo.usage = info.usage;
+    bufferInfo.width_ = info.width;
+    bufferInfo.height_ = info.height;
+    bufferInfo.format_ = (PixelFormat)info.format;
+    bufferInfo.usage_ = info.usage;
     int32_t ret = UpdatePixelInfo(bufferInfo);
     DISPLAY_CHK_RETURN(
         (ret != DISPLAY_SUCCESS), DISPLAY_NOT_SUPPORT, DISPLAY_LOGE("failed to update pixel information"));
@@ -273,9 +273,8 @@ void *Allocator::Mmap(BufferHandle *handle)
         DISPLAY_LOGW("the buffer has virtual addr");
         return handle->virAddr;
     }
-    DISPLAY_LOGI("buffer handle size %{public}d, width %{public}d, height %{public}d, "
-                 "stride %{public}d, fd %{public}d, format: %d, "
-                 "phy 0x%{public}" PRIx64 ", usage 0x%{public}" PRIx64 ", viraddr %{public}p",
+    DISPLAY_LOGI("buffer handle size %{public}d, width %{public}d, height %{public}d, stride %{public}d, fd %{public}d, format: %d, "
+                 "phy 0x%{public}" PRIx64 ", usage 0x%{public}" PRIx64 ", viraddr 0x%{public}p",
         handle->size, handle->width, handle->height, handle->stride, handle->fd, handle->format, handle->phyAddr,
         handle->usage, handle->virAddr);
     virAddr = mmap(nullptr, handle->size, PROT_READ | PROT_WRITE, MAP_SHARED, handle->fd, 0);

@@ -44,7 +44,7 @@ public:
     {
         return &mModeInfo;
     }
-    void ConvertToHdiMode(DisplayModeInfo *hdiMode) const;
+    void ConvertToHdiMode(DisplayModeInfo &hdiMode);
 
 private:
     drmModeModeInfo mModeInfo = { 0 };
@@ -55,14 +55,14 @@ class DrmModeBlock {
 public:
     explicit DrmModeBlock(DrmMode &mode);
     virtual ~DrmModeBlock();
-    int32_t Init(DrmMode &mode) const;
+    int32_t Init(DrmMode &mode);
     uint32_t GetBlockId() const
     {
         return mBlockId;
     }
 
 private:
-    mutable uint32_t mBlockId = DRM_INVALID_ID;
+    uint32_t mBlockId = DRM_INVALID_ID;
 };
 
 class DrmConnector {
@@ -77,9 +77,9 @@ public:
     {
         return mEncoderId;
     }
-    void GetDisplayCap(DisplayCapability *cap) const;
+    void GetDisplayCap(DisplayCapability &cap);
     int32_t Init(DrmDevice &drmDevice);
-    int32_t PickIdleCrtcId(const IdMapPtr<DrmEncoder> &encoders, const IdMapPtr<DrmCrtc> &crtcs, uint32_t *crtcId);
+    int32_t PickIdleCrtcId(IdMapPtr<DrmEncoder> &encoders, IdMapPtr<DrmCrtc> &crtcs, uint32_t &crtcId);
     int32_t GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes);
     int32_t GetPreferenceId() const
     {
@@ -89,12 +89,12 @@ public:
     {
         return mPropCrtcId;
     }
-    int32_t TryPickEncoder(const IdMapPtr<DrmEncoder> &encoders, uint32_t encoderId, const IdMapPtr<DrmCrtc> &crtcs,
-        uint32_t *crtcId);
+    int32_t TryPickEncoder(IdMapPtr<DrmEncoder> &encoders, uint32_t encoderId, IdMapPtr<DrmCrtc> &crtcs,
+        uint32_t &crtcId);
     // update modes will reset the preference mode id and active mode id
     int32_t UpdateModes();
     std::unique_ptr<DrmModeBlock> GetModeBlockFromId(int32_t id);
-    int32_t GetModeFromId(int32_t id, DrmMode *mode);
+    int32_t GetModeFromId(int32_t id, DrmMode &mode);
     uint64_t GetDpmsState() const
     {
         return mDpmsState;
@@ -106,8 +106,8 @@ public:
     int32_t SetBrightness(uint32_t level);
 
 private:
-    static const char *ConvertTypeToName(uint32_t type);
-    static void ConvertToHdiType(uint32_t type, InterfaceType *hdiType);
+    static void ConvertTypeToName(uint32_t type, std::string &name);
+    static void ConvertToHdiType(uint32_t type, InterfaceType &hdiType);
 
     void InitModes(drmModeConnector c);
     uint32_t mId;

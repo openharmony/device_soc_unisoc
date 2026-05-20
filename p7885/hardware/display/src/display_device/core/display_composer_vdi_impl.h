@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef DISPLAY_COMPOSER_VDI_IMPL_H
-#define DISPLAY_COMPOSER_VDI_IMPL_H
+#ifndef _DISPLAY_COMPOSER_VDI_IMPL_H
+#define _DISPLAY_COMPOSER_VDI_IMPL_H
 
 #include <vector>
 #include <mutex>
@@ -83,4 +83,4 @@ extern "C" int32_t UpdateConfig(std::string& result);
 } // DISPLAY
 }  // HDI
 }  // OHOS
-#endif // DISPLAY_COMPOSER_VDI_IMPL_H
+#endif // _DISPLAY_COMPOSER_VDI_IMPL_H

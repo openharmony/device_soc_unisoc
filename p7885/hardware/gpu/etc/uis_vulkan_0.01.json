@@ -1,0 +1,9 @@
+{
+   "file_format_version": "1.0.1",
+   "ICD": {
+      "library_path": "/vendor/lib64/chipsetsdk/libGLES_mali.z.so",
+      "api_version": "1.2.275",
+      "library_arch" : "64",
+      "is_portability_driver": false
+   }
+}

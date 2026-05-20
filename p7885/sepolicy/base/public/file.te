@@ -21,4 +21,5 @@ type dev_vpu_file, dev_attr;
 type dev_sprd_file, dev_attr;
 type dev_modem_file, dev_attr;
 type data_ashmem_file, file_attr, data_file_attr;
+type data_ylog_file, file_attr, data_file_attr;
 # type vendor_module_file, vendor_file_attr, file_attr;
