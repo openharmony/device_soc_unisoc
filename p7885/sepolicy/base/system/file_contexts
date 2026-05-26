@@ -32,6 +32,7 @@
 /dev/chsys              u:object_r:dev_chsys_file:s0
 /dev/modem              u:object_r:dev_modem_file:s0
 /dev/stty_nr[0-9]*          u:object_r:dev_stty_file:s0
+/dev/ttyBT0                   u:object_r:tty_device:s0
 
 /dev/data0_gnss            u:object_r:dev_gnss_file:s0
 /dev/gnss_pmnotify_ctl       u:object_r:dev_gnss_file:s0
