@@ -199,7 +199,7 @@ group("radio"){
     ":cp_diskserver_cfg",
     ":modem_control_cfg",
     ":channelmanager_cfg",
-    ":ueventd_confg",
+    # ":ueventd_confg",
     ":channelmanager_para",
     ":modem_control_para",
     ":nvitem_para",

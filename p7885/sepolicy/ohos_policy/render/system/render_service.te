@@ -46,14 +46,17 @@ allow render_service data_service_file:dir { search };
 # avc:  denied  { write } for  pid=922 comm="render_service" name="render_service" dev="sda62" ino=22 scontext=u:r:render_service:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=dir permissive=0
 allow render_service data_service_el0_file:dir { write remove_name };
 
-# avc:  denied  { open } for  pid=826 comm="RSUniRenderThre" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1# avc:  denied  { read } for  pid=826 comm="RSUniRenderThre" name="sda6" dev="tmpfs" ino=300 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
-allow render_service dev_block_file:blk_file { open read };
+# avc:  denied  { open } for  pid=826 comm="RSUniRenderThre" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+# avc:  denied  { read } for  pid=826 comm="RSUniRenderThre" name="sda6" dev="tmpfs" ino=300 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
+#allow render_service dev_block_file:blk_file { open read };
+allow render_service sml_block_file:blk_file { open read };
 
 # avc:  denied  { search } for  pid=826 comm="RSUniRenderThre" name="by-name" dev="tmpfs" ino=14 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
 allow render_service dev_block_file:dir { search };
 
 # avc:  denied  { read } for  pid=826 comm="RSUniRenderThre" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
-allow render_service dev_block_file:lnk_file { read };
+#allow render_service dev_block_file:lnk_file { read };
+allow render_service sml_block_file:lnk_file { read };
 
 # avc:  denied  { search } for  pid=826 comm="RSUniRenderThre" name="block" dev="tmpfs" ino=6 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
 allow render_service dev_block_volfile:dir { search };

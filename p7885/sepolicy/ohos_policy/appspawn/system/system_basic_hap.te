@@ -54,8 +54,3 @@ allow system_basic_hap allocator_host:binder { call transfer };
 
 allow system_basic_hap data_ashmem_file:file { read write map };
 
-# avc:  denied  { ioctl } for  pid=3630 comm=".hihope.facenet" path="/dev/vha0" dev="tmpfs" ino=573 ioctlcmd=0x7102 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
-# avc:  denied  { map } for  pid=3630 comm=".hihope.facenet" path="/dev/vha0" dev="tmpfs" ino=573 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
-# avc:  denied  { read write } for  pid=3630 comm=".hihope.facenet" path="/dev/vha0" dev="tmpfs" ino=573 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:dev_file:s0 tclass=chr_file permissive=1
-allow system_basic_hap dev_vha:chr_file { ioctl open map read write };
-allowxperm system_basic_hap dev_vha:chr_file ioctl { 0x7100 0x7101 0x7102 0x7103 0x7105 0x7106 0x7107 0x7108 0x7109 0x710d 0x7110 };

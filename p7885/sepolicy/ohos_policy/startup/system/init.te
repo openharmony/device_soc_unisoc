@@ -12,17 +12,22 @@
 # limitations under the License.
 
 #type security_component_service, sadomain, domain;
+typeattribute init cap_violator_sysmodule;
 
 typeattribute init vendor_bin_file_violator_file_execute_no_trans;
 
 # avc:  denied  { read } for  pid=1 comm="init" name="mali_kbase.ko" dev="sda47" ino=646 scontext=u:r:init:s0 tcontext=u:object_r:vendor_module_file:s0 tclass=file permissive=0
-allow init vendor_module_file:file { read open getattr };
+#allow init vendor_module_file:file { read open getattr };
+allow init vendor_lib_file:file { read open getattr };
 
 # avc:  denied  { module_load } for  pid=1 comm="init" path="/vendor/modules/mali_kbase.ko" dev="sda47" ino=646 scontext=u:r:init:s0 tcontext=u:object_r:vendor_module_file:s0 tclass=system permissive=0
-allow init vendor_module_file:system { module_load };
+#allow init vendor_module_file:system { module_load };
 
 # avc:  denied  { search } for  pid=1 comm="init" name="modules" dev="sda47" ino=639 scontext=u:r:init:s0 tcontext=u:object_r:vendor_module_file:s0 tclass=dir permissive=0
-allow init vendor_module_file:dir { search };
+#allow init vendor_module_file:dir { search };
+
+# avc:  denied  { module_load } for  pid=1 comm="init" path="/vendor/lib64/modules/mali_kbase.ko" dev="sda47" ino=662 scontext=u:r:init:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=system permissive=1
+allow init vendor_lib_file:system { module_load };
 
 # avc:  denied  { remove_name } for  pid=1 comm="init" name="pid_363" dev="tmpfs" ino=541 scontext=u:r:init:s0 tcontext=u:object_r:dev_file:s0 tclass=dir permissive=0
 # avc:  denied  { setattr } for  pid=1 comm="init" name="pids" dev="tmpfs" ino=557 scontext=u:r:init:s0 tcontext=u:object_r:dev_file:s0 tclass=dir permissive=0
@@ -175,7 +180,14 @@ allow init dev_snd_file:dir { getattr };
 allow init dev_mali:chr_file { getattr };
 
 allow init dev_vha:chr_file { getattr setattr };
-#allow init dev_modem_file:chr_file { getattr setattr };
+allow init dev_modem_file:chr_file { getattr setattr };
+allow init dev_pmsys_file:chr_file { getattr setattr };
+allow init dev_phycp_file:chr_file { getattr setattr };
+allow init dev_spipe_file:chr_file { getattr setattr };
+allow init dev_snv_file:chr_file { getattr setattr };
+allow init dev_sctl_file:chr_file { getattr setattr };
+allow init dev_chsys_file:chr_file { getattr setattr };
+allow init dev_stty_file:chr_file { getattr setattr };
 
 allow init data_ashmem_file:dir { getattr open read relabelto search setattr };
 allow init data_ashmem_file:file { relabelto create getattr map open read rename setattr unlink write append };
@@ -183,8 +195,14 @@ allow init data_ashmem_file:file { relabelto create getattr map open read rename
 # avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/data0_gnss" dev="tmpfs" ino=414 scontext=u:r:init:s0 tcontext=u:object_r:dev_gnss_file:s0 tclass=chr_file permissive=1
 allow init dev_gnss_file:chr_file { getattr setattr };
 
+allow init sml_block_file:blk_file { getattr setattr };
+allow init sml_block_file:lnk_file { getattr setattr };
+
 # avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=28101 scontext=u:r:init:s0 tcontext=u:r:deviceauth_service:s0 tclass=file permissive=1
 allow init deviceauth_service:file { write };
+
+# avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/hdf_sensor_manager_ap" dev="tmpfs" ino=401 scontext=u:r:init:s0 tcontext=u:object_r:dev_hdf_sensor_mgr:s0 tclass=chr_file permissive=1
+allow init dev_hdf_sensor_mgr:chr_file { getattr };
 
 # add by xqb
 allow init data_hdc_pubkeys:dir { getattr setattr };
