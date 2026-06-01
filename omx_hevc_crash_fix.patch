@@ -1,0 +1,77 @@
+diff --git a/p7885/hardware/omx_il/components/video/hevc/dec/SPRDHEVCDecoder.cpp b/p7885/hardware/omx_il/components/video/hevc/dec/SPRDHEVCDecoder.cpp
+index 2da7534..a93409b 100755
+--- a/p7885/hardware/omx_il/components/video/hevc/dec/SPRDHEVCDecoder.cpp
++++ b/p7885/hardware/omx_il/components/video/hevc/dec/SPRDHEVCDecoder.cpp
+@@ -666,6 +666,7 @@ void SPRDHEVCDecoder::applyPortGeometryChange(OMX_U32 portIndex, uint32_t newWid
+     }
+     mFrameWidth = newWidth;
+     mFrameHeight = newHeight;
++    mStride16 = ((mFrameWidth + ALIGN_16_BOUNDARY) & ~ALIGN_16_BOUNDARY);
+     mStride = ((newWidth + ALIGN_32_BOUNDARY) & ~ALIGN_32_BOUNDARY);
+     mSliceHeight = ((newHeight + ALIGN_32_BOUNDARY) & ~ALIGN_32_BOUNDARY);
+     mPictureSize = mStride * mSliceHeight * YUV420_MULTIPLIER / YUV420_DIVISOR;
+@@ -1361,6 +1362,7 @@ void SPRDHEVCDecoder::UpdateDecoderPictureState(const H265SwDecInfo *info)
+ {
+     mFrameWidth = info->cropParams.cropOutWidth;
+     mFrameHeight = info->cropParams.cropOutHeight;
++    mStride16 = ((mFrameWidth + ALIGN_16_BOUNDARY) & ~ALIGN_16_BOUNDARY);
+     mhigh10En = info->high10En;
+     mStride = info->picWidth;
+     mSliceHeight = info->picHeight;
+@@ -1462,6 +1464,14 @@ bool SPRDHEVCDecoder::HandleBitdepthChangeEvent(const unsigned char *high10En)
+ }
+ void SPRDHEVCDecoder::notifyFillBufferDone(OMX_BUFFERHEADERTYPE *header)
+ {
++    if (header == nullptr) {
++        return;
++    }
++    if (header->nFilledLen == 0) {
++        (*mCallbacks->FillBufferDone)(
++            mComponent, mComponent->pApplicationPrivate, header);
++        return;
++    }
+     NV12Crop(header, mStride, mSliceHeight, mStride16, mFrameHeight);
+     (*mCallbacks->FillBufferDone)(
+         mComponent, mComponent->pApplicationPrivate, header);
+diff --git a/p7885/hardware/omx_il/libstagefrighthw/SprdVideoDecoderBase.cpp b/p7885/hardware/omx_il/libstagefrighthw/SprdVideoDecoderBase.cpp
+index ecf4ed6..ef497bb 100755
+--- a/p7885/hardware/omx_il/libstagefrighthw/SprdVideoDecoderBase.cpp
++++ b/p7885/hardware/omx_il/libstagefrighthw/SprdVideoDecoderBase.cpp
+@@ -14,6 +14,7 @@
+  * limitations under the License.
+  */
+ #include "SprdVideoDecoderBase.h"
++#include "SprdOMXComponent.h"
+ #include "OMXHardwareAPI.h"
+ #include <securec.h>
+ #include <cstring>
+@@ -198,6 +199,29 @@ void SprdVideoDecoderBase::NV12Crop(OMX_BUFFERHEADERTYPE *header,
+     if (header == nullptr || header->pBuffer == nullptr || header->pPlatformPrivate == nullptr) {
+         return;
+     }
++    if (srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0) {
++        OMX_LOGE("NV12Crop invalid params, src(%u x %u), dst(%u x %u)",
++            srcWidth, srcHeight, dstWidth, dstHeight);
++        return;
++    }
++    if (dstWidth > srcWidth || dstHeight > srcHeight) {
++        OMX_LOGE("NV12Crop skip, dst(%u x %u) exceeds src(%u x %u)",
++            dstWidth, dstHeight, srcWidth, srcHeight);
++        return;
++    }
++
++    size_t dstCapacity = header->nAllocLen;
++    BufferCtrlStruct *outCtrl = reinterpret_cast<BufferCtrlStruct*>(header->pOutputPortPrivate);
++    if (outCtrl != nullptr && outCtrl->bufferSize > 0) {
++        dstCapacity = outCtrl->bufferSize;
++    }
++    uint64_t requiredDstSize = static_cast<uint64_t>(dstWidth) * dstHeight * 3 / 2;
++    if (requiredDstSize > dstCapacity) {
++        OMX_LOGE("NV12Crop skip, dst capacity too small, required=%llu, capacity=%zu, src(%u x %u), dst(%u x %u)",
++            static_cast<unsigned long long>(requiredDstSize), dstCapacity, srcWidth, srcHeight, dstWidth, dstHeight);
++        return;
++    }
++
+     OMX_LOGD("NV12Crop start, srcWidth = %u, srcHeight = %u",
+         srcWidth, srcHeight);
+     OMX_LOGD("dstWidth = %u, dstHeight = %u",
