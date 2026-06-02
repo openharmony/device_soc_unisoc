@@ -57,31 +57,31 @@
 
 ### 环境准备
 
-[编译构建方法](https://gitcode.com/openharmony/device_board_revoview/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/wukong100/README_zh.md#section03)
+[编译构建方法](https://gitcode.com/openharmony/device_board_revoview/blob/master/wukong100/README_zh.md#section03)
 
-[烧录方法](https://gitcode.com/openharmony/device_board_revoview/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/wukong100/README_zh.md#section04)
+[烧录方法](https://gitcode.com/openharmony/device_board_revoview/blob/master/wukong100/README_zh.md#section04)
 
 ### 适配方法
 
-[启动适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Startup.md)
+[启动适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/Startup.md)
 
-[Display适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Display.md)
+[Display适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/Display.md)
 
-[Screen适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Screen.md)
+[Screen适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/Screen.md)
 
-[NPU适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Nnrt.md)
+[NPU适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/Nnrt.md)
 
-[Modem适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Modem.md)
+[Modem适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/Modem.md)
 
-[BT框架适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/BT.md)
+[BT框架适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/BT.md)
 
-[Wifi适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/WIFI.md)
+[Wifi适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/WIFI.md)
 
-[Audio适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Audio.md)
+[Audio适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/Audio.md)
 
-[Gnss适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Gnss.md)
+[Gnss适配](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/Gnss.md)
 
-[面部识别](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/FaceNet.md)
+[面部识别](https://gitcode.com/openharmony/device_soc_unisoc/blob/master/doc/FaceNet.md)
 
 ## 参与贡献<a name="section05"></a>
 
