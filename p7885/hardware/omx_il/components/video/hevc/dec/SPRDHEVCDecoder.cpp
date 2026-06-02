@@ -666,6 +666,7 @@ void SPRDHEVCDecoder::applyPortGeometryChange(OMX_U32 portIndex, uint32_t newWid
     }
     mFrameWidth = newWidth;
     mFrameHeight = newHeight;
+    mStride16 = ((mFrameWidth + ALIGN_16_BOUNDARY) & ~ALIGN_16_BOUNDARY);
     mStride = ((newWidth + ALIGN_32_BOUNDARY) & ~ALIGN_32_BOUNDARY);
     mSliceHeight = ((newHeight + ALIGN_32_BOUNDARY) & ~ALIGN_32_BOUNDARY);
     mPictureSize = mStride * mSliceHeight * YUV420_MULTIPLIER / YUV420_DIVISOR;
@@ -1361,6 +1362,7 @@ void SPRDHEVCDecoder::UpdateDecoderPictureState(const H265SwDecInfo *info)
 {
     mFrameWidth = info->cropParams.cropOutWidth;
     mFrameHeight = info->cropParams.cropOutHeight;
+    mStride16 = ((mFrameWidth + ALIGN_16_BOUNDARY) & ~ALIGN_16_BOUNDARY);
     mhigh10En = info->high10En;
     mStride = info->picWidth;
     mSliceHeight = info->picHeight;
@@ -1462,6 +1464,21 @@ bool SPRDHEVCDecoder::HandleBitdepthChangeEvent(const unsigned char *high10En)
 }
 void SPRDHEVCDecoder::notifyFillBufferDone(OMX_BUFFERHEADERTYPE *header)
 {
+    if (header == nullptr) {
+        return;
+    }
+    if (header->nFilledLen == 0) {
+        (*mCallbacks->FillBufferDone)(
+            mComponent, mComponent->pApplicationPrivate, header);
+        return;
+    }
+    if (header->nFilledLen > header->nAllocLen) {
+        OMX_LOGE("skip NV12Crop, nFilledLen(%u) exceeds nAllocLen(%u)",
+            header->nFilledLen, header->nAllocLen);
+        (*mCallbacks->FillBufferDone)(
+            mComponent, mComponent->pApplicationPrivate, header);
+        return;
+    }
     NV12Crop(header, mStride, mSliceHeight, mStride16, mFrameHeight);
     (*mCallbacks->FillBufferDone)(
         mComponent, mComponent->pApplicationPrivate, header);
@@ -1483,6 +1500,10 @@ void SPRDHEVCDecoder::drainOneOutputBuffer(int32_t picId, const void *pBufferHea
     BufferInfo *outInfo = *it;
     OMX_BUFFERHEADERTYPE *outHeader = outInfo->mHeader;
     outHeader->nFilledLen = mPictureSize;
+    if (outHeader->nFilledLen > outHeader->nAllocLen) {
+        OMX_LOGW("clamp nFilledLen from %u to nAllocLen %u", outHeader->nFilledLen, outHeader->nAllocLen);
+        outHeader->nFilledLen = outHeader->nAllocLen;
+    }
     OMX_LOGI("%s, %d, outHeader: %p, outHeader->pBuffer: %p, outHeader->nOffset: %d, "
         "outHeader->nFlags: %d, outHeader->nTimeStamp: %lld", __FUNCTION__, __LINE__,
         outHeader, outHeader->pBuffer, outHeader->nOffset, outHeader->nFlags, outHeader->nTimeStamp);

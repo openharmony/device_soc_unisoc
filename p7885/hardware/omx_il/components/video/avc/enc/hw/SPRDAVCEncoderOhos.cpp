@@ -154,6 +154,21 @@
 #define UV_PLANE_OFFSET_MULTIPLIER      1
 /* DMA sync flag initial value */
 #define DMA_SYNC_FLAG_INITIAL_VALUE     0
+
+namespace {
+int32_t ResolveOhosAvcInputFormat(int32_t configuredFormat, int32_t bufferFormat)
+{
+    switch (bufferFormat) {
+        case COLOR_FORMAT_RGBA_8888:
+        case COLOR_FORMAT_N_V12:
+        case COLOR_FORMAT_N_V21:
+            return bufferFormat;
+        default:
+            return configuredFormat;
+    }
+}
+}
+
 SPRDAVCEncoderOhos::SPRDAVCEncoderOhos(
     const char *name,
     const OMX_CALLBACKTYPE *callbacks,
@@ -391,6 +406,10 @@ bool SPRDAVCEncoderOhos::mapOhosGraphicBuffer(
     OMX_LOGI("size = %u, fd = %d, mStride = %d, mFrameHeight = %d",
         bufferHandle->size, bufferHandle->fd, mStride, mFrameHeight);
     mapping.bufferSize = bufferHandle->size;
+    mapping.width = bufferHandle->width > 0 ? static_cast<uint32_t>(bufferHandle->width) : mFrameWidth;
+    mapping.height = bufferHandle->height > 0 ? static_cast<uint32_t>(bufferHandle->height) : mFrameHeight;
+    mapping.stride = bufferHandle->stride > 0 ? static_cast<uint32_t>(bufferHandle->stride) : mapping.width;
+    mapping.format = bufferHandle->format;
     mapping.py = reinterpret_cast<uint8_t*>(mmap(MMAP_OFFSET, bufferHandle->size,
         MMAP_PROT_FLAGS, MMAP_MAP_FLAGS, bufferHandle->fd, MMAP_OFFSET));
     if (mapping.py == MAP_FAILED) {
@@ -440,14 +459,19 @@ void SPRDAVCEncoderOhos::UnmapOhosGraphicBuffer(const GraphicBufferMapping &mapp
 }
 
 void SPRDAVCEncoderOhos::configureOhosEncodeInput(MMEncIn &vidIn, OMX_BUFFERHEADERTYPE *inHeader,
-    uint8_t *py, uint8_t *pyPhy)
+    const GraphicBufferMapping &mapping)
 {
+    const int32_t inputFormat = ResolveOhosAvcInputFormat(mVideoColorFormat, mapping.format);
+    const uint32_t inputWidth = mapping.width > 0 ? mapping.width : mFrameWidth;
+    const uint32_t inputHeight = mapping.height > 0 ? mapping.height : mFrameHeight;
+    const uint32_t inputStride = mapping.stride > 0 ? mapping.stride : inputWidth;
+    const size_t lumaPlaneSize = static_cast<size_t>(inputStride) * inputHeight;
     (void)memset_s(&vidIn, sizeof(MMEncIn), FIRST_ELEMENT_INDEX, sizeof(MMEncIn));
-    if (mVideoColorFormat == COLOR_FORMAT_RGBA_8888) {
+    if (inputFormat == COLOR_FORMAT_RGBA_8888) {
         vidIn.yuvFormat = YUV_FORMAT_RGBA;
-    } else if (mVideoColorFormat == COLOR_FORMAT_N_V12) {
+    } else if (inputFormat == COLOR_FORMAT_N_V12) {
         vidIn.yuvFormat = YUV_FORMAT_NV12;
-    } else if (mVideoColorFormat == COLOR_FORMAT_N_V21) {
+    } else if (inputFormat == COLOR_FORMAT_N_V21) {
         vidIn.yuvFormat = YUV_FORMAT_NV21;
     }
     vidIn.timeStamp = (inHeader->nTimeStamp + TIMESTAMP_ROUNDING_OFFSET_MS) / VIDEO_TIME_SCALE_MS;
@@ -456,14 +480,19 @@ void SPRDAVCEncoderOhos::configureOhosEncodeInput(MMEncIn &vidIn, OMX_BUFFERHEAD
     vidIn.isChangeBitrate = mIsChangeBitrate;
     mIsChangeBitrate = false;
     vidIn.needIvoP = mKeyFrameRequested || (mNumInputFrames == FIRST_FRAME_INDEX);
-    vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcY = py;
-    vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcU = py + mVideoWidth * mVideoHeight;
+    vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcY = mapping.py;
     vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcV = nullptr;
-    vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcYPhy = pyPhy;
-    vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcUPhy = pyPhy + mVideoWidth * mVideoHeight;
+    vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcYPhy = mapping.pyPhy;
     vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcVPhy = nullptr;
-    vidIn.orgImgWidth = static_cast<int32_t>(mFrameWidth);
-    vidIn.orgImgHeight = static_cast<int32_t>(mFrameHeight);
+    if (inputFormat == COLOR_FORMAT_RGBA_8888) {
+        vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcU = nullptr;
+        vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcUPhy = nullptr;
+    } else {
+        vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcU = mapping.py + lumaPlaneSize;
+        vidIn.srcYuvAddr[FIRST_ELEMENT_INDEX].pSrcUPhy = mapping.pyPhy + lumaPlaneSize;
+    }
+    vidIn.orgImgWidth = static_cast<int32_t>(inputWidth);
+    vidIn.orgImgHeight = static_cast<int32_t>(inputHeight);
     vidIn.cropX = FIRST_ELEMENT_INDEX;
     vidIn.cropY = FIRST_ELEMENT_INDEX;
 }
@@ -496,17 +525,20 @@ bool SPRDAVCEncoderOhos::encodeOhosInputBuffer(OMX_BUFFERHEADERTYPE *inHeader, E
     if (output == nullptr) {
         return false;
     }
-    GraphicBufferMapping mapping = { nullptr, nullptr, 0, NULL_PTR_VALUE, NULL_PTR_VALUE, false };
+    GraphicBufferMapping mapping = { nullptr, nullptr, 0, 0, 0, 0, 0, NULL_PTR_VALUE, NULL_PTR_VALUE, false };
     if (!mapOhosGraphicBuffer(inHeader, mapping)) {
         return false;
     }
     MMEncIn vidIn;
     MMEncOut vidOut;
-    configureOhosEncodeInput(vidIn, inHeader, mapping.py, mapping.pyPhy);
+    configureOhosEncodeInput(vidIn, inHeader, mapping);
     (void)memset_s(&vidOut, sizeof(MMEncOut), FIRST_ELEMENT_INDEX, sizeof(MMEncOut));
     if (mDumpYUVEnabled) {
-        DumpFiles(mapping.py, mVideoWidth * mVideoHeight * YUV_SIZE_MULTIPLIER_NUMERATOR /
-            YUV_SIZE_MULTIPLIER_DENOMINATOR, DUMP_YUV);
+        const size_t dumpSize = vidIn.yuvFormat == YUV_FORMAT_RGBA ?
+            static_cast<size_t>(mapping.stride) * mapping.height * sizeof(uint32_t) :
+            static_cast<size_t>(mapping.stride) * mapping.height * YUV_SIZE_MULTIPLIER_NUMERATOR /
+            YUV_SIZE_MULTIPLIER_DENOMINATOR;
+        DumpFiles(mapping.py, static_cast<int32_t>(dumpSize), DUMP_YUV);
     }
     SyncOhosStreamBuffers();
     int64_t startEncode = OHOS::OMX::systemTime();
