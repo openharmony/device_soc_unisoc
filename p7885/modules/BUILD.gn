@@ -102,7 +102,7 @@ ohos_prebuilt_executable("mali_kbase") {
   source = "$target_out_dir/modules/mali_kbase.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -112,7 +112,7 @@ ohos_prebuilt_executable("unisoc_wcn_bsp") {
   source = "$target_out_dir/modules/unisoc_wcn_bsp.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -122,7 +122,7 @@ ohos_prebuilt_executable("sprd_wlan_combo") {
   source = "$target_out_dir/modules/sprd_wlan_combo.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -132,7 +132,7 @@ ohos_prebuilt_executable("sprdbt_tty") {
   source = "$target_out_dir/modules/sprdbt_tty.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -143,7 +143,7 @@ ohos_prebuilt_executable("unisoc_gnss_common_ctl_all") {
   source = "$target_out_dir/modules/unisoc_gnss_common_ctl_all.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -153,7 +153,7 @@ ohos_prebuilt_executable("unisoc_gnss_dbg") {
   source = "$target_out_dir/modules/unisoc_gnss_dbg.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -163,7 +163,7 @@ ohos_prebuilt_executable("unisoc_gnss_pmnotify_ctl") {
   source = "$target_out_dir/modules/unisoc_gnss_pmnotify_ctl.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -172,7 +172,7 @@ ohos_prebuilt_executable("gslx680") {
   source = "${MODULES_KO_PATH}/input/touchscreen/gslx680.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -181,7 +181,7 @@ ohos_prebuilt_executable("vpu") {
   source = "${MODULES_KO_PATH}/vpu/vpu.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -191,7 +191,7 @@ ohos_prebuilt_executable("npu_img_vha") {
   source = "$target_out_dir/modules/npu_img_vha.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -200,7 +200,7 @@ ohos_prebuilt_executable("agdsp_pd") {
   source = "${MODULES_KO_PATH}/audio/agdsp_pd.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -209,7 +209,7 @@ ohos_prebuilt_executable("audio_mem") {
   source = "${MODULES_KO_PATH}/audio/audio_mem.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -218,7 +218,7 @@ ohos_prebuilt_executable("audio_sipc") {
   source = "${MODULES_KO_PATH}/audio/audio_sipc.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -227,7 +227,7 @@ ohos_prebuilt_executable("audio-dsp-dump") {
   source = "${MODULES_KO_PATH}/audio/audio-dsp-dump.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -236,7 +236,7 @@ ohos_prebuilt_executable("sprd_audio_usb_offload") {
   source = "${MODULES_KO_PATH}/audio/sprd_audio_usb_offload.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -245,7 +245,7 @@ ohos_prebuilt_executable("sprd_apipe") {
   source = "${MODULES_KO_PATH}/audio/sprd_apipe.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -254,7 +254,7 @@ ohos_prebuilt_executable("audio-pipe") {
   source = "${MODULES_KO_PATH}/audio/audio-pipe.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -263,7 +263,7 @@ ohos_prebuilt_executable("mcdt_hw_r2p0") {
   source = "${MODULES_KO_PATH}/audio/mcdt_hw_r2p0.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -272,7 +272,7 @@ ohos_prebuilt_executable("sprd_audcp_dvfs") {
   source = "${MODULES_KO_PATH}/audio/sprd_audcp_dvfs.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -281,7 +281,7 @@ ohos_prebuilt_executable("sprd_audcp_boot") {
   source = "${MODULES_KO_PATH}/audio/sprd_audcp_boot.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -290,7 +290,7 @@ ohos_prebuilt_executable("voice_trigger_irq") {
   source = "${MODULES_KO_PATH}/audio/voice_trigger_irq.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -299,7 +299,7 @@ ohos_prebuilt_executable("snd-soc-sprd-card") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-card.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -308,7 +308,7 @@ ohos_prebuilt_executable("snd-soc-sprd-codec-ump9620-power") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-codec-ump9620-power.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -317,7 +317,7 @@ ohos_prebuilt_executable("snd-soc-sprd-codec-ump9620-power-dev") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-codec-ump9620-power-dev.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -326,7 +326,7 @@ ohos_prebuilt_executable("snd-soc-sprd-codec-ump9620") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-codec-ump9620.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -335,7 +335,7 @@ ohos_prebuilt_executable("snd-soc-unisoc-dp-codec") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-unisoc-dp-codec.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -344,7 +344,7 @@ ohos_prebuilt_executable("snd-soc-sprd-dummy-codec") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-dummy-codec.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -353,7 +353,7 @@ ohos_prebuilt_executable("snd-soc-sprd-pa-ucp1301") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-pa-ucp1301.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -362,7 +362,7 @@ ohos_prebuilt_executable("smp_aw87xxx") {
   source = "${MODULES_KO_PATH}/audio/smp_aw87xxx.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -371,7 +371,7 @@ ohos_prebuilt_executable("snd-soc-sprd-pdm-r2p0") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-pdm-r2p0.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -380,7 +380,7 @@ ohos_prebuilt_executable("snd-soc-sprd-tdm") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-tdm.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -389,7 +389,7 @@ ohos_prebuilt_executable("sprd-platform-pcm-routing") {
   source = "${MODULES_KO_PATH}/audio/sprd-platform-pcm-routing.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -398,7 +398,7 @@ ohos_prebuilt_executable("snd-soc-sprd-vbc-v4") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-vbc-v4.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -407,7 +407,7 @@ ohos_prebuilt_executable("snd-soc-sprd-vbc-fe") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-vbc-fe.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -416,7 +416,7 @@ ohos_prebuilt_executable("snd-soc-sprd-dai") {
   source = "${MODULES_KO_PATH}/audio/snd-soc-sprd-dai.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -425,7 +425,7 @@ ohos_prebuilt_executable("sprd-dmaengine-pcm") {
   source = "${MODULES_KO_PATH}/audio/sprd-dmaengine-pcm.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -434,7 +434,7 @@ ohos_prebuilt_executable("sprd-compr-2stage-dma") {
   source = "${MODULES_KO_PATH}/audio/sprd-compr-2stage-dma.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -452,7 +452,7 @@ ohos_prebuilt_executable("plat_soc") {
   source = "${MODULES_KO_PATH}/ws73/plat_soc.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
@@ -461,7 +461,7 @@ ohos_prebuilt_executable("sle_soc") {
   source = "${MODULES_KO_PATH}/ws73/sle_soc.ko"
   install_enable = true
   install_images = [ chipset_base_dir ]
-  module_install_dir = "modules"
+  module_install_dir = "lib64/modules"
   subsystem_name = "${SUBSYSTEM_NAME}"
   part_name = "${PART_NAME}"
 }
