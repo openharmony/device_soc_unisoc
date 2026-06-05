@@ -1,0 +1,23 @@
+{
+    "whitelist": {
+        "user": {
+            "missing_parameter": {
+                "parameter_attr": [
+                    "modem_param",
+                    "boot_mode_param"
+                ]
+            }, 
+            "conflict_parameter": {
+                "parameter_attr": []
+            }
+        },
+        "developer": {
+            "missing_parameter": {
+                "parameter_attr": []
+            },
+            "conflict_parameter": {
+                "parameter_attr": []
+            }
+        }
+    }
+}

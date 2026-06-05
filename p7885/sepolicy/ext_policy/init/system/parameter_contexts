@@ -11,6 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-vendor.modem.             u:object_r:modem_param:s0
+vendor.modem.         u:object_r:modem_param:s0
 ro.bootmode               u:object_r:boot_mode_param:s0
 vendor.ro.bootmode          u:object_r:boot_mode_param:s0
