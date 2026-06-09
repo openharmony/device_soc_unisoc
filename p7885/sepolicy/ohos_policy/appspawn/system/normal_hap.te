@@ -21,3 +21,6 @@ allow normal_hap_attr data_ashmem_file:file { read write map };
 # avc:  denied  { open } for  pid=2886 comm="RSRenderThread" path="/vendor/lib64/hw" dev="sda47" ino=249 scontext=u:r:normal_hap:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
 # avc:  denied  { read } for  pid=5182 comm="RSRenderThread" name="hw" dev="sda47" ino=249 scontext=u:r:normal_hap:s0 tcontext=u:object_r:vendor_lib_file:s0 tclass=dir permissive=0
 allow normal_hap_attr vendor_lib_file:dir { open read };
+
+# avc:  denied  { search } for  pid=2715 comm="RSRenderThread" name="block" dev="tmpfs" ino=6 scontext=u:r:normal_hap:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=0
+allow normal_hap_attr dev_block_volfile:dir { search };
