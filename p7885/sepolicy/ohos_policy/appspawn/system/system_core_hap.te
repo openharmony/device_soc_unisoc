@@ -40,3 +40,15 @@ allowxperm system_core_hap dev_at_file:chr_file ioctl { 0x5413 };
 
 # avc:  denied  { read write } for  pid=875 comm="OS_IPC_3_1229" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3831342D585858706650496B4A202864656C6574656429 dev="sda62" ino=17936 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:data_ashmem_file:s0 tclass=file permissive=0
 allow system_core_hap data_ashmem_file:file { read write map };
+
+# avc:  denied  { set } for parameter=bootevent.wms.fullscreen.ready.true pid=2021 uid=20010016 gid=20010016 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:bootevent_wms_param:s0 tclass=parameter_service permissive=1
+allow system_core_hap bootevent_wms_param:parameter_service { set };
+
+# avc:  denied  { set } for parameter=init.sceneboard.finish pid=2021 uid=20010016 gid=20010016 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:default_param:s0 tclass=parameter_service permissive=1
+allow system_core_hap init_sceneboard_param:parameter_service { set };
+
+# avc:  denied  { search } for  pid=2881 comm="RSRenderThread" name="block" dev="tmpfs" ino=6 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+# avc:  denied  { search } for  pid=2881 comm="RSRenderThread" name="by-name" dev="tmpfs" ino=14 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+# avc:  denied  { read } for  pid=2881 comm="RSRenderThread" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=lnk_file permissive=1
+# avc:  denied  { read } for  pid=2881 comm="RSRenderThread" name="sda6" dev="tmpfs" ino=300 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+# avc:  denied  { open } for  pid=2881 comm="RSRenderThread" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1

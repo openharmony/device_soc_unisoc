@@ -61,3 +61,11 @@ allow render_service sml_block_file:lnk_file { read };
 # avc:  denied  { search } for  pid=826 comm="RSUniRenderThre" name="block" dev="tmpfs" ino=6 scontext=u:r:render_service:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
 allow render_service dev_block_volfile:dir { search };
 
+# avc:  denied  { unlink } for  pid=932 comm="RSUniRenderThre" name="shader_cache" dev="sda62" ino=3306 scontext=u:r:render_service:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=file permissive=1
+# avc:  denied  { create } for  pid=932 comm="RSUniRenderThre" name="shader_cache" scontext=u:r:render_service:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=file permissive=1
+# avc:  denied  { read write open } for  pid=932 comm="RSUniRenderThre" path="/data/service/el0/render_service/shader_cache" dev="sda62" ino=3592 scontext=u:r:render_service:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=file permissive=1
+# avc:  denied  { setattr } for  pid=932 comm="RSUniRenderThre" name="shader_cache" dev="sda62" ino=3592 scontext=u:r:render_service:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=file permissive=1
+allow render_service data_service_el0_file:file { unlink create read write open setattr };
+
+# avc:  denied  { add_name } for  pid=932 comm="RSUniRenderThre" name="shader_cache" scontext=u:r:render_service:s0 tcontext=u:object_r:data_service_el0_file:s0 tclass=dir permissive=1
+allow render_service data_service_el0_file:dir { add_name };

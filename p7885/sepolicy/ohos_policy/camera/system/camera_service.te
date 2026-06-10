@@ -29,3 +29,6 @@ allowxperm camera_service dev_at_file:chr_file ioctl { 0x5413 };
 # avc:  denied  { getattr } for  pid=841 comm="camera_service" path="/system/usr/ohos_locale_config/supported_locales.xml" dev="sda46" ino=5020 scontext=u:r:camera_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=1
 # avc:  denied  { open } for  pid=841 comm="camera_service" path="/system/usr/ohos_locale_config/supported_locales.xml" dev="sda46" ino=5020 scontext=u:r:camera_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=1# avc:  denied  { read } for  pid=841 comm="camera_service" name="supported_locales.xml" dev="sda46" ino=5020 scontext=u:r:camera_service:s0 tcontext=u:object_r:system_usr_file:s0 tclass=file permissive=1
 allow camera_service system_usr_file:file { getattr open read };
+
+# avc:  denied  { read write } for  pid=824 comm="OS_IPC_1_905" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3832342D5858584E47496F434E202864656C6574656429 dev="sda62" ino=4674 scontext=u:r:camera_service:s0 tcontext=u:object_r:data_ashmem_file:s0 tclass=file permissive=1
+allow camera_service data_ashmem_file:file { read write };
