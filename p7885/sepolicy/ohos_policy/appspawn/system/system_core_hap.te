@@ -48,7 +48,15 @@ allow system_core_hap bootevent_wms_param:parameter_service { set };
 allow system_core_hap init_sceneboard_param:parameter_service { set };
 
 # avc:  denied  { search } for  pid=2881 comm="RSRenderThread" name="block" dev="tmpfs" ino=6 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+allow system_core_hap dev_block_volfile:dir { search };
+
 # avc:  denied  { search } for  pid=2881 comm="RSRenderThread" name="by-name" dev="tmpfs" ino=14 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+allow system_core_hap dev_block_file:dir { search };
+
 # avc:  denied  { read } for  pid=2881 comm="RSRenderThread" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=lnk_file permissive=1
+allow system_core_hap sml_block_file:lnk_file { read };
+
 # avc:  denied  { read } for  pid=2881 comm="RSRenderThread" name="sda6" dev="tmpfs" ino=300 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
 # avc:  denied  { open } for  pid=2881 comm="RSRenderThread" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+allow system_core_hap sml_block_file:blk_file { read open };
+
