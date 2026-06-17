@@ -76,6 +76,10 @@ int32_t HdiDrmComposition::SetLayers(std::vector<HdiLayer*>& layers, HdiLayer& c
         mCompLayers.push_back(mClientLayer);
     }
     for (uint32_t i = 0; i < layers.size(); i++) {
+        if (layers[i] == nullptr) {
+            DISPLAY_LOGE("layer %{public}u is nullptr", i);
+            continue;
+        }
         if (layers[i]->GetAcceleratorType() == ACCELERATOR_DPU) {
             mCompLayers.push_back(layers[i]);
         }
@@ -106,6 +110,8 @@ int32_t HdiDrmComposition::ApplyPlane(HdiDrmLayer& layer, DrmPlane& drmPlane, dr
     }
 
     // set fb id
+    HdiLayerBuffer *currentBuffer = layer.GetCurrentBuffer();
+    DISPLAY_CHK_RETURN((currentBuffer == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("current layer buffer is nullptr"));
     DrmGemBuffer* gemBuffer = layer.GetGemBuffer();
     DISPLAY_CHK_RETURN((gemBuffer == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("current gemBuffer is nullptr"));
     DISPLAY_CHK_RETURN((!gemBuffer->IsValid()), DISPLAY_FAILURE, DISPLAY_LOGE("the DrmGemBuffer is invalid"));
@@ -138,12 +144,13 @@ int32_t HdiDrmComposition::ApplyPlane(HdiDrmLayer& layer, DrmPlane& drmPlane, dr
         layer.SetLayerAlpha(&hdiAlpha);
     }
     // fl0414++ set property_crtc_x ...
-    SetPlaneProperties(drmPlane, pset, layer);
+    SetPlaneProperties(drmPlane, pset, layer, *currentBuffer);
 
     return DISPLAY_SUCCESS;
 }
 
-void HdiDrmComposition::SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer)
+void HdiDrmComposition::SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer,
+    const HdiLayerBuffer &layerBuffer)
 {
     IRect rect = layer.GetLayerDisplayRect();
     IRect crop = layer.GetLayerCrop();
@@ -179,8 +186,8 @@ void HdiDrmComposition::SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqP
         drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_alpha, layer.GetAlpha().gAlpha);
     }
 
-    if ((layer.GetCurrentBuffer()->GetFormat() >= PIXEL_FMT_YUV_422_I) &&
-        (layer.GetCurrentBuffer()->GetFormat() <= PIXEL_FMT_VYUY_422_PKG)) {
+    if ((layerBuffer.GetFormat() >= PIXEL_FMT_YUV_422_I) &&
+        (layerBuffer.GetFormat() <= PIXEL_FMT_VYUY_422_PKG)) {
         drmModeAtomicAddProperty(pset, drmPlane.GetId(), drmPlane.property_y2r_coef, 1);
     }
 }
@@ -287,13 +294,13 @@ int32_t HdiDrmComposition::Apply(bool modeSet)
     // set the plane info.
     DISPLAY_LOGD("mCompLayers size %{public}zd", mCompLayers.size());
     for (uint32_t i = 0; i < mCompLayers.size(); i++) {
+        DISPLAY_CHK_RETURN((mCompLayers[i] == nullptr), DISPLAY_FAILURE,
+            DISPLAY_LOGE("comp layer %{public}u is nullptr", i));
+        DISPLAY_CHK_RETURN((mPlanes[i] == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("drm plane %{public}u is nullptr", i));
         layer = static_cast<HdiDrmLayer*>(mCompLayers[i]);
         auto& drmPlane = mPlanes[i];
         ret = ApplyPlane(*layer, *drmPlane, atomicReqPtr.Get());
-        if (ret != DISPLAY_SUCCESS) {
-            DISPLAY_LOGE("apply plane failed");
-            break;
-        }
+        DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("apply plane failed"));
     }
     ret = UpdateMode(modeBlock, *(atomicReqPtr.Get()));
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("update mode failed"));
