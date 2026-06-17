@@ -76,8 +76,8 @@ ohos_prebuilt_shared_library( "GLES_mali" ){
 ## Build uis_vulkan_0.01.json {{{
 ohos_prebuilt_etc("uis_vulkan_0.01_json") {
   source = "etc/uis_vulkan_0.01.json"
-  part_name = "graphic_2d"
-  subsystem_name = "graphic"
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
   module_install_dir = "etc/vulkan/icd.d"
 }
 ## Build uis_vulkan_0.01.json }}}
