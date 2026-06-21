@@ -16,11 +16,40 @@
 #include "hdi_drm_layer.h"
 #include <cinttypes>
 #include <cerrno>
+#include <limits>
 #include "drm_device.h"
 
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
+namespace {
+bool IsValidLayerBuffer(const HdiLayerBuffer *hdl)
+{
+    if (hdl == nullptr) {
+        DISPLAY_LOGE("layer buffer is nullptr");
+        return false;
+    }
+
+    if (hdl->GetFb() < 0) {
+        DISPLAY_LOGE("layer buffer fd is invalid %{public}d", hdl->GetFb());
+        return false;
+    }
+
+    if ((hdl->GetWidth() <= 0) || (hdl->GetHeight() <= 0) || (hdl->GetStride() <= 0)) {
+        DISPLAY_LOGE("invalid layer buffer size w:%{public}d h:%{public}d stride:%{public}d",
+            hdl->GetWidth(), hdl->GetHeight(), hdl->GetStride());
+        return false;
+    }
+
+    if (DrmDevice::ConvertToDrmFormat(static_cast<PixelFormat>(hdl->GetFormat())) == DRM_FORMAT_INVALID) {
+        DISPLAY_LOGE("unsupported layer buffer format:%{public}d", hdl->GetFormat());
+        return false;
+    }
+
+    return true;
+}
+}
+
 DrmGemBuffer::DrmGemBuffer(int drmfd, HdiLayerBuffer &hdl) : mDrmFd(drmfd)
 {
     DISPLAY_LOGD();
@@ -37,6 +66,7 @@ void DrmGemBuffer::Init(int drmFd, HdiLayerBuffer &hdl)
     uint32_t offsets[maxPlaneCount] = {0};
     DISPLAY_LOGD("hdl %{public}" PRIx64 "", hdl.GetMemHandle());
     DISPLAY_CHK_RETURN_NOT_VALUE((drmFd < 0), DISPLAY_LOGE("can not init drmfd %{public}d", drmFd));
+    DISPLAY_CHK_RETURN_NOT_VALUE((!IsValidLayerBuffer(&hdl)), DISPLAY_LOGE("can not init invalid layer buffer"));
     mDrmFormat = DrmDevice::ConvertToDrmFormat(static_cast<PixelFormat>(hdl.GetFormat()));
     ret = drmPrimeFDToHandle(drmFd, hdl.GetFb(), &mGemHandle);
     DISPLAY_CHK_RETURN_NOT_VALUE((ret != 0), DISPLAY_LOGE("can not get handle errno %{public}d", errno));
@@ -45,6 +75,11 @@ void DrmGemBuffer::Init(int drmFd, HdiLayerBuffer &hdl)
     if ((hdl.GetFormat() >= PIXEL_FMT_YUV_422_I) && (hdl.GetFormat() <= PIXEL_FMT_VYUY_422_PKG)) {
         widthStride = hdl.GetStride();
     }
+    DISPLAY_CHK_RETURN_NOT_VALUE((widthStride <= 0), DISPLAY_LOGE("invalid width stride %{public}d", widthStride));
+    DISPLAY_CHK_RETURN_NOT_VALUE(((hdl.GetFormat() == PIXEL_FMT_YCBCR_420_P) && (widthStride < 2)),
+        DISPLAY_LOGE("invalid yuv420 planar width stride %{public}d", widthStride));
+    DISPLAY_CHK_RETURN_NOT_VALUE((widthStride > (std::numeric_limits<int>::max() / hdl.GetHeight())),
+        DISPLAY_LOGE("buffer size overflow widthStride:%{public}d height:%{public}d", widthStride, hdl.GetHeight()));
     int bpf = widthStride * hdl.GetHeight();
     pitches[0] = hdl.GetStride();
     gemHandles[0] = mGemHandle;
@@ -135,13 +170,22 @@ bool DrmGemBuffer::IsValid()
 DrmGemBuffer *HdiDrmLayer::GetGemBuffer()
 {
     DISPLAY_LOGD();
+    HdiLayerBuffer *layerBuffer = GetCurrentBuffer();
+    if (!IsValidLayerBuffer(layerBuffer)) {
+        DISPLAY_LOGE("skip invalid current layer buffer");
+        return nullptr;
+    }
 
     // 保存旧的 Buffer，等待 DRM 使用完毕后再释放
     // 这样可以避免 DRM 访问已释放的 Framebuffer
     mLastBuffer = std::move(mCurrentBuffer);
 
     // 创建新的 Buffer
-    std::unique_ptr<DrmGemBuffer> ptr = std::make_unique<DrmGemBuffer>(DrmDevice::GetDrmFd(), *GetCurrentBuffer());
+    std::unique_ptr<DrmGemBuffer> ptr = std::make_unique<DrmGemBuffer>(DrmDevice::GetDrmFd(), *layerBuffer);
+    if ((ptr == nullptr) || !ptr->IsValid()) {
+        DISPLAY_LOGE("create DrmGemBuffer failed, drop this frame");
+        return nullptr;
+    }
     mCurrentBuffer = std::move(ptr);
 
     return mCurrentBuffer.get();

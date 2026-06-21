@@ -58,7 +58,8 @@ public:
 
 private:
     int32_t ApplyPlane(HdiDrmLayer &layer, DrmPlane &drmPlane, drmModeAtomicReqPtr pset);
-    void SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer);
+    void SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqPtr pset, HdiDrmLayer &layer,
+        const HdiLayerBuffer &layerBuffer);
     std::shared_ptr<DrmDevice> mDrmDevice;
     std::shared_ptr<DrmConnector> mConnector;
     std::shared_ptr<DrmCrtc> mCrtc;
