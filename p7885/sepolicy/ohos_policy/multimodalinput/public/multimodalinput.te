@@ -30,3 +30,6 @@ allow multimodalinput dev_input_file:chr_file { ioctl };
 
 # avc:  denied  { ioctl } for  pid=496 comm="mmi_service" path="/dev/input/event2" dev="tmpfs" ino=575 ioctlcmd=0x4572 scontext=u:r:multimodalinput:s0 tcontext=u:object_r:dev_input_file:s0 tclass=chr_file permissive=0
 allowxperm multimodalinput dev_input_file:chr_file ioctl { 0x4572 };
+
+# avc: denied { read write } for pointer window buffer shared through /data/ashmem.
+allow multimodalinput data_ashmem_file:file { read write map };
