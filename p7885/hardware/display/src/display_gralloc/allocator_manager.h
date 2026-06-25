@@ -14,7 +14,9 @@
  */
 #ifndef ALLOCATOR_MANAGER_H
 #define ALLOCATOR_MANAGER_H
+#include <map>
 #include <memory>
+#include <mutex>
 #include "allocator.h"
 namespace OHOS {
 namespace HDI {
@@ -28,12 +30,26 @@ public:
     }
     int32_t Init();
     int32_t DeInit();
-    Allocator* GetAllocator(uint64_t usage);
+    int32_t AllocMem(const AllocInfo &info, BufferHandle **handle);
+    void FreeMem(BufferHandle *handle);
+    void *Mmap(BufferHandle *handle);
+    int32_t Unmap(BufferHandle *handle);
+    int32_t FlushCache(BufferHandle *handle);
+    int32_t InvalidateCache(BufferHandle *handle);
 
 private:
+    static int32_t GetHandleKey(const BufferHandle *handle);
+    Allocator *ResolveAllocatorLocked(const BufferHandle *handle);
+    void TrackAllocatorLocked(const BufferHandle *handle, Allocator *allocator);
+    void ForgetAllocatorLocked(const BufferHandle *handle);
+
     bool init_ = false;
     std::shared_ptr<Allocator> frameBufferAllocator_ = nullptr;
     std::shared_ptr<Allocator> allocator_ = nullptr;
+    std::shared_ptr<Allocator> drmAllocator_ = nullptr;
+    std::shared_ptr<Allocator> dmaBufferAllocator_ = nullptr;
+    std::map<int32_t, Allocator *> allocatorOwners_;
+    std::mutex mutex_;
 };
 }
 }
