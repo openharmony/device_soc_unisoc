@@ -65,10 +65,13 @@ allowxperm codec_host dev_sprd_file:chr_file ioctl { 0x6d0a 0x6d0e 0x6d05 0x6d01
 # avc:  denied  { write } for  pid=832 comm="OS_HCodecLoop" path=*** dev="sda62" ino=9382 scontext=u:r:codec_host:s0 tcontext=u:object_r:data_file:s0 tclass=file permissive=0
 allow codec_host data_ashmem_file:file { read write map };
 
-# avc:  denied  { read write } for  pid=769 comm="OS_IPC_1_835" name="vpu_enc0" dev="tmpfs" ino=554 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
-# avc:  denied  { ioctl } for  pid=769 comm="OS_IPC_1_835" path="/dev/vpu_enc0" dev="tmpfs" ino=554 ioctlcmd=0x6d0a scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { read write } for  pid=753 comm="OS_IPC_0_1082" name="vpu_enc0" dev="tmpfs" ino=555 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { open } for  pid=753 comm="OS_IPC_0_1082" path="/dev/vpu_enc0" dev="tmpfs" ino=555 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { map } for  pid=753 comm="OS_IPC_0_1082" path="/dev/vpu_enc0" dev="tmpfs" ino=555 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=753 comm="OS_IPC_0_1082" path="/dev/vpu_enc0" dev="tmpfs" ino=555 ioctlcmd=0x6d0a scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
+# avc:  denied  { ioctl } for  pid=753 comm="OS_IPC_8_6664" path="/dev/vpu_enc0" dev="tmpfs" ino=555 ioctlcmd=0x6d05 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_vpu_file:s0 tclass=chr_file permissive=1
 allow codec_host dev_vpu_file:chr_file { open read write map ioctl };
-allowxperm codec_host dev_vpu_file:chr_file ioctl { 0x6d01 0x6d03 0x6d04 0x6d05 0x6d06 0x6d07 0x6d08 0x6d0a 0x6d0b 0x6d0c 0x6d0d 0x6d0e 0x6d0f 0x6d10 };
+allowxperm codec_host dev_vpu_file:chr_file ioctl { 0x6d05 0x6d0a };
 
 # avc::  denied  { read write } for  pid=788 comm="OS_IPC_1_841" name="sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
 # avc::  denied  { open } for  pid=788 comm="OS_IPC_1_841" path="/dev/block/sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
@@ -78,12 +81,3 @@ allow codec_host sml_block_file:blk_file { open read write };
 # avc::  denied  { read } for  pid=788 comm="OS_IPC_1_841" name="sml_a" dev="tmpfs" ino=300 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
 #allow codec_host dev_block_file:lnk_file { read };
 allow codec_host sml_block_file:lnk_file { read };
-
-# avc::  denied  { read write } for  pid=788 comm="OS_IPC_1_841" name="sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
-# avc::  denied  { open } for  pid=788 comm="OS_IPC_1_841" path="/dev/block/sda6" dev="tmpfs" ino=298 scontext=u:r:codec_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=blk_file permissive=1
-typeattribute codec_host rgm_violator_ohos_dev_blk_file;
-allow codec_host dev_block_file:blk_file { read write open };
-
-# avc:  denied  { dac_override } for  pid=790 comm="OS_IPC_0_824" capability=1 scontext=u:r:codec_host:s0 tcontext=u:r:codec_host:s0 tclass=capability permissive=0
-typeattribute codec_host rgm_violator_ohos_capability_dacoverride;
-allow codec_host self:capability { dac_override };
