@@ -2438,6 +2438,7 @@
                 <Partition id="dtb_b" size="8"/>
                 <Partition id="dtbo_a" size="8"/>
                 <Partition id="dtbo_b" size="8"/>
+                <Partition id="bootctrl" size="1"/>
                 <Partition id="system" size="3000"/>
                 <Partition id="vendor" size="800"/>
                 <Partition id="sys_prod" size="100"/>
@@ -2666,6 +2667,18 @@
                 <CheckFlag>2</CheckFlag>
                 <Description>dtbo image file</Description>
 	        </File>
+            <File>
+                <ID>EraseBootctrl</ID>
+                <IDAlias>EraseBootctrl</IDAlias>
+                <Type>EraseFlash2</Type>
+                <Block id="bootctrl">
+                    <Base>0x0</Base>
+                    <Size>0x0</Size>
+                </Block>
+                <Flag>0</Flag>
+                <CheckFlag>0</CheckFlag>
+                <Description>Erase bootctrl section operation</Description>
+            </File>
             <File>
                 <ID>Updater</ID>
                 <IDAlias>Updater</IDAlias>
