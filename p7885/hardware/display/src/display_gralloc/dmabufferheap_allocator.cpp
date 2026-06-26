@@ -14,6 +14,8 @@
  */
 #include "dmabufferheap_allocator.h"
 #include <cerrno>
+#include <cstdlib>
+#include <securec.h>
 #include "display_common.h"
 #include "dmabuf_alloc.h"
 namespace OHOS {
@@ -39,15 +41,38 @@ int32_t DmaBufferHeapAllocator::Allocate(const BufferInfo &bufferInfo, BufferHan
     buffer.heapFlags = 0;
     DmabufHeapBufferAlloc(deviceFd_, &buffer);
     handle.fd = buffer.fd;
+    handle.size = bufferInfo.size_;
+    handle.format = bufferInfo.format_;
+    handle.width = bufferInfo.width_;
+    handle.height = bufferInfo.height_;
+    handle.stride = bufferInfo.widthStride_ * bufferInfo.bytesPerPixel_;
+    handle.usage = bufferInfo.usage_;
+    handle.phyAddr = 0;
+    handle.virAddr = nullptr;
+    handle.reserveFds = 0;
+    handle.reserveInts = 0;
     return DISPLAY_SUCCESS;
 }
 
 int32_t DmaBufferHeapAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle **handle)
 {
-    ALLOC_UNUSED(bufferInfo);
-
-    DISPLAY_LOGE("AllocMem do not implement");
-    return DISPLAY_NOT_SUPPORT;
+    DISPLAY_CHK_RETURN((handle == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("handle is nullptr"));
+    BufferHandle *priBuffer = static_cast<BufferHandle *>(malloc(sizeof(BufferHandle)));
+    DISPLAY_CHK_RETURN((priBuffer == nullptr), DISPLAY_NOMEM, DISPLAY_LOGE("malloc buffer handle failed"));
+    errno_t eok = memset_s(priBuffer, sizeof(BufferHandle), 0, sizeof(BufferHandle));
+    if (eok != EOK) {
+        free(priBuffer);
+        DISPLAY_LOGE("memset_s failed");
+        return DISPLAY_FAILURE;
+    }
+    priBuffer->fd = -1;
+    int32_t ret = Allocate(bufferInfo, *priBuffer);
+    if (ret != DISPLAY_SUCCESS) {
+        free(priBuffer);
+        return ret;
+    }
+    *handle = priBuffer;
+    return DISPLAY_SUCCESS;
 }
 
 DmaBufferHeapAllocator::~DmaBufferHeapAllocator()
