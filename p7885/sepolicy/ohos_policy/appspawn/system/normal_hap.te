@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#typeattribute normal_hap dev_attr_violator;
+
 # avc:  denied  { ioctl } for  pid=2345 comm="os.settingsdata" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:normal_hap:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
 allowxperm normal_hap_attr dev_at_file:chr_file ioctl { 0x5413 };
 
@@ -24,3 +26,12 @@ allow normal_hap_attr vendor_lib_file:dir { open read };
 
 # avc:  denied  { search } for  pid=2715 comm="RSRenderThread" name="block" dev="tmpfs" ino=6 scontext=u:r:normal_hap:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=0
 allow normal_hap_attr dev_block_volfile:dir { search };
+
+# avc:  denied  { search } for  pid=13124 comm="cgles3.napitest" name="by-name" dev="tmpfs" ino=14 scontext=u:r:normal_hap:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+allow normal_hap dev_block_file:dir { search };
+
+# avc:  denied  { read } for  pid=17460 comm="eimage.napitest" name="sml_a" dev="tmpfs" ino=303 scontext=u:r:normal_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=lnk_file permissive=1
+# avc:  denied  { read } for  pid=17460 comm="eimage.napitest" name="sda6" dev="tmpfs" ino=301 scontext=u:r:normal_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+# avc:  denied  { open } for  pid=17460 comm="eimage.napitest" path="/dev/block/sda6" dev="tmpfs" ino=301 scontext=u:r:normal_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+allow normal_hap sml_block_file:lnk_file { read };
+allow normal_hap sml_block_file:blk_file { read open };

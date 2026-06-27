@@ -44,3 +44,7 @@ allow sandbox_manager_service system_usr_file:file { getattr map open read };
 
 # avc:  denied  { search } for  pid=2342 comm="sandbox_manager" name="etc" dev="sda47" ino=24 scontext=u:r:sandbox_manager_service:s0 tcontext=u:object_r:vendor_etc_file:s0 tclass=dir permissive=0
 #allow sandbox_manager_service vendor_etc_file:dir { search };
+
+# avc:  denied  { ioctl } for  pid=13102 comm="OS_FFRT_2_0" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:sandbox_manager_service:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
+allow sandbox_manager_service dev_at_file:chr_file { ioctl };
+allowxperm sandbox_manager_service dev_at_file:chr_file ioctl { 0x5413 };
