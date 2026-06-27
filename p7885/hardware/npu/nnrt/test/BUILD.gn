@@ -19,14 +19,18 @@ NPU_LIB_PATH="//device/soc/unisoc/p7885/hardware/npu"
 ohos_unittest("nnrt_vdi_impl_unittest") {
   module_out_path = module_output_path
 
-  sources = [ "unittest/src/nnrt_vdi_impl_test.cpp" ]
+  sources = [
+    "unittest/src/nnrt_vdi_impl_test.cpp",
+    "${NPU_LIB_PATH}/nnrt/nnrt_device_vdi_impl.cpp",
+    "${NPU_LIB_PATH}/nnrt/prepared_model_impl_2_0.cpp",
+  ]
+
+  ldflags = [ "-Wl,--wrap=dup" ]
 
   include_dirs = [
     "//device/soc/unisoc/p7885/hardware/npu/nnrt/include",
     "${NPU_LIB_PATH}/include"
   ]
-
-  deps = [ "//device/soc/unisoc/p7885/hardware/npu/nnrt:libnpu_vdi_impl" ]
 
   external_deps = [
     "ipc:ipc_single",
