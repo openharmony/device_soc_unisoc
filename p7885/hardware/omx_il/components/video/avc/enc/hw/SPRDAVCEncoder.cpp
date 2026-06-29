@@ -803,6 +803,24 @@ OMX_ERRORTYPE SPRDAVCEncoder::internalSetParameter(
     }
 }
 
+OMX_ERRORTYPE SPRDAVCEncoder::internalSetConfig(
+    OMX_INDEXTYPE index, const OMX_PTR params, bool *frameConfig)
+{
+    if (static_cast<int>(index) == OMX_INDEX_DESCRIBE_COLOR_ASPECTS) {
+        DescribeColorAspectsParams *colorAspectsParams =
+            static_cast<DescribeColorAspectsParams *>(params);
+        if (colorAspectsParams == nullptr ||
+            colorAspectsParams->nPortIndex != OHOS::OMX::K_INPUT_PORT_INDEX) {
+            OMX_LOGE("invalid DescribeColorAspectsParams");
+            return OMX_ErrorBadPortIndex;
+        }
+        colorAspectsParams->nDataSpace = 0;
+        OMX_LOGI("ignore unsupported encoder color aspects config");
+        return OMX_ErrorNone;
+    }
+    return SprdVideoEncoderBase::internalSetConfig(index, params, frameConfig);
+}
+
 OMX_ERRORTYPE SPRDAVCEncoder::setPortDefinition(const OMX_PTR params)
 {
     OMX_PARAM_PORTDEFINITIONTYPE *def = (OMX_PARAM_PORTDEFINITIONTYPE *)params;
@@ -1025,7 +1043,6 @@ bool SPRDAVCEncoder::generateCodecHeader(int fd, MMEncOut &header, int32_t heade
     const char *tag, bool log16Bytes)
 {
     (void)memset_s(&header, sizeof(MMEncOut), 0, sizeof(MMEncOut));
-    ++mNumInputFrames;
     int ret = (*mH264EncGenHeader)(mHandle, &header, headerType);
     if (ret < 0) {
         OMX_LOGE("%s, line:%d, mH264EncGenHeader failed, ret: %d", __FUNCTION__, __LINE__, ret);
@@ -1050,9 +1067,8 @@ bool SPRDAVCEncoder::emitCodecConfig(EncodeOutputState &output, std::list<Buffer
     }
     mSpsPpsHeaderReceived = true;
     if (mNumInputFrames != 0) {
-        OMX_LOGE("[%{public}s@%{public}s:%{public}d] OMX_CHECK((0) == (mNumInputFrames)) failed.",
-            __FUNCTION__, FILENAME_ONLY, __LINE__);
-        return false;
+        OMX_LOGW("reset input frame count after codec config, count=%lld", mNumInputFrames);
+        mNumInputFrames = 0;
     }
     return finalizeCodecConfigOutput(output, outQueue);
 }
@@ -1106,8 +1122,20 @@ void SPRDAVCEncoder::queueInputBufferInfo(OMX_BUFFERHEADERTYPE *inHeader)
 
 bool SPRDAVCEncoder::mapGraphicBuffer(OMX_BUFFERHEADERTYPE *inHeader, GraphicBufferMapping &mapping)
 {
+    if (inHeader == nullptr || inHeader->pBuffer == nullptr) {
+        OMX_LOGE("invalid input header for graphic buffer mapping");
+        return false;
+    }
     DynamicBuffer* buffer = reinterpret_cast<DynamicBuffer*>(inHeader->pBuffer);
+    if (buffer == nullptr || buffer->bufferHandle == nullptr) {
+        OMX_LOGE("invalid dynamic input buffer");
+        return false;
+    }
     BufferHandle *bufferHandle = buffer->bufferHandle;
+    if (bufferHandle->fd < 0 || bufferHandle->size <= 0) {
+        OMX_LOGE("invalid input buffer handle, fd=%d, size=%d", bufferHandle->fd, bufferHandle->size);
+        return false;
+    }
     OMX_LOGI("size = %u, fd = %d, mStride = %d, mFrameHeight = %d",
         bufferHandle->size, bufferHandle->fd, mStride, mFrameHeight);
     mapping.bufferSize = bufferHandle->size;
