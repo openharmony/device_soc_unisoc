@@ -26,6 +26,9 @@ namespace OMX {
 #define DEFAULT_INITIAL_REF_COUNT 1
 // Color component offset for YUV data (chroma offset calculation)
 #define YUV_CHROMA_OFFSET_DIVIDER 2
+/* Graphic pixel format values used by HCodec capability/configuration */
+#define GRAPHIC_PIXEL_FMT_YCBCR_420_SP_VALUE 24
+#define GRAPHIC_PIXEL_FMT_YCRCB_420_SP_VALUE 25
 // Port index validation boundary
 #define MAX_PORT_INDEX 1
 // Number of OMX component ports (input and output)
@@ -230,10 +233,19 @@ OMX_ERRORTYPE SPRDAVCDecoderOhos::setCodecVideoPortFormat(const CodecVideoPortFo
     if (CheckParam(const_cast<CodecVideoPortFormatParam *>(formatParams), sizeof(CodecVideoPortFormatParam))) {
         return OMX_ErrorUnsupportedIndex;
     }
+    if (formatParams->portIndex == K_OUTPUT_PORT_INDEX &&
+        formatParams->codecColorFormat != GRAPHIC_PIXEL_FMT_YCBCR_420_SP_VALUE &&
+        formatParams->codecColorFormat != GRAPHIC_PIXEL_FMT_YCRCB_420_SP_VALUE) {
+        OMX_LOGE("unsupported output graphic pixel format: %d", formatParams->codecColorFormat);
+        return OMX_ErrorUnsupportedSetting;
+    }
     PortInfo *port = editPortInfo(formatParams->portIndex);
     port->mDef.format.video.eColorFormat = static_cast<OMX_COLOR_FORMATTYPE>(formatParams->codecColorFormat);
     port->mDef.format.video.eCompressionFormat = static_cast<OMX_VIDEO_CODINGTYPE>(formatParams->codecCompressFormat);
     port->mDef.format.video.xFramerate = static_cast<OMX_U32>(formatParams->framerate);
+    if (formatParams->portIndex == K_OUTPUT_PORT_INDEX) {
+        mOutputNV21 = (formatParams->codecColorFormat == GRAPHIC_PIXEL_FMT_YCRCB_420_SP_VALUE);
+    }
     return OMX_ErrorNone;
 }
 
@@ -562,6 +574,10 @@ void SPRDAVCDecoderOhos::copyOhosLumaPlane(OMX_U8 *dstInfo, OMX_U8 *buffInfo, co
 void SPRDAVCDecoderOhos::copyOhosChromaPlane(
     OMX_U8 *dstInfo, OMX_U8 *buffInfo, const BufferHandle *bufferhandle) const
 {
+    if (mOutputNV21) {
+        copyOhosChromaPlaneAsNV21(dstInfo, buffInfo, bufferhandle);
+        return;
+    }
     if (bufferhandle->stride <= 0 || bufferhandle->height <= 0) {
         return;
     }
@@ -576,6 +592,28 @@ void SPRDAVCDecoderOhos::copyOhosChromaPlane(
             &buffInfo[srcSize + i * mStride], copyWidth);
         if (ret != 0) {
             OMX_LOGE("memmove_s failed at line %d, ret=%d", __LINE__, ret);
+        }
+    }
+}
+
+void SPRDAVCDecoderOhos::copyOhosChromaPlaneAsNV21(
+    OMX_U8 *dstInfo, OMX_U8 *buffInfo, const BufferHandle *bufferhandle) const
+{
+    if (bufferhandle->stride <= 0 || bufferhandle->height <= 0) {
+        return;
+    }
+    const uint32_t dstStride = static_cast<uint32_t>(bufferhandle->stride);
+    const uint32_t dstHeight = static_cast<uint32_t>(bufferhandle->height);
+    const uint32_t copyHeight = (dstHeight < mSliceHeight) ? dstHeight : mSliceHeight;
+    const uint32_t copyWidth = (dstStride < mStride) ? dstStride : mStride;
+    const uint32_t dstSize = copyHeight * dstStride;
+    const uint32_t srcSize = mSliceHeight * mStride;
+    for (uint32_t i = VIDEO_PORT_FORMAT_START_INDEX; i < copyHeight / YUV_CHROMA_OFFSET_DIVIDER; i++) {
+        OMX_U8 *dst = &dstInfo[dstSize + i * dstStride];
+        OMX_U8 *src = &buffInfo[srcSize + i * mStride];
+        for (uint32_t j = 0; j + 1 < copyWidth; j += YUV_CHROMA_OFFSET_DIVIDER) {
+            dst[j] = src[j + 1];
+            dst[j + 1] = src[j];
         }
     }
 }

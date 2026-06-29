@@ -59,6 +59,8 @@ protected:
     OMX_INDEXTYPE index, OMX_PTR params) override;
     OMX_ERRORTYPE internalSetParameter(
     OMX_INDEXTYPE index, const OMX_PTR params) override;
+    OMX_ERRORTYPE internalSetConfig(
+    OMX_INDEXTYPE index, const OMX_PTR params, bool *frameConfig) override;
     OMX_ERRORTYPE initCheck() const override;
     void onQueueFilled(OMX_U32 portIndex) override;
     OMX_ERRORTYPE getExtensionIndex(
