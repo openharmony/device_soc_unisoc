@@ -198,7 +198,7 @@ When you need to add configuration files, users can define their own configurati
 
 Reference document
 
-[https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md)
+[https://gitee.com/openharmony/docs/blob/OpenHarmony-6.1-LTS/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md](https://gitee.com/openharmony/docs/blob/OpenHarmony-6.1-LTS/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md)
 
 ### Verification
 

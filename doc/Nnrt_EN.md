@@ -58,7 +58,7 @@ The location of NNRt HDI interface files is as follows:
     └── NodeAttrTypes.idl     # AI model operator attribute definitions
 ```
 
-Interface introduction document directory path: [NNRt HDI Interface](https://gitee.com/openharmony/drivers_interface/tree/master/nnrt)
+Interface introduction document directory path: [NNRt HDI Interface](https://gitee.com/openharmony/drivers_interface/tree/OpenHarmony-6.1-LTS/nnrt)
 
 > Note: The v2.0 interface is used.
 
@@ -252,6 +252,6 @@ After adaptation is completed, developers can verify through the following steps
 
 ## Related Repositories
 
-[**device\_board\_revoview**](https://gitcode.com/openharmony-sig/device_board_revoview)
+[**device\_board\_revoview**](https://gitcode.com/openharmony/device_board_revoview)
 
-[**vendor\_revoview**](https://gitcode.com/openharmony-sig/vendor_revoview)
+[**vendor\_revoview**](https://gitcode.com/openharmony/vendor_revoview)

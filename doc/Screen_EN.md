@@ -210,7 +210,7 @@ The TP driver is provided by the manufacturer.
 
 >There are two ways to adapt TP drivers:
 >1. Directly use Linux native drivers, which can refer to this document.
->2. Use the HDF framework to adapt drivers, refer to: [TP Driver Model](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/porting/porting-dayu200-on_standard-demo.md#tp)
+>2. Use the HDF framework to adapt drivers, refer to: [TP Driver Model](https://gitee.com/openharmony/docs/blob/OpenHarmony-6.1-LTS/zh-cn/device-dev/porting/porting-dayu200-on_standard-demo.md#tp)
 
 #### ko Installation to img
 

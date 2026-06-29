@@ -428,4 +428,4 @@ hdc app install -r Location.hap
 
 ### Related Repositories
 
-[base_location](https://gitee.com/openharmony/base_location/blob/master/README.md)
+[base_location](https://gitee.com/openharmony/base_location/blob/OpenHarmony-6.1-LTS/README.md)

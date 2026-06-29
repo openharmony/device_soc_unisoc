@@ -126,5 +126,5 @@ git init
 git config core.sparsecheckout true
 echo code/AI/FaceNetApp/ > .git/info/sparse-checkout
 git remote add origin https://gitcode.com/openharmony/applications_app_samples.git
-git pull origin OpenHarmony_standard_p7885_rk3588_d3000m_20251124
+git pull origin OpenHarmony-6.1-LTS
 ```
