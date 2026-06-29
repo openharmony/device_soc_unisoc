@@ -198,7 +198,7 @@ init进程启动时，首先完成系统初始化工作，然后开始解析配�
 
 参考文档
 
-[https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md)
+[https://gitee.com/openharmony/docs/blob/OpenHarmony-6.1-LTS/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md](https://gitee.com/openharmony/docs/blob/OpenHarmony-6.1-LTS/zh-cn/device-dev/subsystems/subsys-boot-init-cfg.md)
 
 ### 验证
 

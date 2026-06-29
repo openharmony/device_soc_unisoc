@@ -58,7 +58,7 @@ NNRt  HDI接口文件的位置如下：
     └── NodeAttrTypes.idl     # AI模型算子属性定义
 ```
 
-接口介绍文档目录路径：[NNRt HDI 接口](https://gitee.com/openharmony/drivers_interface/tree/master/nnrt)
+接口介绍文档目录路径：[NNRt HDI 接口](https://gitee.com/openharmony/drivers_interface/tree/OpenHarmony-6.1-LTS/nnrt)
 
 > 注：使用的是v2.0接口。
 
@@ -252,6 +252,6 @@ nnrt_host:x:3311:
 
 ## 相关仓
 
-[**device\_board\_revoview**](https://gitcode.com/openharmony-sig/device_board_revoview)
+[**device\_board\_revoview**](https://gitcode.com/openharmony/device_board_revoview)
 
-[**vendor\_revoview**](https://gitcode.com/openharmony-sig/vendor_revoview)
+[**vendor\_revoview**](https://gitcode.com/openharmony/vendor_revoview)

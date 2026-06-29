@@ -210,7 +210,7 @@ TP的驱动，由厂家提供。
 
 >TP驱动适配有两种方式：
 >1、直接使用linux原生驱动，此方式可以参考本文档。
->2、使用hdf框架适配驱动，参考: [TP驱动模型](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/porting/porting-dayu200-on_standard-demo.md#tp)
+>2、使用hdf框架适配驱动，参考: [TP驱动模型](https://gitee.com/openharmony/docs/blob/OpenHarmony-6.1-LTS/zh-cn/device-dev/porting/porting-dayu200-on_standard-demo.md#tp)
 
 #### ko安装到img
 

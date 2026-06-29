@@ -14,7 +14,7 @@ WUKONG100的LCD驱动适配使用linux原生驱动，具体参考内核适配过
 
 ## 显示HDI适配<a name="section02"></a>
 
-[显示HDI](https://gitee.com/openharmony/drivers_peripheral/blob/master/display/README_zh.md)对图形服务提供显示驱动能力，包括显示图层的管理、显示内存的管理及硬件加速等。 显示HDI需要适配两部分：gralloc 和 display_device。其中display_device也包括硬件合成管理display_gfx等。整体架构如图所示：
+[显示HDI](https://gitee.com/openharmony/drivers_peripheral/blob/OpenHarmony-6.1-LTS/display/README_zh.md)对图形服务提供显示驱动能力，包括显示图层的管理、显示内存的管理及硬件加速等。 显示HDI需要适配两部分：gralloc 和 display_device。其中display_device也包括硬件合成管理display_gfx等。整体架构如图所示：
 
 ![](figures/display框架图.png)
 
@@ -42,7 +42,7 @@ display
 
 ### gralloc适配
 
-gralloc模块提供显示内存管理功能，OpenHarmony提供了使用与Hi3516DV300参考实现，厂商可根据实际情况参考适配，该实现基于drm开发，[源码链接](https://gitee.com/openharmony/drivers_peripheral/tree/master/display/hal/default_standard)。
+gralloc模块提供显示内存管理功能，OpenHarmony提供了使用与Hi3516DV300参考实现，厂商可根据实际情况参考适配，该实现基于drm开发，[源码链接](https://gitee.com/openharmony/drivers_peripheral/tree/OpenHarmony-6.1-LTS/display/hal/default_standard)。
 
 展锐P7885的显示内存管理参考RK3568的实现，依赖展锐私有的allocator实现，对展锐私有的allocator进行封装，提供libdisplay_buffer_vdi_impl.z.so供allocator_host服务调用。
 
@@ -50,7 +50,7 @@ gralloc模块提供显示内存管理功能，OpenHarmony提供了使用与Hi351
 
 display device模块提供显示设备管理、layer管理、硬件加速等功能。
 
-OpenHarmony提供了[基于drm的Hi3516DV300芯片的参考实现](https://gitee.com/openharmony/drivers_peripheral/tree/master/display/hal/default_standard/src/display_device),该实现默认支持硬件合成；
+OpenHarmony提供了[基于drm的Hi3516DV300芯片的参考实现](https://gitee.com/openharmony/drivers_peripheral/tree/OpenHarmony-6.1-LTS/display/hal/default_standard/src/display_device),该实现默认支持硬件合成；
 
 展锐P7885的display device模块参考RK3568的实现，默认支持硬件合成。
 

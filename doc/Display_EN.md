@@ -14,7 +14,7 @@ The LCD driver adaptation for WUKONG100 uses the native Linux driver. For detail
 
 ## Display HDI Adaptation<a name="section02"></a>
 
-[显示HDI](https://gitee.com/openharmony/drivers_peripheral/blob/master/display/README_zh.md)The Display HDI provides display driver capabilities to the graphics service, including display layer management, display memory management, and hardware acceleration. The Display HDI requires adaptation in two parts: gralloc and display_device. The display_device also includes hardware composition management such as display_gfx. The overall architecture is shown in the following figure:
+[显示HDI](https://gitee.com/openharmony/drivers_peripheral/blob/OpenHarmony-6.1-LTS/display/README_zh.md)The Display HDI provides display driver capabilities to the graphics service, including display layer management, display memory management, and hardware acceleration. The Display HDI requires adaptation in two parts: gralloc and display_device. The display_device also includes hardware composition management such as display_gfx. The overall architecture is shown in the following figure:
 
 ![](figures/display框架图.png)
 
@@ -42,7 +42,7 @@ display
 
 ### Gralloc Adaptation
 
-The gralloc module provides display memory management functionality. OpenHarmony provides a reference implementation for Hi3516DV300, which vendors can refer to for adaptation based on their actual situation. This implementation is based on drm development. [Source code link.](https://gitee.com/openharmony/drivers_peripheral/tree/master/display/hal/default_standard)。
+The gralloc module provides display memory management functionality. OpenHarmony provides a reference implementation for Hi3516DV300, which vendors can refer to for adaptation based on their actual situation. This implementation is based on drm development. [Source code link.](https://gitee.com/openharmony/drivers_peripheral/tree/OpenHarmony-6.1-LTS/display/hal/default_standard)。
 
 The display memory management for Spreadtrum P7885 refers to the implementation of RK3568, relying on Spreadtrum's proprietary allocator implementation. The proprietary allocator is encapsulated to provide libdisplay_buffer_vdi_impl.z.so for the allocator_host service to call.
 
@@ -50,7 +50,7 @@ The display memory management for Spreadtrum P7885 refers to the implementation 
 
 The display device module provides display device management, layer management, hardware acceleration, and other functions.
 
-OpenHarmony provides[a reference implementation based on drm for the Hi3516DV300 chip](https://gitee.com/openharmony/drivers_peripheral/tree/master/display/hal/default_standard/src/display_device),which supports hardware composition by default.
+OpenHarmony provides[a reference implementation based on drm for the Hi3516DV300 chip](https://gitee.com/openharmony/drivers_peripheral/tree/OpenHarmony-6.1-LTS/display/hal/default_standard/src/display_device),which supports hardware composition by default.
 
 The display device module for Spreadtrum P7885 refers to the implementation of RK3568 and supports hardware composition by default.
 

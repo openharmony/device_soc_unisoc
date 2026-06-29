@@ -57,31 +57,31 @@ See the LICENSE file and code declarations in the corresponding directories.
 
 ### Environment Preparation
 
-[Build and Compilation Method](https://gitcode.com/openharmony-sig/device_board_revoview/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/wukong100/README_zh.md#section03)
+[Build and Compilation Method](https://gitcode.com/openharmony/device_board_revoview/blob/OpenHarmony-6.1-LTS/wukong100/README_zh.md#section03)
 
-[Flashing Method](https://gitcode.com/openharmony-sig/device_board_revoview/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/wukong100/README_zh.md#section04)
+[Flashing Method](https://gitcode.com/openharmony/device_board_revoview/blob/OpenHarmony-6.1-LTS/wukong100/README_zh.md#section04)
 
 ### Adaptation Methods
 
-[Startup Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Startup.md)
+[Startup Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/Startup.md)
 
-[Display Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Display.md)
+[Display Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/Display.md)
 
-[Screen Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Screen.md)
+[Screen Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/Screen.md)
 
-[NPU Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Nnrt.md)
+[NPU Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/Nnrt.md)
 
-[Modem Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Modem.md)
+[Modem Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/Modem.md)
 
-[BT Framework Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/BT.md)
+[BT Framework Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/BT.md)
 
-[WiFi Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/WIFI.md)
+[WiFi Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/WIFI.md)
 
-[Audio Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Audio.md)
+[Audio Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/Audio.md)
 
-[GNSS Adaptation](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/Gnss.md)
+[GNSS Adaptation](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/Gnss.md)
 
-[Face Recognition](https://gitcode.com/openharmony-sig/device_soc_unisoc/blob/OpenHarmony_standard_p7885_rk3588_d3000m_20251103/doc/FaceNet.md)
+[Face Recognition](https://gitcode.com/openharmony/device_soc_unisoc/blob/OpenHarmony-6.1-LTS/doc/FaceNet.md)
 
 ## Contribution<a name="section05"></a>
 
@@ -91,6 +91,6 @@ See the LICENSE file and code declarations in the corresponding directories.
 
 ## Related Repositories<a name="section06"></a>
 
-[device_board_revoview](https://gitcode.com/openharmony-sig/device_board_revoview)
+[device_board_revoview](https://gitcode.com/openharmony/device_board_revoview)
 
-[vendor_revoview](https://gitcode.com/openharmony-sig/vendor_revoview)
+[vendor_revoview](https://gitcode.com/openharmony/vendor_revoview)
