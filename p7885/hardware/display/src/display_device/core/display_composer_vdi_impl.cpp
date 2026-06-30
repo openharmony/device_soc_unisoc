@@ -35,7 +35,7 @@ DisplayComposerVdiImpl::~DisplayComposerVdiImpl() { }
 
 int32_t DisplayComposerVdiImpl::RegHotPlugCallback(HotPlugCallback cb, void* data)
 {
-    std::lock_guard<std::mutex> lock(mMutex);
+   
     HdiSession::GetInstance().RegHotPlugCallback(cb, data);
     return HDF_SUCCESS;
 }
