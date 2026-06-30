@@ -1252,6 +1252,9 @@ void SprdSimpleOMXComponent::InitLooper(const char *name) const
 void SprdSimpleOMXComponent::DeinitLooper()
 {
     Looper *looper = mMsgHandler.getLooper();
+    if (looper == nullptr) {
+        return;
+    }
     mMsgHandler.setLooper(nullptr);
     looper->stop();
     delete looper;
