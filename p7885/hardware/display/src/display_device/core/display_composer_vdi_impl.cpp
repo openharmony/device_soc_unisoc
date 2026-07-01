@@ -34,7 +34,7 @@ DisplayComposerVdiImpl::DisplayComposerVdiImpl() { }
 DisplayComposerVdiImpl::~DisplayComposerVdiImpl() { }
 
 int32_t DisplayComposerVdiImpl::RegHotPlugCallback(HotPlugCallback cb, void* data)
-{ 
+{
     HdiSession::GetInstance().RegHotPlugCallback(cb, data);
     return HDF_SUCCESS;
 }
