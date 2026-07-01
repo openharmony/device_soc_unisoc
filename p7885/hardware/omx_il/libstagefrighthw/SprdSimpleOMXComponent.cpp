@@ -215,6 +215,35 @@ void SprdSimpleOMXComponent::PrepareForDestruction()
 OMX_ERRORTYPE SprdSimpleOMXComponent::sendCommand(OMX_COMMANDTYPE cmd, OMX_U32 param, OMX_PTR data)
 {
     OMX_LOGD("cmd: 0x%08x", cmd);
+    // Validate port index range for port-level commands
+    if (cmd == OMX_CommandPortEnable || cmd == OMX_CommandPortDisable) {
+        if (param >= mPorts.size()) {
+            OMX_LOGE("[%{public}s@%{public}s:%{public}d] Invalid port index %{public}u, max=%{public}zu",
+                __FUNCTION__, FILENAME_ONLY, __LINE__, param, mPorts.size());
+            return OMX_ErrorBadPortIndex;
+        }
+        // Port enable is not supported in this implementation
+        if (cmd == OMX_CommandPortEnable) {
+            OMX_LOGE("[%{public}s@%{public}s:%{public}d] Port enable not supported, port=%{public}u",
+                __FUNCTION__, FILENAME_ONLY, __LINE__, param);
+            return OMX_ErrorUnsupportedSetting;
+        }
+    }
+    // Validate state for flush command: only allowed in Executing/Pause/Idle(OMX_ALL)
+    if (cmd == OMX_CommandFlush) {
+        if (mState != OMX_StateExecuting && mState != OMX_StatePause &&
+            !(param == OMX_ALL && mState == OMX_StateIdle)) {
+            OMX_LOGE("[%{public}s@%{public}s:%{public}d] Flush not allowed in state %{public}d, port=%{public}u",
+                __FUNCTION__, FILENAME_ONLY, __LINE__, mState, param);
+            return OMX_ErrorIncorrectStateOperation;
+        }
+    }
+    // MarkBuffer is not implemented by this component
+    if (cmd == OMX_CommandMarkBuffer) {
+        OMX_LOGE("[%{public}s@%{public}s:%{public}d] MarkBuffer not supported",
+            __FUNCTION__, FILENAME_ONLY, __LINE__);
+        return OMX_ErrorNotImplemented;
+    }
     Message *msg = new Message(K_WHAT_SEND_COMMAND, &mMsgHandler);
     msg->setInt32("cmd", cmd);
     msg->setInt32("param", param);
@@ -649,6 +678,13 @@ void SprdSimpleOMXComponent::onSendCommand(
             break;
         }
         case OMX_CommandFlush: {
+            if (mState != OMX_StateExecuting && mState != OMX_StatePause &&
+                !(param == OMX_ALL && mState == OMX_StateIdle)) {
+                OMX_LOGE("[%{public}s@%{public}s:%{public}d] Flush not allowed in state %{public}d, port=%{public}u",
+                    __FUNCTION__, FILENAME_ONLY, __LINE__, mState, param);
+                notify(OMX_EventError, OMX_ErrorIncorrectStateOperation, 0, nullptr);
+                break;
+            }
             onPortFlush(param, true /* sendFlushComplete */);
             break;
         }

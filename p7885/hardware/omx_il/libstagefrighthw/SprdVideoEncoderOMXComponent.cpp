@@ -304,6 +304,9 @@ OMX_ERRORTYPE SprdVideoEncoderOMXComponent::setConfigVideoBitrate(const OMX_PTR 
 {
     OMX_VIDEO_CONFIG_BITRATETYPE *pConfigParams =
         (OMX_VIDEO_CONFIG_BITRATETYPE *)params;
+    if (!IsValidOmxParam(pConfigParams)) {
+        return OMX_ErrorBadParameter;
+    }
     if (pConfigParams->nPortIndex != OUTPUT_PORT_INDEX) {
         return OMX_ErrorBadPortIndex;
     }
@@ -379,6 +382,9 @@ OMX_ERRORTYPE SprdVideoEncoderOMXComponent::getExtensionIndex(
         return OMX_ErrorNone;
     } else if (strcmp(name, "OMX.index.describeColorFormat") == 0) {
         *index = (OMX_INDEXTYPE) OMX_INDEX_DESCRIBE_COLOR_FORMAT;
+        return OMX_ErrorNone;
+    } else if (strcmp(name, OHOS_INDEX_PARAM_EXTENDED_VIDEO) == 0) {
+        *index = (OMX_INDEXTYPE) OMX_INDEX_PARAM_RK_ENC_EXTENDED_VIDEO;
         return OMX_ErrorNone;
     }
     return SprdSimpleOMXComponent::getExtensionIndex(name, index);
