@@ -307,6 +307,11 @@ OMX_ERRORTYPE SprdVideoEncoderOMXComponent::setConfigVideoBitrate(const OMX_PTR 
     if (!IsValidOmxParam(pConfigParams)) {
         return OMX_ErrorBadParameter;
     }
+    if (pConfigParams->nSize != sizeof(OMX_VIDEO_CONFIG_BITRATETYPE)) {
+        OMX_LOGE("SetConfig bitrate struct size mismatch, got %u, expected %zu",
+            pConfigParams->nSize, sizeof(OMX_VIDEO_CONFIG_BITRATETYPE));
+        return OMX_ErrorBadParameter;
+    }
     if (pConfigParams->nPortIndex != OUTPUT_PORT_INDEX) {
         return OMX_ErrorBadPortIndex;
     }
@@ -372,7 +377,19 @@ OMX_ERRORTYPE SprdVideoEncoderOMXComponent::internalSetConfig(
 OMX_ERRORTYPE SprdVideoEncoderOMXComponent::getConfig(
     OMX_INDEXTYPE index, OMX_PTR params)
 {
-    return SprdSimpleOMXComponent::getConfig(index, params);
+    switch (static_cast<int>(index)) {
+        case OMX_IndexConfigVideoBitrate: {
+            OMX_VIDEO_CONFIG_BITRATETYPE *pConfigParams =
+                (OMX_VIDEO_CONFIG_BITRATETYPE *)params;
+            if (!IsValidOmxParam(pConfigParams)) {
+                return OMX_ErrorBadParameter;
+            }
+            pConfigParams->nEncodeBitrate = mBitrate;
+            return OMX_ErrorNone;
+        }
+        default:
+            return SprdSimpleOMXComponent::getConfig(index, params);
+    }
 }
 OMX_ERRORTYPE SprdVideoEncoderOMXComponent::getExtensionIndex(
     const char *name, OMX_INDEXTYPE *index)
@@ -556,6 +573,9 @@ OMX_ERRORTYPE SprdVideoEncoderOMXComponent::setParamVideoPortFormat(
 {
     const OMX_VIDEO_PARAM_PORTFORMATTYPE *formatParams =
         (const OMX_VIDEO_PARAM_PORTFORMATTYPE *)params;
+    if (!IsValidOmxParam(formatParams)) {
+        return OMX_ErrorBadParameter;
+    }
     if (formatParams->nPortIndex > OUTPUT_PORT_INDEX) {
         return OMX_ErrorUndefined;
     }
