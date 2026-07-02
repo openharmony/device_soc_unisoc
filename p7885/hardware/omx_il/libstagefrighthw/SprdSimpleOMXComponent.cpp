@@ -217,7 +217,7 @@ OMX_ERRORTYPE SprdSimpleOMXComponent::sendCommand(OMX_COMMANDTYPE cmd, OMX_U32 p
     OMX_LOGD("cmd: 0x%08x", cmd);
     // Validate port index range for port-level commands
     if (cmd == OMX_CommandPortEnable || cmd == OMX_CommandPortDisable) {
-        if (param >= mPorts.size()) {
+        if (param >= mPorts.size() && param != OMX_ALL) {
             OMX_LOGE("[%{public}s@%{public}s:%{public}d] Invalid port index %{public}u, max=%{public}zu",
                 __FUNCTION__, FILENAME_ONLY, __LINE__, param, mPorts.size());
             return OMX_ErrorBadPortIndex;
