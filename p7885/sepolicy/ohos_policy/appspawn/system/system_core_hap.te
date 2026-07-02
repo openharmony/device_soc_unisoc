@@ -60,3 +60,15 @@ allow system_core_hap sml_block_file:lnk_file { read };
 # avc:  denied  { open } for  pid=2881 comm="RSRenderThread" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
 allow system_core_hap sml_block_file:blk_file { read open };
 
+# avc:  denied  { search } for  pid=4148 comm="OS_FFRT_3_2" name="com.ohos.medialibrary.medialibrarydata" dev="sda63" ino=1909 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:medialibrary_hap_data_file:s0 tclass=dir permissive=1
+allow system_core_hap medialibrary_hap_data_file:dir { search };
+
+# avc:  denied  { ioctl } for  pid=4148 comm="OS_FFRT_3_2" path="/data/medialibrary/database/rdb/media_library.db" dev="sda63" ino=3210 ioctlcmd=0xf546 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:medialibrary_hap_data_file:s0 tclass=file permissive=1
+# avc:  denied  { map } for  pid=4148 comm="OS_FFRT_3_2" path="/data/medialibrary/database/rdb/media_library.db-dwr" dev="sda63" ino=3211 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:medialibrary_hap_data_file:s0 tclass=file permissive=1
+# avc:  denied  { lock } for  pid=4148 comm="OS_FFRT_3_2" path="/data/medialibrary/database/rdb/media_library.db" dev="sda63" ino=3210 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:medialibrary_hap_data_file:s0 tclass=file permissive=1
+# avc:  denied  { ioctl } for  pid=2878 comm="OS_FFRT_3_1" path="/data/medialibrary/database/rdb/media_library.db" dev="sda63" ino=3210 ioctlcmd=0xf50c scontext=u:r:system_core_hap:s0 tcontext=u:object_r:medialibrary_hap_data_file:s0 tclass=file permissive=0
+allow system_core_hap medialibrary_hap_data_file:file { ioctl map lock };
+allowxperm system_core_hap medialibrary_hap_data_file:file ioctl { 0xf546 0xf50c };
+
+# avc:  denied  { search } for  pid=2878 comm="hos.photos:form" name="etc" dev="sda49" ino=12 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sys_prod_file:s0 tclass=dir permissive=0
+allow system_core_hap sys_prod_file:dir { search };
