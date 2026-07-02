@@ -222,9 +222,9 @@ OMX_ERRORTYPE SprdSimpleOMXComponent::sendCommand(OMX_COMMANDTYPE cmd, OMX_U32 p
                 __FUNCTION__, FILENAME_ONLY, __LINE__, param, mPorts.size());
             return OMX_ErrorBadPortIndex;
         }
-        // Port enable is not supported in this implementation
-        if (cmd == OMX_CommandPortEnable) {
-            OMX_LOGE("[%{public}s@%{public}s:%{public}d] Port enable not supported, port=%{public}u",
+        // Port enable is only allowed after port disable (not in initial Loaded state)
+        if (cmd == OMX_CommandPortEnable && mState == OMX_StateLoaded) {
+            OMX_LOGE("[%{public}s@%{public}s:%{public}d] Port enable rejected in Loaded state, port=%{public}u",
                 __FUNCTION__, FILENAME_ONLY, __LINE__, param);
             return OMX_ErrorUnsupportedSetting;
         }
