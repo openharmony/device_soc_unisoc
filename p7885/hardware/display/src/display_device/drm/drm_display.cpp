@@ -97,6 +97,11 @@ int32_t DrmDisplay::GetDisplayMode(uint32_t *modeId)
 
 int32_t DrmDisplay::SetDisplayMode(uint32_t modeId)
 {
+    DISPLAY_CHK_RETURN((mConnector == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("connector is null"));
+    DrmMode mode;
+    DISPLAY_CHK_RETURN((mConnector->GetModeFromId(static_cast<int32_t>(modeId), mode) != DISPLAY_SUCCESS),
+        DISPLAY_FAILURE,
+        DISPLAY_LOGE("invalid modeId %{public}u", modeId));
     return mCrtc->SetActivieMode(modeId);
 }
 
