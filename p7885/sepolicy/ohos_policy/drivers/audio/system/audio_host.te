@@ -24,13 +24,12 @@ allow audio_host hiviewdfx_hiview_param:file { open read };
 
 # avc:  denied  { ioctl } for  pid=796 comm="OS_IPC_2_1159" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=592 ioctlcmd=0x4100 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=813 comm="OS_IPC_2_1191" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=592 ioctlcmd=0x4101 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
-# avc:  denied  { ioctl } for  pid=773 comm="OS_IPC_3_1405" path="/dev/snd/pcmC0D0p" dev="tmpfs" ino=595 ioctlcmd=0x4145 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=840 comm="OS_IPC_1_905" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5500 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=815 comm="OS_IPC_2_960" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5501 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=825 comm="OS_IPC_3_1373" path="/dev/snd/controlC0" dev="tmpfs" ino=621 ioctlcmd=0x5530 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=827 comm="OS_IPC_0_851" path="/dev/snd/controlC0" dev="tmpfs" ino=621 ioctlcmd=0x5531 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
 # avc:  denied  { ioctl } for  pid=815 comm="OS_IPC_0_1055" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5532 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=0
-allowxperm audio_host dev_snd_file:chr_file ioctl { 0x4100 0x4101 0x4145 0x5500 0x5501 0x5530 0x5531 0x5532 };
+allowxperm audio_host dev_snd_file:chr_file ioctl { 0x4100 0x4101 0x5500 0x5501 0x5530 0x5531 0x5532 };
 
 # avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5511 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
 # avc:  denied  { ioctl } for  pid=809 comm="OS_IPC_0_1151" path="/dev/snd/controlC0" dev="tmpfs" ino=614 ioctlcmd=0x5513 scontext=u:r:audio_host:s0 tcontext=u:object_r:dev_snd_file:s0 tclass=chr_file permissive=1
