@@ -64,3 +64,9 @@ allow resource_schedule_service arkcompiler_param:file { read open map };
 # avc:  denied  { create } for  pid=526 comm="OS_FFRT_2_2" name="usageGroup.db-journal" scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=file permissive=0
 allow resource_schedule_service data_service_el1_public_bundle_usage:file { setattr ioctl create };
 allowxperm resource_schedule_service data_service_el1_public_bundle_usage:file ioctl { 0xf501 };
+
+# avc:  denied  { getattr } for  pid=469 comm="OS_FFRT_2_4" path="/proc/meminfo" dev="proc" ino=4026532025 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:proc_meminfo_file:s0 tclass=file permissive=0
+allow resource_schedule_service arkcompiler_param:file { read open map };
+
+# avc:  denied  { getattr } for  pid=469 comm="OS_FFRT_2_4" path="/proc/meminfo" dev="proc" ino=4026532025 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:proc_meminfo_file:s0 tclass=file permissive=0
+allow resource_schedule_service proc_meminfo_file:file { getattr };
