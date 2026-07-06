@@ -72,3 +72,4 @@ allowxperm system_core_hap medialibrary_hap_data_file:file ioctl { 0xf546 0xf50c
 
 # avc:  denied  { search } for  pid=2878 comm="hos.photos:form" name="etc" dev="sda49" ino=12 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sys_prod_file:s0 tclass=dir permissive=0
 allow system_core_hap sys_prod_file:dir { search };
+
