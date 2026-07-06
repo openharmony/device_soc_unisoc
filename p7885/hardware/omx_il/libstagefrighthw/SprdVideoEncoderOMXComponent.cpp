@@ -384,6 +384,15 @@ OMX_ERRORTYPE SprdVideoEncoderOMXComponent::getConfig(
             if (!IsValidOmxParam(pConfigParams)) {
                 return OMX_ErrorBadParameter;
             }
+            if (pConfigParams->nSize != sizeof(OMX_VIDEO_CONFIG_BITRATETYPE)) {
+                OMX_LOGE("GetConfig bitrate struct size mismatch, got %u, expected %zu",
+                    pConfigParams->nSize, sizeof(OMX_VIDEO_CONFIG_BITRATETYPE));
+                return OMX_ErrorBadParameter;
+            }
+            if (pConfigParams->nPortIndex != OUTPUT_PORT_INDEX) {
+                OMX_LOGE("GetConfig bitrate invalid port index: %u", pConfigParams->nPortIndex);
+                return OMX_ErrorBadPortIndex;
+            }
             pConfigParams->nEncodeBitrate = mBitrate;
             return OMX_ErrorNone;
         }
