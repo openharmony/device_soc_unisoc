@@ -144,7 +144,7 @@ int32_t HdiGfxComposition::SetLayers(std::vector<HdiLayer *> &layers, HdiLayer &
             }
             mCompLayers.push_back(layer);
         } else {
-            layer->SetDeviceSelect(COMPOSITION_CLIENT);
+            layer->SetDeviceSelect(COMPOSITION_DEVICE);
             mClientLayer->SetAcceleratorType(ACCELERATOR_DPU);
             dpuSize = 1;
         }
@@ -311,9 +311,14 @@ int32_t HdiGfxComposition::Apply(bool modeSet)
                     DISPLAY_LOGE("clear layer %{public}d failed", i));
                 break;
             case COMPOSITION_DEVICE:
+                if (layer->GetAcceleratorType() != ACCELERATOR_GSP) {
+                    DISPLAY_LOGD("skip layer %{public}d on gfx, accelerator=%{public}d", i,
+                        layer->GetAcceleratorType());
+                    break;
+                }
                 ret = BlitLayer(*layer, *mClientLayer, i, mCompLayers.size(), layer->GetZorder());
                 DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE,
-                    DISPLAY_LOGE("blit layer %{public}d failed ", i));
+                DISPLAY_LOGE("blit layer %{public}d failed ", i));
                 break;
             default:
                 DISPLAY_LOGE("the gfx composition can not surpport the type %{public}d", compType);

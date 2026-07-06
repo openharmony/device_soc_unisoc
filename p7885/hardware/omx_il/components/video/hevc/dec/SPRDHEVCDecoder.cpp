@@ -108,6 +108,9 @@
 #define ZERO_VALUE 0
 /* Minimum value for loop conditions */
 #define MIN_LOOP_VALUE 0
+/* Graphic pixel format values used by HCodec capability/configuration */
+#define GRAPHIC_PIXEL_FMT_YCBCR_420_SP_VALUE 24
+#define GRAPHIC_PIXEL_FMT_YCRCB_420_SP_VALUE 25
 /* CheckParam return value for unsupported index */
 #define CHECK_PARAM_UNSUPPORTED_INDEX 1
 /* Size of META_DATA_T structure */
@@ -594,10 +597,19 @@ OMX_ERRORTYPE SPRDHEVCDecoder::setCodecVideoPortFormat(const CodecVideoPortForma
     if (CheckParam(const_cast<CodecVideoPortFormatParam *>(formatParams), sizeof(CodecVideoPortFormatParam))) {
         return OMX_ErrorUnsupportedIndex;
     }
+    if (formatParams->portIndex == K_OUTPUT_PORT_INDEX &&
+        formatParams->codecColorFormat != GRAPHIC_PIXEL_FMT_YCBCR_420_SP_VALUE &&
+        formatParams->codecColorFormat != GRAPHIC_PIXEL_FMT_YCRCB_420_SP_VALUE) {
+        OMX_LOGE("unsupported output graphic pixel format: %d", formatParams->codecColorFormat);
+        return OMX_ErrorUnsupportedSetting;
+    }
     PortInfo *port = editPortInfo(formatParams->portIndex);
     port->mDef.format.video.eColorFormat = (OMX_COLOR_FORMATTYPE)formatParams->codecColorFormat;
     port->mDef.format.video.eCompressionFormat = (OMX_VIDEO_CODINGTYPE)formatParams->codecCompressFormat;
     port->mDef.format.video.xFramerate = (OMX_U32)formatParams->framerate;
+    if (formatParams->portIndex == K_OUTPUT_PORT_INDEX) {
+        mOutputNV21 = (formatParams->codecColorFormat == GRAPHIC_PIXEL_FMT_YCRCB_420_SP_VALUE);
+    }
     return OMX_ErrorNone;
 }
 
@@ -1463,8 +1475,40 @@ bool SPRDHEVCDecoder::HandleBitdepthChangeEvent(const unsigned char *high10En)
 void SPRDHEVCDecoder::notifyFillBufferDone(OMX_BUFFERHEADERTYPE *header)
 {
     NV12Crop(header, mStride, mSliceHeight, mStride16, mFrameHeight);
+    ConvertOutputToNV21(header);
     (*mCallbacks->FillBufferDone)(
         mComponent, mComponent->pApplicationPrivate, header);
+}
+
+void SPRDHEVCDecoder::ConvertOutputToNV21(OMX_BUFFERHEADERTYPE *header)
+{
+    if (!mOutputNV21 || header == nullptr || header->nFilledLen == 0 || mhigh10En || mFbcMode != FBC_NONE) {
+        return;
+    }
+
+    OMX_U8 *buffer = nullptr;
+    uint32_t width = 0;
+    uint32_t height = 0;
+    if (header->pPlatformPrivate != nullptr) {
+        buffer = reinterpret_cast<OMX_U8 *>(header->pPlatformPrivate);
+        width = mStride16;
+        height = mFrameHeight;
+    } else if (header->pBuffer != nullptr) {
+        buffer = header->pBuffer + header->nOffset;
+        width = mStride;
+        height = mSliceHeight;
+    }
+    if (buffer == nullptr || width == 0 || height == 0) {
+        return;
+    }
+
+    OMX_U8 *uvPlane = buffer + width * height;
+    uint32_t uvSize = width * height / HIGH10_MULTIPLIER;
+    for (uint32_t i = 0; i + 1 < uvSize; i += HIGH10_MULTIPLIER) {
+        OMX_U8 tmp = uvPlane[i];
+        uvPlane[i] = uvPlane[i + 1];
+        uvPlane[i + 1] = tmp;
+    }
 }
 void SPRDHEVCDecoder::drainOneOutputBuffer(int32_t picId, const void *pBufferHeader)
 {

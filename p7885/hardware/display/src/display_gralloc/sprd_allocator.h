@@ -17,8 +17,8 @@
 #define SPRD_ALLOCATOR_H_
 
 #include <cstdint>
-#include <mutex>
 #include <map>
+#include <mutex>
 #include "allocator.h"
 #include "SprdGraphicBufferWrapper.h"
 
@@ -31,26 +31,29 @@ public:
     int32_t Init() override;
     int32_t Allocate(const BufferInfo &bufferInfo, BufferHandle &handle) override;
     int32_t Allocate(const BufferInfo &bufferInfo, BufferHandle **handle) override;
-    int32_t FreeMem(BufferHandle *handle)override;
+    int32_t FreeMem(BufferHandle *handle) override;
+    static bool SupportsFormat(PixelFormat format);
     ~SprdAllocator() override;
 
 protected:
     int32_t InitBufferhandle(const BufferInfo &bufferInfo, BufferHandle **handle);
-    uint64_t ConvertUsageToGpu(uint64_t inUsage);
-    AdapterPixelFormat ConvertFormatToGpu(PixelFormat inFormat);
-    
+    uint64_t ConvertUsageToGpu(uint64_t inUsage, PixelFormat format);
+    static AdapterPixelFormat ConvertFormatToGpu(PixelFormat inFormat);
+
 private:
+    static int32_t GetHandleKey(const BufferHandle *handle);
+
     NativeHandle *mHandle;
     uint32_t mStride;
     uint64_t mUsage;
     AdapterPixelFormat mFormat;
     std::mutex m;
-    // 跟踪分配的 wrapper 对象生命周期，key 为 BufferHandle 指针
-    std::map<BufferHandle*, void*> mBufferMap;
+    // Track wrapper lifetime by exported dma-buf fd.
+    std::map<int32_t, void*> mBufferMap;
 };
 
 } /*namespace DISPLAY*/
 } /*namespace HDI*/
 } /*namespace OHOS*/
 
-#endif /*_SPRD_ALLOCATOR_H_*/
+#endif /* SPRD_ALLOCATOR_H_ */

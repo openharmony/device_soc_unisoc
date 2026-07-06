@@ -153,11 +153,32 @@ protected:
     virtual OMX_ERRORTYPE fillThisBuffer(
         OMX_BUFFERHEADERTYPE *buffer);
     virtual OMX_ERRORTYPE getState(OMX_STATETYPE *state);
+    virtual OMX_ERRORTYPE componentTunnelRequest(
+        OMX_U32 port,
+        OMX_HANDLETYPE tunneledComp,
+        OMX_U32 tunneledPort,
+        OMX_TUNNELSETUPTYPE *tunnelSetup);
+    virtual OMX_ERRORTYPE setCallbacks(
+        OMX_CALLBACKTYPE *callbacks,
+        OMX_PTR appData);
+    virtual OMX_ERRORTYPE useEGLImage(
+        OMX_BUFFERHEADERTYPE **buffer,
+        OMX_U32 portIndex,
+        OMX_PTR appPrivate,
+        void *eglImage);
+    virtual OMX_ERRORTYPE componentRoleEnum(
+        OMX_U8 *role,
+        OMX_U32 index);
     const OMX_CALLBACKTYPE *mCallbacks;
     OMX_COMPONENTTYPE *mComponent;
 private:
     std::string mName;
     void *mHwLibHandle;
+    OMX_PTR AppData() const;
+    void BuildComponentHandle(OMX_PTR appData);
+    void FillComponentVersion();
+    void BindComponentEntryPoints();
+    static SprdOMXComponent *FromHandle(OMX_HANDLETYPE component);
     static OMX_ERRORTYPE GetComponentVersionWrapper(
         OMX_HANDLETYPE Component,
         OMX_STRING ComponentName,
@@ -216,6 +237,28 @@ private:
     static OMX_ERRORTYPE GetStateWrapper(
     OMX_HANDLETYPE component,
         OMX_STATETYPE *state);
+    static OMX_ERRORTYPE ComponentTunnelRequestWrapper(
+        OMX_HANDLETYPE component,
+        OMX_U32 port,
+        OMX_HANDLETYPE tunneledComp,
+        OMX_U32 tunneledPort,
+        OMX_TUNNELSETUPTYPE *tunnelSetup);
+    static OMX_ERRORTYPE SetCallbacksWrapper(
+        OMX_HANDLETYPE component,
+        OMX_CALLBACKTYPE *callbacks,
+        OMX_PTR appData);
+    static OMX_ERRORTYPE UseEGLImageWrapper(
+        OMX_HANDLETYPE component,
+        OMX_BUFFERHEADERTYPE **buffer,
+        OMX_U32 portIndex,
+        OMX_PTR appPrivate,
+        void *eglImage);
+    static OMX_ERRORTYPE ComponentRoleEnumWrapper(
+        OMX_HANDLETYPE component,
+        OMX_U8 *role,
+        OMX_U32 index);
+    static OMX_ERRORTYPE ComponentDeInitWrapper(
+        OMX_HANDLETYPE component);
     SprdOMXComponent(const SprdOMXComponent &);
     SprdOMXComponent &operator=(const SprdOMXComponent &);
 };

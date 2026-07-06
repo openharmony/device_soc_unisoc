@@ -314,8 +314,8 @@ As general code, WUKONG100 does not involve modifications to the audio-framework
 
 ### Related Repositories
 
-[**device_board_revoview**](https://gitcode.com/openharmony-sig/device_board_revoview)
+[**device_board_revoview**](https://gitcode.com/openharmony/device_board_revoview)
 
-[**vendor_revoview**](https://gitcode.com/openharmony-sig/vendor_revoview)
+[**vendor_revoview**](https://gitcode.com/openharmony/vendor_revoview)
 
 [**drivers_peripheral**](https://gitcode.com/openharmony/drivers_peripheral)

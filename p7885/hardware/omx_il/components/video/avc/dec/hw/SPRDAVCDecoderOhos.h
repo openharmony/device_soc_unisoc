@@ -92,6 +92,7 @@ private:
         uint32_t &copyWidth, uint32_t &copyHeight) const;
     void copyOhosLumaPlane(OMX_U8 *dstInfo, OMX_U8 *buffInfo, const BufferHandle *bufferhandle) const;
     void copyOhosChromaPlane(OMX_U8 *dstInfo, OMX_U8 *buffInfo, const BufferHandle *bufferhandle) const;
+    void copyOhosChromaPlaneAsNV21(OMX_U8 *dstInfo, OMX_U8 *buffInfo, const BufferHandle *bufferhandle) const;
     void initOhosHeader(OMX_BUFFERHEADERTYPE *header, const UseBufferParams &params) const;
     void initDefaultOutputBufferCtrl(BufferCtrlStruct *bufferCtrl, BufferPrivateStruct *bufferPrivate) const;
     OMX_ERRORTYPE initOhosOutputPrivate(OMX_BUFFERHEADERTYPE **header, const UseBufferParams &params);
@@ -113,6 +114,7 @@ private:
         std::list<BufferInfo *>::iterator it, BufferInfo *outInfo,
         OMX_BUFFERHEADERTYPE *outHeader);
     bool drainOneOutputFrame(std::list<BufferInfo*>& outQueue);
+    bool mOutputNV21 = false;
 };
 }  // namespace OMX
 }  // namespace OHOS

@@ -81,6 +81,7 @@ private:
     uint32_t mCropWidth = 320;
     uint32_t mCropHeight = 240;
     uint8_t mhigh10En = 0;
+    bool mOutputNV21 = false;
     Mutex mLock;
     uint8_t *mCodecInterBuffer = nullptr;
     uint8_t *mCodecExtraBuffer = nullptr;
@@ -130,6 +131,7 @@ private:
     OMX_ERRORTYPE setProcessName(const ProcessNameParam *nameParams);
     OMX_ERRORTYPE setPortDefinitionParam(const OMX_PARAM_PORTDEFINITIONTYPE *defParams);
     OMX_ERRORTYPE setCodecVideoPortFormat(const CodecVideoPortFormatParam *formatParams);
+    void ConvertOutputToNV21(OMX_BUFFERHEADERTYPE *header);
     void initOmxHeader(OMX_BUFFERHEADERTYPE *header, OMX_U32 portIndex, OMX_PTR appPrivate,
         OMX_U32 size, OMX_U8 *ptr);
     OMX_ERRORTYPE initOutputPrivate(OMX_BUFFERHEADERTYPE *header, OMX_U8 *ptr, BufferPrivateStruct *bufferPrivate);

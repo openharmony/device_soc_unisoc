@@ -144,12 +144,7 @@ void DrmConnector::GetDisplayCap(DisplayCapability &cap)
     cap.phyHeight = mPhyHeight;
     cap.phyWidth = mPhyWidth;
     cap.type = mType;
-    memcpy_s(const_cast<char*>(cap.name.c_str()), cap.name.size(), mName.c_str(), mName.size());
-    if (mName.size() >= sizeof(cap.name)) {
-        cap.name[sizeof(cap.name) - 1] = 0;
-    } else {
-        cap.name[mName.size()] = 0;
-    }
+    cap.name = mName;
     cap.supportLayers = mSupportLayers;
     cap.virtualDispCount = mVirtualDispCount;
     cap.supportWriteBack = mSupportWriteBack;
