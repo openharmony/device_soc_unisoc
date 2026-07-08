@@ -169,6 +169,9 @@ int32_t Allocator::AllocMem(const AllocInfo &info, BufferHandle **handle)
 {
     int ret;
     DISPLAY_LOGD();
+    DISPLAY_CHK_RETURN((info.width == 0), DISPLAY_PARAM_ERR, DISPLAY_LOGE("invalid width: %{public}u", info.width));
+    DISPLAY_CHK_RETURN((info.height == 0), DISPLAY_PARAM_ERR,
+        DISPLAY_LOGE("invalid height: %{public}u", info.height));
     BufferInfo bufferInfo;
     ret = ConvertToBufferInfo(bufferInfo, info);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_NOT_SUPPORT, DISPLAY_LOGE("failed to convert to bufferInfo"));
