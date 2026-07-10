@@ -71,3 +71,8 @@ allow location_host sml_block_file:blk_file { read open };
 # avc:  denied  { read } for  pid=3765 comm="OS_IPC_0_3771" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:location_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
 #allow location_host dev_block_file:lnk_file { read };
 allow location_host sml_block_file:lnk_file { read };
+
+# avc:  denied  { read } for  pid=2860 comm="OS_IPC_0_2864" name="prop.ini" dev="sda47" ino=893 scontext=u:r:location_host:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=0
+# avc:  denied  { open } for  pid=2698 comm="OS_IPC_1_2704" path="/system/etc/gnss/prop.ini" dev="sda47" ino=893 scontext=u:r:location_host:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=0
+# avc:  denied  { getattr } for  pid=2890 comm="OS_IPC_1_2896" path="/system/etc/gnss/prop.ini" dev="sda47" ino=893 scontext=u:r:location_host:s0 tcontext=u:object_r:system_etc_file:s0 tclass=file permissive=0
+allow location_host system_etc_file:file { read open getattr };
