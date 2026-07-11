@@ -26,3 +26,9 @@ allowxperm locationhub dev_at_file:chr_file ioctl { 0x5413 };
 
 # avc:  denied  { call } for  pid=3256 comm="OS_IPC_1_3259" scontext=u:r:locationhub:s0 tcontext=u:r:system_core_hap:s0 tclass=binder permissive=0
 allow locationhub system_core_hap:binder {call};
+
+# avc:  denied  { read } for  pid=2873 comm="locationhub" name="online" dev="sysfs" ino=8390 scontext=u:r:locationhub:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=1
+# avc:  denied  { open } for  pid=2873 comm="locationhub" path="/sys/devices/system/cpu/online" dev="sysfs" ino=8390 scontext=u:r:locationhub:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=1
+# avc:  denied  { getattr } for  pid=2873 comm="locationhub" path="/sys/devices/system/cpu/online" dev="sysfs" ino=8390 scontext=u:r:locationhub:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=1
+allow locationhub sysfs_devices_system_cpu:file { read open getattr };
+
