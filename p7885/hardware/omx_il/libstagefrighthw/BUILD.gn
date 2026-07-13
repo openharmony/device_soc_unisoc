@@ -18,31 +18,31 @@ import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
 import("//device/soc/unisoc/p7885/soc_common.gni")
 
 ohos_shared_library("libstagefrighthw") {
-  sources = [
-      "SprdOMXComponent.cpp",
-      "SprdSimpleOMXComponent.cpp",
-      "SprdVideoDecoderBase.cpp",
-      "SprdVideoDecoderOMXComponent.cpp",
-      "SprdVideoEncoderBase.cpp",
-      "SprdVideoEncoderOMXComponent.cpp",
-  ]
+    sources = [
+        "SprdOMXComponent.cpp",
+        "SprdSimpleOMXComponent.cpp",
+        "SprdVideoDecoderBase.cpp",
+        "SprdVideoDecoderOMXComponent.cpp",
+        "SprdVideoEncoderBase.cpp",
+        "SprdVideoEncoderOMXComponent.cpp",
+    ]
 
-  include_dirs = openmax_include_dirs
+    include_dirs = openmax_include_dirs
 
-  include_dirs += [
-      "./include",
-  ]
+    include_dirs += [
+        "./include",
+    ]
 
-  deps = [
-      "//device/soc/unisoc/p7885/hardware/omx_il/libutils:libomx_utils",
-      "//device/soc/unisoc/p7885/hardware/omx_il/libutils/memory/libmemion:libomx_memion",
-  ]
-  external_deps = [ 
+    deps = [
+        "//device/soc/unisoc/p7885/hardware/omx_il/libutils:libomx_utils",
+        "//device/soc/unisoc/p7885/hardware/omx_il/libutils/memory/libmemion:libomx_memion",
+    ]
+    external_deps = [ 
     "hilog:libhilog",
     "c_utils:utils",
   ]
-
-  cflags_cc = [
+  
+    cflags_cc = [
     "-Wno-reorder-ctor",
     "-Wno-unused-function",
     "-Wno-thread-safety-analysis",

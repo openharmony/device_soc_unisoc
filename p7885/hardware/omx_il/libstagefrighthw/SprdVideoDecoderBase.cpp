@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "SprdVideoDecoderBase.h"
-#include "SprdOMXComponent.h"
 #include "OMXHardwareAPI.h"
 #include <securec.h>
 #include <cstring>
@@ -199,40 +198,6 @@ void SprdVideoDecoderBase::NV12Crop(OMX_BUFFERHEADERTYPE *header,
     if (header == nullptr || header->pBuffer == nullptr || header->pPlatformPrivate == nullptr) {
         return;
     }
-    if (srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0) {
-        OMX_LOGE("NV12Crop invalid params, src(%u x %u), dst(%u x %u)",
-            srcWidth, srcHeight, dstWidth, dstHeight);
-        return;
-    }
-    if (dstWidth > srcWidth || dstHeight > srcHeight) {
-        OMX_LOGE("NV12Crop skip, dst(%u x %u) exceeds src(%u x %u)",
-            dstWidth, dstHeight, srcWidth, srcHeight);
-        return;
-    }
-
-    uint64_t requiredSrcSize = static_cast<uint64_t>(srcWidth) * srcHeight * 3 / 2;
-    if (requiredSrcSize > header->nAllocLen || requiredSrcSize > header->nFilledLen) {
-        OMX_LOGE("NV12Crop skip, src capacity too small, required=%llu, alloc=%u, filled=%u, src(%u x %u)",
-            static_cast<unsigned long long>(requiredSrcSize), header->nAllocLen, header->nFilledLen,
-            srcWidth, srcHeight);
-        return;
-    }
-
-    size_t dstCapacity = header->nAllocLen;
-    BufferCtrlStruct *outCtrl = reinterpret_cast<BufferCtrlStruct*>(header->pOutputPortPrivate);
-    if (outCtrl != nullptr && outCtrl->bufferSize > 0) {
-        // Use conservative capacity to avoid trusting stale metadata during port reconfiguration.
-        if (dstCapacity == 0 || outCtrl->bufferSize < dstCapacity) {
-            dstCapacity = outCtrl->bufferSize;
-        }
-    }
-    uint64_t requiredDstSize = static_cast<uint64_t>(dstWidth) * dstHeight * 3 / 2;
-    if (requiredDstSize > dstCapacity) {
-        OMX_LOGE("NV12Crop skip, dst capacity too small, required=%llu, capacity=%zu, src(%u x %u), dst(%u x %u)",
-            static_cast<unsigned long long>(requiredDstSize), dstCapacity, srcWidth, srcHeight, dstWidth, dstHeight);
-        return;
-    }
-
     OMX_LOGD("NV12Crop start, srcWidth = %u, srcHeight = %u",
         srcWidth, srcHeight);
     OMX_LOGD("dstWidth = %u, dstHeight = %u",
