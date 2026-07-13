@@ -179,6 +179,9 @@ allow init dev_snd_file:dir { getattr };
 # avc:  denied  { getattr } for  pid=1 comm="init" path="/dev/mali0" dev="tmpfs" ino=529 scontext=u:r:init:s0 tcontext=u:object_r:dev_mali:s0 tclass=chr_file permissive=0
 allow init dev_mali:chr_file { getattr };
 
+# avc:  denied  { write } for  pid=1 comm="init" name="oom_score_adj" dev="proc" ino=32557 scontext=u:r:init:s0 tcontext=u:r:location_host:s0 tclass=file permissive=1
+allow init location_host:file { write };
+
 allow init dev_vha:chr_file { getattr setattr };
 allow init dev_modem_file:chr_file { getattr setattr };
 allow init dev_pmsys_file:chr_file { getattr setattr };

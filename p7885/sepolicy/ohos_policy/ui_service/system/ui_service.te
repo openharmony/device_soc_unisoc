@@ -28,3 +28,5 @@ allow ui_service sa_foundation_abilityms:samgr_class { get };
 allow ui_service sysfs_devices_system_cpu:file { getattr };
 allow ui_service hiviewdfx_hiview_param:file { read open map };
 
+# avc:  denied  { set } for parameter=persist.uiAppearance.first_initialization pid=978 uid=1048 gid=1000 scontext=u:r:ui_service:s0 tcontext=u:object_r:persist_param:s0 tclass=parameter_service permissive=1
+allow ui_service persist_param:parameter_service { set };

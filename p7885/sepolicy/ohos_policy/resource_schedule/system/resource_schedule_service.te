@@ -59,3 +59,11 @@ allow resource_schedule_service dev_kmsg_file:chr_file { open write };
 # avc:  denied  { read } for  pid=508 comm="resource_schedu" name="u:object_r:arkcompiler_param:s0" dev="tmpfs" ino=107 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:arkcompiler_param:s0 tclass=file permissive=0
 allow resource_schedule_service arkcompiler_param:file { read open map };
 
+# avc:  denied  { setattr } for  pid=526 comm="OS_FFRT_2_2" name="usageGroup.db" dev="sda63" ino=1779 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=file permissive=0
+# avc:  denied  { ioctl } for  pid=526 comm="OS_FFRT_2_2" path="/data/service/el1/public/bundle_usage/usageGroup.db" dev="sda63" ino=1779 ioctlcmd=0xf501 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=file permissive=0
+# avc:  denied  { create } for  pid=526 comm="OS_FFRT_2_2" name="usageGroup.db-journal" scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:data_service_el1_public_bundle_usage:s0 tclass=file permissive=0
+allow resource_schedule_service data_service_el1_public_bundle_usage:file { setattr ioctl create };
+allowxperm resource_schedule_service data_service_el1_public_bundle_usage:file ioctl { 0xf501 };
+
+# avc:  denied  { getattr } for  pid=469 comm="OS_FFRT_2_4" path="/proc/meminfo" dev="proc" ino=4026532025 scontext=u:r:resource_schedule_service:s0 tcontext=u:object_r:proc_meminfo_file:s0 tclass=file permissive=0
+allow resource_schedule_service proc_meminfo_file:file { getattr };
