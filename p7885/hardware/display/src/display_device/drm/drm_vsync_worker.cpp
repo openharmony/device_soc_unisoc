@@ -93,6 +93,7 @@ uint64_t DrmVsyncWorker::WaitNextVBlank(unsigned int &sq)
         DISPLAY_LOGE("wait vblank failed ret : %{public}d errno %{public}d mEnable %{public}d", ret, errno, mEnable));
     sq = vblank.reply.sequence;
     return static_cast<uint64_t>(vblank.reply.tval_sec * secToNsec + vblank.reply.tval_usec * usecToNsec);
+#else
     struct timespec current;
 
     constexpr uint32_t vsyncSleepTime = 5000; // 5ms

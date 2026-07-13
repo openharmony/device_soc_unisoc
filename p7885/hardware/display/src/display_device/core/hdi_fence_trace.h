@@ -109,7 +109,7 @@ inline int32_t CountProcessFds()
     int32_t count = 0;
     for (dirent* entry = readdir(dir); entry != nullptr; entry = readdir(dir)) {
         if (entry->d_name[0] == '.' &&
-            (entry->d_name[1] == '\0' || (entry->d_name[1] == '.' && entry->d_name[2] == '\0'))) {
+            (entry->d_name[1] == '\0' || strcmp(entry->d_name, "..") == 0)) {
             continue;
         }
         ++count;
