@@ -678,6 +678,7 @@ void SPRDHEVCDecoder::applyPortGeometryChange(OMX_U32 portIndex, uint32_t newWid
     }
     mFrameWidth = newWidth;
     mFrameHeight = newHeight;
+    mStride16 = ((mFrameWidth + ALIGN_16_BOUNDARY) & ~ALIGN_16_BOUNDARY);
     mStride = ((newWidth + ALIGN_32_BOUNDARY) & ~ALIGN_32_BOUNDARY);
     mSliceHeight = ((newHeight + ALIGN_32_BOUNDARY) & ~ALIGN_32_BOUNDARY);
     mPictureSize = mStride * mSliceHeight * YUV420_MULTIPLIER / YUV420_DIVISOR;
@@ -1373,6 +1374,7 @@ void SPRDHEVCDecoder::UpdateDecoderPictureState(const H265SwDecInfo *info)
 {
     mFrameWidth = info->cropParams.cropOutWidth;
     mFrameHeight = info->cropParams.cropOutHeight;
+    mStride16 = ((mFrameWidth + ALIGN_16_BOUNDARY) & ~ALIGN_16_BOUNDARY);
     mhigh10En = info->high10En;
     mStride = info->picWidth;
     mSliceHeight = info->picHeight;
@@ -1472,8 +1474,151 @@ bool SPRDHEVCDecoder::HandleBitdepthChangeEvent(const unsigned char *high10En)
     }
     return false;
 }
+
+bool SPRDHEVCDecoder::CanDirectCropOutput(const OMX_BUFFERHEADERTYPE *header) const
+{
+    if (header == nullptr || header->pBuffer == nullptr || header->pPlatformPrivate == nullptr) {
+        return false;
+    }
+    if (mhigh10En || mFbcMode != FBC_NONE || mStride == 0 || mCropWidth == 0 || mCropHeight == 0) {
+        return false;
+    }
+    if (mCropWidth > mStride || mCropHeight > mSliceHeight) {
+        OMX_LOGE("DirectCropOutput invalid geometry, stride=%u, slice=%u, crop=%u x %u",
+            mStride, mSliceHeight, mCropWidth, mCropHeight);
+        return false;
+    }
+    return true;
+}
+
+bool SPRDHEVCDecoder::ValidateDirectCropBuffers(
+    const OMX_BUFFERHEADERTYPE *header, size_t &dstCapacity, uint64_t &dstSize) const
+{
+    BufferCtrlStruct *outCtrl = reinterpret_cast<BufferCtrlStruct*>(header->pOutputPortPrivate);
+    const uint64_t dstYSize = static_cast<uint64_t>(mCropWidth) * mCropHeight;
+    dstCapacity = (outCtrl != nullptr && outCtrl->bufferSize > 0) ? outCtrl->bufferSize : header->nAllocLen;
+    dstSize = dstYSize * YUV420_MULTIPLIER / YUV420_DIVISOR;
+    if (dstSize > dstCapacity) {
+        OMX_LOGE("DirectCropOutput dst too small, required=%llu, capacity=%zu, crop=%u x %u",
+            static_cast<unsigned long long>(dstSize), dstCapacity, mCropWidth, mCropHeight);
+        return false;
+    }
+    if (header->nOffset >= mPictureSize) {
+        OMX_LOGE("DirectCropOutput invalid offset=%u, pictureSize=%u", header->nOffset, mPictureSize);
+        return false;
+    }
+    return true;
+}
+
+bool SPRDHEVCDecoder::CopyDirectCropLuma(OMX_U8 *dst, const OMX_U8 *src, uint64_t srcCapacity) const
+{
+    const uint64_t srcYEnd = static_cast<uint64_t>(mStride) * (mCropHeight - 1) + mCropWidth;
+    if (srcYEnd > srcCapacity) {
+        OMX_LOGE("DirectCropOutput src Y too small, required=%llu, capacity=%llu",
+            static_cast<unsigned long long>(srcYEnd), static_cast<unsigned long long>(srcCapacity));
+        return false;
+    }
+    for (uint32_t row = 0; row < mCropHeight; ++row) {
+        errno_t ret = memcpy_s(dst + static_cast<size_t>(row) * mCropWidth, mCropWidth,
+            src + static_cast<size_t>(row) * mStride, mCropWidth);
+        if (ret != 0) {
+            OMX_LOGE("DirectCropOutput copy Y failed, row=%u, ret=%d", row, ret);
+            return false;
+        }
+    }
+    return true;
+}
+
+bool SPRDHEVCDecoder::CopyDirectCropNv21Row(OMX_U8 *dstRow, const OMX_U8 *srcRow) const
+{
+    for (uint32_t col = 0; col + 1 < mCropWidth; col += HIGH10_MULTIPLIER) {
+        dstRow[col] = srcRow[col + 1];
+        dstRow[col + 1] = srcRow[col];
+    }
+    return true;
+}
+
+bool SPRDHEVCDecoder::CopyDirectCropChroma(OMX_U8 *dstUv, const OMX_U8 *src, uint64_t srcCapacity) const
+{
+    const uint32_t uvRows = mCropHeight / HIGH10_MULTIPLIER;
+    const uint64_t srcUvOffset = static_cast<uint64_t>(mStride) * mCropHeight;
+    bool hasValidUvLine = false;
+    for (uint32_t row = 0; row < uvRows; ++row) {
+        OMX_U8 *dstRow = dstUv + static_cast<size_t>(row) * mCropWidth;
+        const uint64_t srcRowOffset = srcUvOffset + static_cast<uint64_t>(row) * mStride;
+        if (srcRowOffset + mCropWidth > srcCapacity) {
+            if (!hasValidUvLine) {
+                (void)memset_s(dstRow, mCropWidth, 0x80, mCropWidth);
+                continue;
+            }
+            errno_t extendRet = memcpy_s(dstRow, mCropWidth, dstRow - mCropWidth, mCropWidth);
+            if (extendRet != 0) {
+                OMX_LOGE("DirectCropOutput extend UV failed, row=%u, ret=%d", row, extendRet);
+                return false;
+            }
+            continue;
+        }
+        const OMX_U8 *srcRow = src + srcRowOffset;
+        if (mOutputNV21) {
+            CopyDirectCropNv21Row(dstRow, srcRow);
+        } else {
+            errno_t copyRet = memcpy_s(dstRow, mCropWidth, srcRow, mCropWidth);
+            if (copyRet != 0) {
+                OMX_LOGE("DirectCropOutput copy UV failed, row=%u, ret=%d", row, copyRet);
+                return false;
+            }
+        }
+        hasValidUvLine = true;
+    }
+    return true;
+}
+
+bool SPRDHEVCDecoder::DirectCropOutput(OMX_BUFFERHEADERTYPE *header)
+{
+    if (!CanDirectCropOutput(header)) {
+        return false;
+    }
+    size_t dstCapacity = 0;
+    uint64_t dstSize = 0;
+    if (!ValidateDirectCropBuffers(header, dstCapacity, dstSize)) {
+        return false;
+    }
+    (void)dstCapacity;
+    OMX_U8 *src = header->pBuffer + header->nOffset;
+    OMX_U8 *dst = reinterpret_cast<OMX_U8*>(header->pPlatformPrivate);
+    const uint64_t srcCapacity = static_cast<uint64_t>(mPictureSize) - header->nOffset;
+    const uint64_t dstYSize = static_cast<uint64_t>(mCropWidth) * mCropHeight;
+    if (!CopyDirectCropLuma(dst, src, srcCapacity) ||
+        !CopyDirectCropChroma(dst + static_cast<size_t>(dstYSize), src, srcCapacity)) {
+        return false;
+    }
+    header->nFilledLen = static_cast<OMX_U32>(dstSize);
+    header->nOffset = 0;
+    return true;
+}
+
 void SPRDHEVCDecoder::notifyFillBufferDone(OMX_BUFFERHEADERTYPE *header)
 {
+    if (header == nullptr) {
+        return;
+    }
+    if (header->nFilledLen == 0) {
+        (*mCallbacks->FillBufferDone)(
+            mComponent, mComponent->pApplicationPrivate, header);
+        return;
+    }
+    if (DirectCropOutput(header)) {
+        (*mCallbacks->FillBufferDone)(
+            mComponent, mComponent->pApplicationPrivate, header);
+        return;
+    }
+    if (header->nFilledLen > header->nAllocLen) {
+        OMX_LOGE("skip NV12Crop, nFilledLen(%u) exceeds nAllocLen(%u)",
+            header->nFilledLen, header->nAllocLen);
+        (*mCallbacks->FillBufferDone)(
+            mComponent, mComponent->pApplicationPrivate, header);
+        return;
+    }
     NV12Crop(header, mStride, mSliceHeight, mStride16, mFrameHeight);
     ConvertOutputToNV21(header);
     (*mCallbacks->FillBufferDone)(
@@ -1527,6 +1672,10 @@ void SPRDHEVCDecoder::drainOneOutputBuffer(int32_t picId, const void *pBufferHea
     BufferInfo *outInfo = *it;
     OMX_BUFFERHEADERTYPE *outHeader = outInfo->mHeader;
     outHeader->nFilledLen = mPictureSize;
+    if (outHeader->nFilledLen > outHeader->nAllocLen) {
+        OMX_LOGW("clamp nFilledLen from %u to nAllocLen %u", outHeader->nFilledLen, outHeader->nAllocLen);
+        outHeader->nFilledLen = outHeader->nAllocLen;
+    }
     OMX_LOGI("%s, %d, outHeader: %p, outHeader->pBuffer: %p, outHeader->nOffset: %d, "
         "outHeader->nFlags: %d, outHeader->nTimeStamp: %lld", __FUNCTION__, __LINE__,
         outHeader, outHeader->pBuffer, outHeader->nOffset, outHeader->nFlags, outHeader->nTimeStamp);

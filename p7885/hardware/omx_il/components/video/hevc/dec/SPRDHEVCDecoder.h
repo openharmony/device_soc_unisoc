@@ -131,6 +131,12 @@ private:
     OMX_ERRORTYPE setProcessName(const ProcessNameParam *nameParams);
     OMX_ERRORTYPE setPortDefinitionParam(const OMX_PARAM_PORTDEFINITIONTYPE *defParams);
     OMX_ERRORTYPE setCodecVideoPortFormat(const CodecVideoPortFormatParam *formatParams);
+    bool DirectCropOutput(OMX_BUFFERHEADERTYPE *header);
+    bool CanDirectCropOutput(const OMX_BUFFERHEADERTYPE *header) const;
+    bool ValidateDirectCropBuffers(const OMX_BUFFERHEADERTYPE *header, size_t &dstCapacity, uint64_t &dstSize) const;
+    bool CopyDirectCropLuma(OMX_U8 *dst, const OMX_U8 *src, uint64_t srcCapacity) const;
+    bool CopyDirectCropChroma(OMX_U8 *dstUv, const OMX_U8 *src, uint64_t srcCapacity) const;
+    bool CopyDirectCropNv21Row(OMX_U8 *dstRow, const OMX_U8 *srcRow) const;
     void ConvertOutputToNV21(OMX_BUFFERHEADERTYPE *header);
     void initOmxHeader(OMX_BUFFERHEADERTYPE *header, OMX_U32 portIndex, OMX_PTR appPrivate,
         OMX_U32 size, OMX_U8 *ptr);
