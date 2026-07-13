@@ -160,3 +160,10 @@ allow camera_host sml_block_file:blk_file { read open };
 # avc:  denied  { read } for  pid=826 comm="RSUniRenderThre" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:camera_host:s0 tcontext=u:object_r:dev_block_file:s0 tclass=lnk_file permissive=1
 #allow camera_host dev_block_file:lnk_file { read };
 allow camera_host sml_block_file:lnk_file { read };
+
+# avc:  denied  { getopt } for  pid=814 comm="OS_IPC_1_846" scontext=u:r:camera_host:s0 tcontext=u:r:camera_host:s0 tclass=unix_dgram_socket permissive=0
+# avc:  denied  { setopt } for  pid=814 comm="OS_IPC_1_846" scontext=u:r:camera_host:s0 tcontext=u:r:camera_host:s0 tclass=unix_dgram_socket permissive=0
+# avc:  denied  { getopt } for  pid=814 comm="OS_IPC_1_846" scontext=u:r:camera_host:s0 tcontext=u:r:camera_host:s0 tclass=unix_dgram_socket permissive=0
+# avc:  denied  { getopt } for  pid=814 comm="STILL_CAPTURE#2" scontext=u:r:camera_host:s0 tcontext=u:r:camera_host:s0 tclass=unix_dgram_socket permissive=0
+#allow camera_host camera_host:unix_dgram_socket { getopt setopt };
+

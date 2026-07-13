@@ -54,3 +54,19 @@ allow system_basic_hap allocator_host:binder { call transfer };
 
 allow system_basic_hap data_ashmem_file:file { read write map };
 
+# avc:  denied  { search } for  pid=1940 comm="m.ohos.launcher" name="for-all-app" dev="sda62" ino=66 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:data_service_el1_file:s0 tclass=dir permissive=1
+allow system_basic_hap data_service_el1_file:dir { search };
+
+# avc:  denied  { search } for  pid=1810 comm="RSRenderThread" name="by-name" dev="tmpfs" ino=14 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+allow system_basic_hap dev_block_file:dir { search };
+
+# avc:  denied  { search } for  pid=1810 comm="RSRenderThread" name="block" dev="tmpfs" ino=6 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+allow system_basic_hap dev_block_volfile:dir { search };
+
+# avc:  denied  { open } for  pid=1810 comm="RSRenderThread" path="/dev/block/sda6" dev="tmpfs" ino=300 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+# avc:  denied  { read } for  pid=1810 comm="RSRenderThread" name="sda6" dev="tmpfs" ino=300 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+allow system_basic_hap sml_block_file:blk_file { open read };
+
+# avc:  denied  { read } for  pid=1940 comm="RSRenderThread" name="sml_a" dev="tmpfs" ino=302 scontext=u:r:system_basic_hap:s0 tcontext=u:object_r:sml_block_file:s0 tclass=lnk_file permissive=1
+allow system_basic_hap sml_block_file:lnk_file { read };
+
