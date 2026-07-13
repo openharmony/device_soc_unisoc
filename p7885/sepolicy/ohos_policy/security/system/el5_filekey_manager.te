@@ -11,6 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# avc:  denied  { search } for  pid=365 comm="sa_main" name="etc" dev="sda48" ino=12 scontext=u:r:el5_filekey_manager:s0 tcontext=u:object_r:sys_prod_file:s0 tclass=dir permissive=1
+allow el5_filekey_manager sys_prod_file:dir { search };
+
 # avc:  denied  { read } for  pid=361 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:el5_filekey_manager:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
 # avc:  denied  { read } for  pid=361 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:el5_filekey_manager:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
 # avc:  denied  { open } for  pid=360 comm="sa_main" path="/dev/__parameters__/u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:el5_filekey_manager:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
