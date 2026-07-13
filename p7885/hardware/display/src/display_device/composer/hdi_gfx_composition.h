@@ -36,7 +36,7 @@ private:
     void SetLayerAccelerator(HdiLayer *layer, std::vector<HdiLayer *> &layers,
                              uint32_t i, int32_t mask, uint32_t &dpuSize);
     void SetComplexLayerAccelerator(HdiLayer *layer, std::vector<HdiLayer *> &layers,
-                                    uint32_t i, uint32_t &dpuSize);
+                                    uint32_t i, int32_t mask, uint32_t &dpuSize);
     void InitGfxSurface(ISurface &surface, HdiLayerBuffer &buffer);
     int32_t BlitLayer(HdiLayer &src, HdiLayer &dst, uint32_t index, uint32_t max, uint32_t zorder);
     int32_t ClearRect(HdiLayer &src, HdiLayer &dst);
@@ -45,9 +45,9 @@ private:
     void *mGfxModule = nullptr;
     GfxFuncs *mGfxFuncs = nullptr;
     HdiLayer *mClientLayer;
-    static constexpr const char* libHdiGfxName = "libdisplay_gfx.z.so";
-    static constexpr const char* libGfxFuncInit = "GfxInitialize";
-    static constexpr const char* libGfxFuncDeinit = "GfxUninitialize";
+    static constexpr const char* LIB_HDI_GFX_NAME = "libdisplay_gfx.z.so";
+    static constexpr const char* LIB_GFX_FUNC_INIT = "GfxInitialize";
+    static constexpr const char* LIB_GFX_FUNC_DEINIT = "GfxUninitialize";
     bool valid_ = false;
 };
 } // namespace OHOS

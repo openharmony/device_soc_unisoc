@@ -22,7 +22,7 @@
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
-int32_t FbComposition::FbFresh(int fd, HdiLayer &clientlayer, int *fence)
+int32_t FbComposition::FbFresh(int fd, HdiLayer &clientlayer, int &fence)
 {
     DISPLAY_LOGD();
     DisplayFrameInfo fbFrameInfo;
@@ -38,11 +38,11 @@ int32_t FbComposition::FbFresh(int fd, HdiLayer &clientlayer, int *fence)
     if (DisplayAdapter::GetInstance()->FbFresh(fd, fbFrameInfo) != 0) {
         DISPLAY_LOGE(" HIFB_REFRESH_FRAMEINFO Error! %{public}d", errno);
     }
-    *fence = fbFrameInfo.outFence;
+    fence = fbFrameInfo.outFence;
     return DISPLAY_SUCCESS;
 }
 
-FbComposition::FbComposition(const std::vector<int> &fbs)
+FbComposition::FbComposition(std::vector<int> &fbs)
 {
     DISPLAY_LOGD();
     fds_ = fbs;
@@ -79,7 +79,7 @@ int32_t FbComposition::Apply(bool modeSet)
         int fence = -1;
         HdiLayer *layer = mCompLayers[i];
         HitraceScoped trace(HITRACE_TAG_GRAPHIC_AGP, "fb apply");
-        ret = FbFresh(fds_[i], *layer, &fence);
+        ret = FbFresh(fds_[i], *layer, fence);
         layer->SetReleaseFence(fence);
         DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("fb fresh failed"));
     }

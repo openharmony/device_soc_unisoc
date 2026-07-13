@@ -14,8 +14,14 @@
  */
 #ifndef DRM_ALLOCATOR_H
 #define DRM_ALLOCATOR_H
+#include <map>
+#include <mutex>
 #include <string>
 #include "allocator.h"
+
+struct gbm_device;
+struct gbm_bo;
+
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
@@ -24,11 +30,27 @@ public:
     int32_t Init() override;
     int32_t Allocate(const BufferInfo &bufferInfo, BufferHandle &handle) override;
     int32_t Allocate(const BufferInfo &bufferInfo, BufferHandle **handle) override;
+    int32_t FreeMem(BufferHandle *handle) override;
+    void *Mmap(BufferHandle *handle) override;
+    int32_t Unmap(BufferHandle *handle) override;
+    int32_t InvalidateCache(BufferHandle *handle) override;
+    int32_t FlushCache(BufferHandle *handle) override;
+    static bool SupportsFormat(PixelFormat format);
     ~DrmAllocator() override;
+
 private:
-    static constexpr const char* filePath = "/dev/dri/card0";
+    static int32_t GetHandleKey(const BufferHandle *handle);
+    static bool SupportsUsage(uint64_t usage, PixelFormat format);
+    static uint32_t ConvertFormatToDrm(PixelFormat format);
+    static uint64_t ConvertUsageToGbm(uint64_t usage);
+    static int32_t DmaBufferSync(BufferHandle *handle, bool start);
+    void *MmapFromPrimeFd(BufferHandle *handle);
+    void CloseGemHandle(uint32_t gemHandle);
     uint64_t GetPhysicalAddr(int primeFd);
+    std::mutex mutex_;
+    std::map<int32_t, struct gbm_bo *> bufferObjects_;
     int32_t drmFd_ = -1;
+    gbm_device *gbmDevice_ = nullptr;
 };
 }
 }

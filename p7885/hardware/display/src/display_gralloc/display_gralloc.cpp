@@ -23,42 +23,42 @@ static int32_t AllocMem(const AllocInfo *info, BufferHandle **handle)
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((info == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("info is nullptr"));
     DISPLAY_CHK_RETURN((handle == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("handle is nullptr"));
-    return AllocatorManager::GetInstance().GetAllocator(info->usage)->AllocMem(*info, handle);
+    return AllocatorManager::GetInstance().AllocMem(*info, handle);
 }
 
 static void FreeMem(BufferHandle *handle)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN_NOT_VALUE((handle == nullptr), DISPLAY_LOGE("handle is nullptr"));
-    AllocatorManager::GetInstance().GetAllocator(handle->usage)->FreeMem(handle);
+    AllocatorManager::GetInstance().FreeMem(handle);
 }
 
 static void *Mmap(BufferHandle *handle)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((handle == nullptr), nullptr, DISPLAY_LOGE("handle is nullptr"));
-    return AllocatorManager::GetInstance().GetAllocator(handle->usage)->Mmap(handle);
+    return AllocatorManager::GetInstance().Mmap(handle);
 }
 
 static int32_t Unmap(BufferHandle *handle)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((handle == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("handle is nullptr"));
-    return AllocatorManager::GetInstance().GetAllocator(handle->usage)->Unmap(handle);
+    return AllocatorManager::GetInstance().Unmap(handle);
 }
 
 static int32_t FlushCache(BufferHandle *handle)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((handle == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("handle is nullptr"));
-    return AllocatorManager::GetInstance().GetAllocator(handle->usage)->FlushCache(handle);
+    return AllocatorManager::GetInstance().FlushCache(handle);
 }
 
 static int32_t InvalidateCache(BufferHandle *handle)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((handle == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("handle is nullptr"));
-    return AllocatorManager::GetInstance().GetAllocator(handle->usage)->InvalidateCache(handle);
+    return AllocatorManager::GetInstance().InvalidateCache(handle);
 }
 
 extern "C" {

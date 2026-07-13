@@ -23,13 +23,12 @@
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
-void DrmMode::ConvertToHdiMode(DisplayModeInfo *hdiMode) const
+void DrmMode::ConvertToHdiMode(DisplayModeInfo &hdiMode)
 {
-    DISPLAY_CHK_RETURN_NOT_VALUE((hdiMode == nullptr), DISPLAY_LOGE("hdiMode is null"));
-    hdiMode->height = mModeInfo.vdisplay;
-    hdiMode->width = mModeInfo.hdisplay;
-    hdiMode->freshRate = mModeInfo.vrefresh;
-    hdiMode->id = mId;
+    hdiMode.height = mModeInfo.vdisplay;
+    hdiMode.width = mModeInfo.hdisplay;
+    hdiMode.freshRate = mModeInfo.vrefresh;
+    hdiMode.id = mId;
 }
 
 DrmConnector::DrmConnector(drmModeConnector c, FdPtr &fd)
@@ -48,8 +47,8 @@ DrmConnector::DrmConnector(drmModeConnector c, FdPtr &fd)
         DISPLAY_LOGD("add possible encoder id %{public}d", c.encoders[i]);
     }
 
-    ConvertToHdiType(c.connector_type, &mType);
-    mName = ConvertTypeToName(mType);
+    ConvertToHdiType(c.connector_type, mType);
+    ConvertTypeToName(mType, mName);
     InitModes(c);
     DISPLAY_LOGD("name %{public}s", mName.c_str());
 }
@@ -80,19 +79,19 @@ int32_t DrmConnector::Init(DrmDevice &drmDevice)
     DISPLAY_CHK_RETURN((mDrmFdPtr == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("the mDrmFdPtr is NULL"));
     DISPLAY_CHK_RETURN((mDrmFdPtr->GetFd() == -1), DISPLAY_FAILURE, DISPLAY_LOGE("the drm fd is -1"));
     // find dpms prop
-    ret = drmDevice.GetConnectorProperty(*this, PROP_DPMS, &prop);
+    ret = drmDevice.GetConnectorProperty(*this, PROP_DPMS, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("can not get mode prop id"));
     mPropDpmsId = prop.propId;
     mDpmsState = prop.value;
     DISPLAY_LOGD("dpms state : %{public}" PRIu64 "", mDpmsState);
     // find the crtcid
-    ret = drmDevice.GetConnectorProperty(*this, PROP_CRTCID, &prop);
+    ret = drmDevice.GetConnectorProperty(*this, PROP_CRTCID, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("cat not get out fence prop id"));
     mPropCrtcId = prop.propId;
     DISPLAY_LOGD("encoder_id %{public}d", mEncoderId);
     DISPLAY_LOGD("mPropCrtcId %{public}d", mPropCrtcId);
     // find the brightness
-    ret = drmDevice.GetConnectorProperty(*this, PROP_BRIGHTNESS, &prop);
+    ret = drmDevice.GetConnectorProperty(*this, PROP_BRIGHTNESS, prop);
     if (ret == DISPLAY_SUCCESS) {
         mPropBrightnessId =  prop.propId;
         mBrightnessLevel = static_cast<uint32_t>(prop.value);
@@ -140,64 +139,58 @@ int32_t DrmConnector::SetBrightness(uint32_t level)
     return DISPLAY_SUCCESS;
 }
 
-void DrmConnector::GetDisplayCap(DisplayCapability *cap) const
+void DrmConnector::GetDisplayCap(DisplayCapability &cap)
 {
-    DISPLAY_CHK_RETURN_NOT_VALUE((cap == nullptr), DISPLAY_LOGE("cap is null"));
-    cap->phyHeight = mPhyHeight;
-    cap->phyWidth = mPhyWidth;
-    cap->type = mType;
-    if (!mName.empty()) {
-        memcpy_s(const_cast<char*>(cap->name.c_str()), cap->name.size(), mName.c_str(), mName.size());
-        if (mName.size() >= sizeof(cap->name)) {
-            cap->name[sizeof(cap->name) - 1] = 0;
-        } else {
-            cap->name[mName.size()] = 0;
-        }
-    }
-    cap->supportLayers = mSupportLayers;
-    cap->virtualDispCount = mVirtualDispCount;
-    cap->supportWriteBack = mSupportWriteBack;
-    cap->propertyCount = mPropertyCount;
+    cap.phyHeight = mPhyHeight;
+    cap.phyWidth = mPhyWidth;
+    cap.type = mType;
+    cap.name = mName;
+    cap.supportLayers = mSupportLayers;
+    cap.virtualDispCount = mVirtualDispCount;
+    cap.supportWriteBack = mSupportWriteBack;
+    cap.propertyCount = mPropertyCount;
 }
 
-const char *DrmConnector::ConvertTypeToName(uint32_t type)
+void DrmConnector::ConvertTypeToName(uint32_t type, std::string &name)
 {
     DISPLAY_LOGD("type %{public}d", type);
     switch (type) {
         case DISP_INTF_VGA:
-            return "VGA";
+            name = "VGA";
+            break;
         case DISP_INTF_HDMI:
-            return "HDMI";
+            name = "HDMI";
+            break;
         case DISP_INTF_MIPI:
-            return "MIPI";
+            name = "MIPI";
+            break;
         default:
-            return "Unknown";
+            name = "Unknown";
+            break;
     }
 }
 
-void DrmConnector::ConvertToHdiType(uint32_t type, InterfaceType *hdiType)
+void DrmConnector::ConvertToHdiType(uint32_t type, InterfaceType &hdiType)
 {
-    DISPLAY_CHK_RETURN_NOT_VALUE((hdiType == nullptr), DISPLAY_LOGE("hdiType is null"));
     switch (type) {
         case DRM_MODE_CONNECTOR_VGA:
-            *hdiType = DISP_INTF_VGA;
+            hdiType = DISP_INTF_VGA;
             break;
         case DRM_MODE_CONNECTOR_DSI:
-            *hdiType = DISP_INTF_MIPI;
+            hdiType = DISP_INTF_MIPI;
             break;
         case DRM_MODE_CONNECTOR_HDMIA:
         case DRM_MODE_CONNECTOR_HDMIB:
-            *hdiType = DISP_INTF_HDMI;
+            hdiType = DISP_INTF_HDMI;
             break;
         default:
-            *hdiType = DISP_INTF_BUTT;
+            hdiType = DISP_INTF_BUTT;
             break;
     }
 }
-int32_t DrmConnector::TryPickEncoder(const IdMapPtr<DrmEncoder> &encoders, uint32_t encoderId,
-    const IdMapPtr<DrmCrtc> &crtcs, uint32_t *crtcId)
+int32_t DrmConnector::TryPickEncoder(IdMapPtr<DrmEncoder> &encoders, uint32_t encoderId, IdMapPtr<DrmCrtc> &crtcs,
+    uint32_t &crtcId)
 {
-    DISPLAY_CHK_RETURN((crtcId == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("crtcId is null"));
     int ret;
     auto encoderIter = encoders.find(encoderId);
     if (encoderIter == encoders.end()) {
@@ -213,22 +206,20 @@ int32_t DrmConnector::TryPickEncoder(const IdMapPtr<DrmEncoder> &encoders, uint3
     return DISPLAY_FAILURE;
 }
 
-int32_t DrmConnector::PickIdleCrtcId(const IdMapPtr<DrmEncoder> &encoders, const IdMapPtr<DrmCrtc> &crtcs,
-    uint32_t *crtcId)
+int32_t DrmConnector::PickIdleCrtcId(IdMapPtr<DrmEncoder> &encoders, IdMapPtr<DrmCrtc> &crtcs, uint32_t &crtcId)
 {
-    DISPLAY_CHK_RETURN((crtcId == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("crtcId is null"));
     DISPLAY_LOGD();
     DISPLAY_LOGD("encoder_id %{public}d", mEncoderId);
     int ret = TryPickEncoder(encoders, mEncoderId, crtcs, crtcId);
     DISPLAY_CHK_RETURN((ret == DISPLAY_SUCCESS), DISPLAY_SUCCESS,
         DISPLAY_LOGD("connector : %{public}d pick encoder : %{public}d crtcId : %{public}d",
-        mId, mEncoderId, *crtcId));
+        mId, mEncoderId, crtcId));
 
     for (auto encoder : mPossibleEncoders) {
         ret = TryPickEncoder(encoders, encoder, crtcs, crtcId);
         DISPLAY_CHK_RETURN((ret == DISPLAY_SUCCESS), DISPLAY_SUCCESS,
             DISPLAY_LOGD("connector : %{public}d pick encoder : %{public}d crtcId : %{public}d", mId, mEncoderId,
-            *crtcId));
+            crtcId));
     }
 
     DISPLAY_LOGW("can not pick a crtc for connector");
@@ -254,7 +245,8 @@ int32_t DrmConnector::GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *m
     int i = 0;
     if (modes != nullptr) {
         for (const auto &modeMap : mModes) {
-            modeMap.second.ConvertToHdiMode(modes + i);
+            DrmMode mode = modeMap.second;
+            mode.ConvertToHdiMode(*(modes + i));
             i++;
         }
     }
@@ -278,15 +270,14 @@ bool DrmConnector::IsConnected() const
     return (mConnectState == DRM_MODE_CONNECTED);
 }
 
-int32_t DrmConnector::GetModeFromId(int32_t id, DrmMode *mode)
+int32_t DrmConnector::GetModeFromId(int32_t id, DrmMode &mode)
 {
-    DISPLAY_CHK_RETURN((mode == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("mode is null"));
     DISPLAY_LOGD();
     auto iter = mModes.find(id);
     if (iter == mModes.end()) {
         return DISPLAY_FAILURE;
     }
-    *mode = mModes[id];
+    mode = mModes[id];
     return DISPLAY_SUCCESS;
 }
 
@@ -304,7 +295,7 @@ DrmModeBlock::DrmModeBlock(DrmMode &mode)
     Init(mode);
 }
 
-int32_t DrmModeBlock::Init(DrmMode &mode) const
+int32_t DrmModeBlock::Init(DrmMode &mode)
 {
     int ret;
     int drmFd = DrmDevice::GetDrmFd();

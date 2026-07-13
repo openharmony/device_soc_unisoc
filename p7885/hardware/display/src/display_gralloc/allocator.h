@@ -50,15 +50,15 @@ template<typename T>
 inline void ALLOC_UNUSED(T&&) {}
 
 struct BufferInfo {
-    uint32_t width = 0;
-    uint32_t height = 0;
-    uint32_t widthStride = 0;
-    uint32_t heightStride = 0;
-    uint32_t bitsPerPixel = 0;
-    uint32_t bytesPerPixel = 0;
-    uint32_t size = 0;
-    uint64_t usage = 0;
-    PixelFormat format = PIXEL_FMT_BUTT;
+    uint32_t width_ = 0;
+    uint32_t height_ = 0;
+    uint32_t widthStride_ = 0;
+    uint32_t heightStride_ = 0;
+    uint32_t bitsPerPixel_ = 0;
+    uint32_t bytesPerPixel_ = 0;
+    uint32_t size_ = 0;
+    uint64_t usage_ = 0;
+    PixelFormat format_ = PIXEL_FMT_BUTT;
 };
 
 class Allocator {
@@ -73,10 +73,10 @@ public:
     virtual int32_t InvalidateCache(BufferHandle *handle);
     virtual int32_t FlushCache(BufferHandle *handle);
     virtual ~Allocator() {}
-    static constexpr uint32_t bitsPerBytes = 8;
-    static constexpr uint32_t heightAlign = 2;
-    static constexpr uint32_t heightAlignYuv = 16;
-    static constexpr uint32_t widthAlign = 16;
+    static constexpr uint32_t BITS_PER_BYTES = 8;
+    static constexpr uint32_t HEIGHT_ALIGN = 2;
+    static constexpr uint32_t HEIGHT_ALIGN_YUV = 16;
+    static constexpr uint32_t WIDTH_ALIGN = 16;
 private:
     int32_t DmaBufferSync(const BufferHandle &handle, uint64_t flag);
     uint32_t UpdatePixelInfo(BufferInfo &bufferInfo);

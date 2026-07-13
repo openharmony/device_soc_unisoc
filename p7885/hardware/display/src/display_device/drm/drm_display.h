@@ -32,38 +32,38 @@ namespace HDI {
 namespace DISPLAY {
 class DrmDisplay : public HdiDisplay {
 public:
-    DrmDisplay(const std::shared_ptr<DrmConnector> &connector, const std::shared_ptr<DrmCrtc> &crtc,
-        const std::shared_ptr<DrmDevice> &drmDevice);
+    DrmDisplay(std::shared_ptr<DrmConnector> &connector, std::shared_ptr<DrmCrtc> &crtc,
+        std::shared_ptr<DrmDevice> &drmDevice);
 
     ~DrmDisplay() override;
 
-    int32_t Init() const override;
-    int32_t GetDisplayCapability(DisplayCapability *info) const override;
-    int32_t GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes) const override;
-    int32_t GetDisplayMode(uint32_t *modeId) const override;
-    int32_t SetDisplayMode(uint32_t modeId) const override;
-    int32_t GetDisplayPowerStatus(DispPowerStatus *status) const override;
+    int32_t Init() override;
+    int32_t GetDisplayCapability(DisplayCapability *info) override;
+    int32_t GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes) override;
+    int32_t GetDisplayMode(uint32_t *modeId) override;
+    int32_t SetDisplayMode(uint32_t modeId) override;
+    int32_t GetDisplayPowerStatus(DispPowerStatus *status) override;
     int32_t SetDisplayPowerStatus(DispPowerStatus status) override;
-    int32_t GetDisplayBacklight(uint32_t *value) const override;
-    int32_t SetDisplayBacklight(uint32_t value) const override;
-    int32_t ChosePreferenceMode() const;
-    int32_t RegDisplayVBlankCallback(VBlankCallback cb, const void *data) override;
+    int32_t GetDisplayBacklight(uint32_t *value) override;
+    int32_t SetDisplayBacklight(uint32_t value) override;
+    int32_t ChosePreferenceMode();
+    int32_t RegDisplayVBlankCallback(VBlankCallback cb, void *data) override;
     int32_t WaitForVBlank(uint64_t *ns) override;
-    bool IsConnected() const override;
+    bool IsConnected() override;
     int32_t SetDisplayVsyncEnabled(bool enabled) override;
     HdiDrmComposition *GetDrmComposition();
-    int32_t AllocMem(const AllocInfo& info, BufferHandle*& handle) const;
+    int32_t AllocMem(const AllocInfo& info, BufferHandle*& handle);
 
 protected:
-    std::unique_ptr<HdiLayer> CreateHdiLayer(LayerType type) const override;
+    std::unique_ptr<HdiLayer> CreateHdiLayer(LayerType type) override;
 
 private:
     int32_t mStatus = POWER_STATUS_ON;
-    int32_t PushFirstFrame() const;
-    int32_t ConvertToHdiPowerState(uint32_t drmPowerState, DispPowerStatus &hdiPowerState) const;
-    int32_t ConvertToDrmPowerState(DispPowerStatus hdiPowerState, uint32_t &drmPowerState) const;
+    int32_t PushFirstFrame();
+    int32_t ConvertToHdiPowerState(uint32_t drmPowerState, DispPowerStatus &hdiPowerState);
+    int32_t ConvertToDrmPowerState(DispPowerStatus hdiPowerState, uint32_t &drmPowerState);
     std::shared_ptr<DrmDevice> mDrmDevice;
-    mutable std::shared_ptr<DrmConnector> mConnector;
+    std::shared_ptr<DrmConnector> mConnector;
     std::shared_ptr<DrmCrtc> mCrtc;
 };
 } // namespace OHOS
