@@ -45,3 +45,9 @@ allow time_service resource_schedule_service:file { getattr };
 
 # avc:  denied  { getattr } for  pid=723 comm="time_service" path="/proc/2776/cmdline" dev="proc" ino=13144 scontext=u:r:time_service:s0 tcontext=u:r:updater_sa:s0 tclass=file permissive=0
 allow time_service updater_sa:file { getattr };
+
+# avc:  denied  { getattr } for  pid=726 comm="OS_IPC_5_2240" path="/proc/864/cmdline" dev="proc" ino=11978 scontext=u:r:time_service:s0 tcontext=u:r:distributeddata:s0 tclass=file permissive=1
+allow time_service distributeddata:file { getattr };
+
+# avc:  denied  { getattr } for  pid=692 comm="OS_IPC_0_751" path="/proc/2749/cmdline" dev="proc" ino=38005 scontext=u:r:time_service:s0 tcontext=u:r:locationhub:s0 tclass=file permissive=1
+allow time_service locationhub:file { getattr };

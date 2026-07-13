@@ -41,5 +41,15 @@ allow distributeddata dev_kmsg_file:chr_file { open write };
 # avc:  denied  { read } for  pid=769 comm="distributeddata" name="online" dev="sysfs" ino=8387 scontext=u:r:distributeddata:s0 tcontext=u:object_r:sysfs_devices_system_cpu:s0 tclass=file permissive=0
 allow distributeddata sysfs_devices_system_cpu:file { read };
 
+# avc:  denied  { ioctl } for  pid=864 comm="OS_IPC_7_2006" path="/data/app/el2/100/database/com.ohos.photos/phone_photos/rdb" dev="sda63" ino=4780 ioctlcmd=0xf546 scontext=u:r:distributeddata:s0 tcontext=u:object_r:system_core_hap_data_file:s0 tclass=dir permissive=1
+allow distributeddata system_core_hap_data_file:dir { ioctl };
+allowxperm distributeddata system_core_hap_data_file:dir ioctl { 0xf546 };
+
+# avc:  denied  { setattr } for  pid=864 comm="DB_TaskExecutor" name="com.ohos.photos" dev="sda63" ino=1232 scontext=u:r:distributeddata:s0 tcontext=u:object_r:system_core_hap_data_file:s0 tclass=dir permissive=1
+allow distributeddata system_core_hap_data_file:dir { setattr };
+
+# avc:  denied  { use } for  pid=795 comm="foundation" path="/dev/ashmem" dev="tmpfs" ino=392 scontext=u:r:distributeddata:s0 tcontext=u:r:foundation:s0 tclass=fd permissive=0
+allow distributeddata foundation:fd { use };
+
 # avc:  denied  { read } for  pid=783 comm="sa_main" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:distributeddata:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
 #allow distributeddata hiviewdfx_hiview_param:file { read open map };

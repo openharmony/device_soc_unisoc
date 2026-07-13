@@ -3,7 +3,9 @@
         "user": {
             "missing_parameter": {
                 "parameter_attr": [
-                    "modem_param"
+                    "modem_param",
+                    "boot_mode_param",
+                    "init_sceneboard_param"
                 ]
             }, 
             "conflict_parameter": {

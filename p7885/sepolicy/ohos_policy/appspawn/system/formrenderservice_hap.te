@@ -11,5 +11,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-type modem_param, parameter_attr;
-type boot_mode_param, parameter_attr;
+# avc:  denied  { search } for  pid=2847 comm="rmrenderservice" name="etc" dev="sda49" ino=12 scontext=u:r:formrenderservice_hap:s0 tcontext=u:object_r:sys_prod_file:s0 tclass=dir permissive=0
+allow formrenderservice_hap sys_prod_file:dir { search };
