@@ -244,12 +244,13 @@ std::unique_ptr<HdiLayer> DrmDisplay::CreateHdiLayer(LayerType type)
 
 int32_t DrmDisplay::WaitForVBlank(uint64_t *ns)
 {
+    constexpr uint64_t usecToNsec = 1000;
+    constexpr uint32_t vblankSleepTime = 5000;
 #ifndef DRM_WAIT_VBK
 #ifdef HIHOPE_OS_DEBUG
     HITRACE_METER_NAME(HITRACE_TAG_GRAPHIC_AGP, "DrmDisplay::WaitForVBlank");
 #endif
     constexpr uint64_t secToNsec = 1000 * 1000 * 1000;
-    constexpr uint64_t usecToNsec = 1000;
     drmVBlank vblank = {
         .request =
             drmVBlankReq {
@@ -264,8 +265,8 @@ int32_t DrmDisplay::WaitForVBlank(uint64_t *ns)
         DISPLAY_LOGE("wait vblank failed ret : %{public}d errno %{public}d", ret, errno));
     *ns = static_cast<uint64_t>(vblank.reply.tval_sec * secToNsec + vblank.reply.tval_usec * usecToNsec);
 #else
-    usleep(1000*5);
-    *ns = 1000*1000*5;  //static_cast<uint64_t>(vbl.reply.tval_sec * nPerS + vbl.reply.tval_usec * nPerUS);
+    usleep(vblankSleepTime);
+    *ns = static_cast<uint64_t>(vblankSleepTime) * usecToNsec;
 #endif
     return DISPLAY_SUCCESS;
 }
