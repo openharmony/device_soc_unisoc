@@ -23,16 +23,17 @@ ohos_shared_library("libomx_memion") {
 
   include_dirs = openmax_include_dirs
 
+
   cflags = [
     "-Wall",
     "-Wextra",
     "-Werror",
   ]
 
-  external_deps = [ 
-  "hilog:libhilog",
-  "c_utils:utils",
-  ]
+    external_deps = [ 
+    "hilog:libhilog",
+    "c_utils:utils",
+    ]
   install_enable = true
   innerapi_tags = [ "passthrough_indirect" ]
   install_images = [chipset_base_dir ]

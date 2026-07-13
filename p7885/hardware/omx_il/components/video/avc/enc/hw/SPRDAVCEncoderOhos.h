@@ -58,7 +58,7 @@ private:
     bool mapOhosGraphicBuffer(OMX_BUFFERHEADERTYPE *inHeader, GraphicBufferMapping &mapping) const;
     void UnmapOhosGraphicBuffer(const GraphicBufferMapping &mapping) const;
     void configureOhosEncodeInput(MMEncIn &vidIn, OMX_BUFFERHEADERTYPE *inHeader,
-        const GraphicBufferMapping &mapping);
+        uint8_t *py, uint8_t *pyPhy);
     void SyncOhosStreamBuffers();
     bool PatchOhosEncodedFrame(MMEncOut &vidOut) const;
     bool encodeOhosInputBuffer(OMX_BUFFERHEADERTYPE *inHeader, EncodeOutputState *output);

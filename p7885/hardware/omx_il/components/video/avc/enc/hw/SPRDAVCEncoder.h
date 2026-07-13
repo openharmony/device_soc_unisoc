@@ -32,10 +32,6 @@ protected:
         uint8_t *py;
         uint8_t *pyPhy;
         size_t bufferSize;
-        uint32_t width;
-        uint32_t height;
-        uint32_t stride;
-        int32_t format;
         unsigned long iova;
         size_t iovaLen;
         bool needUnmap;
@@ -69,28 +65,10 @@ protected:
     void onQueueFilled(OMX_U32 portIndex) override;
     OMX_ERRORTYPE getExtensionIndex(
     const char *name, OMX_INDEXTYPE *index) override;
-    void CheckUpdateColorAspects(MMEncConfig *encConfig)
+    void CheckUpdateColorAspects(const MMEncConfig *encConfig) const
     {
-        if (encConfig == nullptr) {
-            return;
-        }
-        encConfig->vuiColorAspects.videoSignalTypePresentFlag = mColorAspects.videoSignalTypePresentFlag;
-        encConfig->vuiColorAspects.videoFormat = mColorAspects.videoFormat;
-        encConfig->vuiColorAspects.videoFullRangeFlag = mColorAspects.videoFullRangeFlag;
-        encConfig->vuiColorAspects.colourDescriptionPresentFlag = mColorAspects.colourDescriptionPresentFlag;
-        encConfig->vuiColorAspects.colourPrimaries = mColorAspects.colourPrimaries;
-        encConfig->vuiColorAspects.transferCharacteristics = mColorAspects.transferCharacteristics;
-        encConfig->vuiColorAspects.matrixCoefficients = mColorAspects.matrixCoefficients;
+        (void)encConfig;
     }
-    ColorAspectsT mColorAspects = {
-        false,   /* videoSignalTypePresentFlag */
-        0,       /* videoFormat: unspecified */
-        false,   /* videoFullRangeFlag: limited range */
-        false,   /* colourDescriptionPresentFlag */
-        2,       /* colourPrimaries: BT.709 */
-        2,       /* transferCharacteristics: BT.709 */
-        2,       /* matrixCoefficients: BT.709 */
-    };
 protected:
     enum {
         K_NUM_BUFFERS = 4,
@@ -162,7 +140,7 @@ protected:
     void queueInputBufferInfo(OMX_BUFFERHEADERTYPE *inHeader);
     bool mapGraphicBuffer(OMX_BUFFERHEADERTYPE *inHeader, GraphicBufferMapping &mapping);
     void UnmapGraphicBuffer(const GraphicBufferMapping &mapping);
-    void configureEncodeInput(MMEncIn &vidIn, OMX_BUFFERHEADERTYPE *inHeader, const GraphicBufferMapping &mapping);
+    void configureEncodeInput(MMEncIn &vidIn, OMX_BUFFERHEADERTYPE *inHeader, uint8_t *py, uint8_t *pyPhy);
     void SyncAllStreamBuffers();
     bool PatchEncodedFrame(MMEncOut &vidOut);
     bool runEncode(const GraphicBufferMapping &mapping, OMX_BUFFERHEADERTYPE *inHeader, MMEncOut &vidOut, int &ret);
