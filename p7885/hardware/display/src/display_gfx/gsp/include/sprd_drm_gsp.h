@@ -16,38 +16,32 @@
 #ifndef UAPI_SPRD_DRM_GSP_H_
 #define UAPI_SPRD_DRM_GSP_H_
 
+#include <drm/drm.h>
 #include "gsp_cfg.h"
 
-namespace OHOS {
-namespace HDI {
-namespace DISPLAY {
+#define DRM_SPRD_GSP_GET_CAPABILITY 0
+#define DRM_SPRD_GSP_TRIGGER 1
 
-#define UISOC_GSP_CMD_CAP       0
-#define UISOC_GSP_CMD_TRIG      1
-
-struct UisocDrmGspCfg {
-    __u8 id;
+struct DrmGspCfgUser {
+    __u8 gspId;
     bool async;
     __u32 size;
-    __u32 count;
+    __u32 num;
     bool split;
-    void *data;
+    void *config;
 };
 
-struct UisocDrmGspCapa {
-    __u8 id;
+struct DrmGspCapability {
+    __u8 gspId;
     __u32 size;
-    void *ptr;
+    void *cap;
 };
 
-#define UISOC_IOCTL_GSP_GET_CAP                                                \
-    DRM_IOWR(DRM_COMMAND_BASE + UISOC_GSP_CMD_CAP, struct UisocDrmGspCapa)
+#define DRM_IOCTL_SPRD_GSP_GET_CAPABILITY                                      \
+    DRM_IOWR(DRM_COMMAND_BASE + DRM_SPRD_GSP_GET_CAPABILITY,                     \
+             struct DrmGspCapability)
 
-#define UISOC_IOCTL_GSP_TRIGGER                                                \
-    DRM_IOWR(DRM_COMMAND_BASE + UISOC_GSP_CMD_TRIG, struct UisocDrmGspCfg)
-
-} // namespace DISPLAY
-} // namespace HDI
-} // namespace OHOS
+#define DRM_IOCTL_SPRD_GSP_TRIGGER                                             \
+    DRM_IOWR(DRM_COMMAND_BASE + DRM_SPRD_GSP_TRIGGER, struct DrmGspCfgUser)
 
 #endif /* UAPI_SPRD_DRM_GSP_H_ */

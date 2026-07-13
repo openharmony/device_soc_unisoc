@@ -27,9 +27,8 @@ DrmEncoder::DrmEncoder(drmModeEncoder e)
         mEncoderId, mCrtcId, mPossibleCrtcs);
 }
 
-int32_t DrmEncoder::PickIdleCrtcId(const IdMapPtr<DrmCrtc> &crtcs, uint32_t *crtcId)
+int32_t DrmEncoder::PickIdleCrtcId(IdMapPtr<DrmCrtc> &crtcs, uint32_t &crtcId)
 {
-    DISPLAY_CHK_RETURN((crtcId == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("crtcId is null"));
     DISPLAY_LOGI("PickIdleCrtcId: encoder %{public}d, current crtc_id=%{public}d, "
         "possible_crtcs=0x%{public}x, available crtcs=%{public}zu",
         mEncoderId, mCrtcId, mPossibleCrtcs, crtcs.size());
@@ -71,9 +70,9 @@ int32_t DrmEncoder::PickIdleCrtcId(const IdMapPtr<DrmCrtc> &crtcs, uint32_t *crt
         DISPLAY_LOGE("encoder %{public}d can not bind to any idle crtc (possible_crtcs=0x%{public}x)",
             mEncoderId, mPossibleCrtcs));
 
-    *crtcId = crtc->GetId();
+    crtcId = crtc->GetId();
     DISPLAY_LOGI("PickIdleCrtcId: encoder %{public}d -> CRTC %{public}d (pipe %{public}d)",
-        mEncoderId, *crtcId, crtc->GetPipe());
+        mEncoderId, crtcId, crtc->GetPipe());
     return DISPLAY_SUCCESS;
 }
 } // namespace OHOS
