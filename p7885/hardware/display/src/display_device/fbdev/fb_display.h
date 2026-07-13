@@ -31,30 +31,27 @@ class FbDisplay : public HdiDisplay {
 public:
     explicit FbDisplay(std::vector<int> &fds);
     virtual ~FbDisplay();
-    int32_t Init() const override;
-    int32_t GetDisplayCapability(DisplayCapability *info) const override;
-    int32_t GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes) const override;
-    int32_t GetDisplayMode(uint32_t *modeId) const override;
-    int32_t BindToDisplay(uint32_t id) const;
-    void UnBindDisplay(uint32_t id) const;
-    int32_t SetDisplayMode(uint32_t modeId) const override;
-    int32_t GetDisplayPowerStatus(DispPowerStatus *status) const override;
+    int32_t Init() override;
+    int32_t GetDisplayCapability(DisplayCapability *info) override;
+    int32_t GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes) override;
+    int32_t GetDisplayMode(uint32_t *modeId) override;
+    int32_t SetDisplayMode(uint32_t modeId) override;
+    int32_t GetDisplayPowerStatus(DispPowerStatus *status) override;
     int32_t SetDisplayPowerStatus(DispPowerStatus status) override;
-    int32_t GetDisplayBacklight(uint32_t *) const override;
-    int32_t SetDisplayBacklight(uint32_t value) const override;
-    int32_t RegDisplayVBlankCallback(VBlankCallback cb, const void *data) override;
-    bool IsConnected() const override;
+    int32_t GetDisplayBacklight(uint32_t *value) override;
+    int32_t SetDisplayBacklight(uint32_t value) override;
+    int32_t RegDisplayVBlankCallback(VBlankCallback cb, void *data) override;
+    bool IsConnected() override;
     int32_t SetDisplayVsyncEnabled(bool enabled) override;
 protected:
-    std::unique_ptr<HdiLayer> CreateHdiLayer(LayerType type) const override;
+    std::unique_ptr<HdiLayer> CreateHdiLayer(LayerType type) override;
 private:
     // the first fd is the master device fd
     std::vector<int> deviceFds_;
-    mutable std::vector<DisplayModeInfo> modes_;
-    mutable uint32_t mDisplayId = INVALIDE_DISPLAY_ID;
-    mutable uint32_t mActiveModeId = INVALID_MODE_ID;
-    mutable DisplayCapability displayCapability_;
-    mutable DispPowerStatus mPowerstatus = POWER_STATUS_ON;
+    std::vector<DisplayModeInfo> modes_;
+    uint32_t mActiveModeId = INVALID_MODE_ID;
+    DisplayCapability displayCapability_;
+    DispPowerStatus mPowerstatus = POWER_STATUS_ON;
 };
 } // namespace OHOS
 } // namespace HDI

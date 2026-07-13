@@ -57,7 +57,7 @@ SorftVsync::~SorftVsync()
     }
 }
 
-bool SorftVsync::CheckRuning() const
+bool SorftVsync::CheckRuning()
 {
     std::unique_lock<std::mutex> ul(mutext_);
     condition_.wait(ul, [this]() { return (enable_ || !running_); });

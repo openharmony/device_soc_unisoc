@@ -35,7 +35,6 @@ DisplayComposerVdiImpl::~DisplayComposerVdiImpl() { }
 
 int32_t DisplayComposerVdiImpl::RegHotPlugCallback(HotPlugCallback cb, void* data)
 {
-    std::lock_guard<std::mutex> lock(mMutex);
     HdiSession::GetInstance().RegHotPlugCallback(cb, data);
     return HDF_SUCCESS;
 }
@@ -192,8 +191,7 @@ int32_t DisplayComposerVdiImpl::SetDisplayVsyncEnabled(uint32_t devId, bool enab
 
 int32_t DisplayComposerVdiImpl::RegDisplayVBlankCallback(uint32_t devId, VBlankCallback cb, void* data)
 {
-    int32_t ec = HdiSession::GetInstance().CallDisplayFunction(devId, &HdiDisplay::RegDisplayVBlankCallback,
-                                                               cb, static_cast<const void*>(data));
+    int32_t ec = HdiSession::GetInstance().CallDisplayFunction(devId, &HdiDisplay::RegDisplayVBlankCallback, cb, data);
     DISPLAY_CHK_RETURN(ec != DISPLAY_SUCCESS, HDF_FAILURE, DISPLAY_LOGE("failed, ec=%{public}d", ec));
     return HDF_SUCCESS;
 }
@@ -275,11 +273,8 @@ int32_t DisplayComposerVdiImpl::Commit(uint32_t devId, int32_t& fence)
 int32_t DisplayComposerVdiImpl::CreateLayer(uint32_t devId, const LayerInfo& layerInfo, uint32_t& layerId)
 {
     std::lock_guard<std::mutex> lock(mMutex);
-    uint32_t createdLayerId = 0;
-    int32_t ec = HdiSession::GetInstance().CallDisplayFunction(devId, &HdiDisplay::CreateLayer,
-                                                               &layerInfo, &createdLayerId);
+    int32_t ec = HdiSession::GetInstance().CallDisplayFunction(devId, &HdiDisplay::CreateLayer, &layerInfo, &layerId);
     DISPLAY_CHK_RETURN(ec != DISPLAY_SUCCESS, HDF_FAILURE, DISPLAY_LOGE("failed, ec=%{public}d", ec));
-    layerId = createdLayerId;
     return HDF_SUCCESS;
 }
 
@@ -564,12 +559,7 @@ extern "C" int32_t Commit(uint32_t devId, int32_t& fence)
 
 extern "C" int32_t CreateLayer(uint32_t devId, const V1_0::LayerInfo& layerInfo, uint32_t& layerId)
 {
-    uint32_t createdLayerId = 0;
-    int32_t ret = DisplayComposerVdiImpl::GetVdiInstance().CreateLayer(devId, layerInfo, createdLayerId);
-    if (ret == HDF_SUCCESS) {
-        layerId = createdLayerId;
-    }
-    return ret;
+    return DisplayComposerVdiImpl::GetVdiInstance().CreateLayer(devId, layerInfo, layerId);
 }
 
 extern "C" int32_t DestroyLayer(uint32_t devId, uint32_t layerId)
