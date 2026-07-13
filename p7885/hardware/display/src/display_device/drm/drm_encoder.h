@@ -42,7 +42,7 @@ public:
     {
         return mPossibleCrtcs;
     }
-    int32_t PickIdleCrtcId(const IdMapPtr<DrmCrtc> &crtcs, uint32_t *crtcId);
+    int32_t PickIdleCrtcId(IdMapPtr<DrmCrtc> &crtcs, uint32_t &crtcId);
     uint32_t GetId() const
     {
         return mEncoderId;

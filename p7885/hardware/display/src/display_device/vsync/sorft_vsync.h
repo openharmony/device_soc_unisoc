@@ -33,13 +33,13 @@ public:
     void EnableVsync(bool enable);
     void WorkThread();
     void ReqesterVBlankCb(std::shared_ptr<VsyncCallBack> &cb);
-    bool CheckRuning() const;
+    bool CheckRuning();
 
 private:
     std::unique_ptr<std::thread> thread_;
     bool enable_ = false;
-    mutable std::mutex mutext_;
-    mutable std::condition_variable condition_;
+    std::mutex mutext_;
+    std::condition_variable condition_;
     std::shared_ptr<VsyncCallBack> callback_;
     bool running_ = false;
 };

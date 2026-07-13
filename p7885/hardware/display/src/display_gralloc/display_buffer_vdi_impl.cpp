@@ -14,7 +14,9 @@
  */
 
 #include "display_buffer_vdi_impl.h"
+#include <cstdlib>
 #include "cinttypes"
+#include "securec.h"
 #include "display_log.h"
 #include "allocator.h"
 #include "allocator_manager.h"
@@ -42,33 +44,44 @@ DisplayBufferVdiImpl::~DisplayBufferVdiImpl()
 
 int32_t DisplayBufferVdiImpl::AllocMem(const AllocInfo& info, BufferHandle*& handle) const
 {
-    return AllocatorManager::GetInstance().GetAllocator(info.usage)->AllocMem(info, &handle);
+    return AllocatorManager::GetInstance().AllocMem(info, &handle);
 }
 
 void DisplayBufferVdiImpl::FreeMem(const BufferHandle& handle) const
 {
-    AllocatorManager::GetInstance().GetAllocator(handle.usage)->FreeMem(const_cast<BufferHandle *>(&handle));
+    size_t copySize = sizeof(BufferHandle) + sizeof(int32_t) * (handle.reserveFds + handle.reserveInts);
+    BufferHandle *handleCopy = static_cast<BufferHandle *>(malloc(copySize));
+    if (handleCopy == nullptr) {
+        DISPLAY_LOGE("malloc handle copy failed");
+        return;
+    }
+    errno_t ret = memcpy_s(handleCopy, copySize, &handle, copySize);
+    if (ret != EOK) {
+        DISPLAY_LOGE("copy handle failed");
+        free(handleCopy);
+        return;
+    }
+    AllocatorManager::GetInstance().FreeMem(handleCopy);
 }
 
 void* DisplayBufferVdiImpl::Mmap(const BufferHandle& handle) const
 {
-    return AllocatorManager::GetInstance().GetAllocator(handle.usage)->Mmap(const_cast<BufferHandle *>(&handle));
+    return AllocatorManager::GetInstance().Mmap(const_cast<BufferHandle *>(&handle));
 }
 
 int32_t DisplayBufferVdiImpl::Unmap(const BufferHandle& handle) const
 {
-    return AllocatorManager::GetInstance().GetAllocator(handle.usage)->Unmap(const_cast<BufferHandle *>(&handle));
+    return AllocatorManager::GetInstance().Unmap(const_cast<BufferHandle *>(&handle));
 }
 
 int32_t DisplayBufferVdiImpl::FlushCache(const BufferHandle& handle) const
 {
-    return AllocatorManager::GetInstance().GetAllocator(handle.usage)->FlushCache(const_cast<BufferHandle *>(&handle));
+    return AllocatorManager::GetInstance().FlushCache(const_cast<BufferHandle *>(&handle));
 }
 
 int32_t DisplayBufferVdiImpl::InvalidateCache(const BufferHandle& handle) const
 {
-    return AllocatorManager::GetInstance().GetAllocator(handle.usage)->InvalidateCache(
-        const_cast<BufferHandle *>(&handle));
+    return AllocatorManager::GetInstance().InvalidateCache(const_cast<BufferHandle *>(&handle));
 }
 
 int32_t DisplayBufferVdiImpl::IsSupportedAlloc(const std::vector<VerifyAllocInfo>& infos,

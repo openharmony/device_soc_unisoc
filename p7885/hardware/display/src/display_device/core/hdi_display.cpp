@@ -43,7 +43,7 @@ uint32_t HdiDisplay::GetIdleId()
 }
 
 
-int32_t HdiDisplay::Init() const
+int32_t HdiDisplay::Init()
 {
     DISPLAY_LOGD();
     uint32_t id = GetIdleId();
@@ -107,7 +107,7 @@ int32_t HdiDisplay::CreateLayer(const LayerInfo *layerInfo, uint32_t *layerId)
     return DISPLAY_SUCCESS;
 }
 
-std::unique_ptr<HdiLayer> HdiDisplay::CreateHdiLayer(LayerType type) const
+std::unique_ptr<HdiLayer> HdiDisplay::CreateHdiLayer(LayerType type)
 {
     DISPLAY_LOGD();
     return std::make_unique<HdiLayer>(type);
@@ -224,7 +224,7 @@ HdiLayer *HdiDisplay::GetHdiLayer(uint32_t id)
     return iter->second.get();
 }
 
-VsyncCallBack::VsyncCallBack(VBlankCallback cb, const void *data) : mVBlankCb(cb), mData(data)
+VsyncCallBack::VsyncCallBack(VBlankCallback cb, void *data) : mVBlankCb(cb), mData(data)
 {
     DISPLAY_LOGD("VsyncCallBack %{public}p", cb);
 }
@@ -232,7 +232,7 @@ VsyncCallBack::VsyncCallBack(VBlankCallback cb, const void *data) : mVBlankCb(cb
 void VsyncCallBack::Vsync(unsigned int sequence, uint64_t ns)
 {
     DISPLAY_CHK_RETURN_NOT_VALUE((mVBlankCb == nullptr), DISPLAY_LOGE("the callback is nullptr"));
-    mVBlankCb(sequence, ns, const_cast<void *>(mData));
+    mVBlankCb(sequence, ns, mData);
 }
 }
 }

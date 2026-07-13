@@ -39,19 +39,19 @@ std::unique_ptr<DisplayAdapter> &DisplayAdapter::GetInstance()
 
 int32_t DisplayAdapter::Init()
 {
-    loader_ = DisplayModuleLoader::Create(libNameAdapter);
+    loader_ = DisplayModuleLoader::Create(LIB_NAME_ADAPTER);
     if (loader_ == nullptr) {
         DISPLAY_LOGE("can not create loader");
         return DISPLAY_FAILURE;
     }
-    initFunc_ = reinterpret_cast<AdapterInitFunc>(loader_->GetSymbol(initFunctionName));
+    initFunc_ = reinterpret_cast<AdapterInitFunc>(loader_->GetSymbol(INIT_FUNCTION_NAME));
     if (initFunc_ == nullptr) {
-        DISPLAY_LOGE("failed to get function %{public}s", initFunctionName);
+        DISPLAY_LOGE("failed to get function %{public}s", INIT_FUNCTION_NAME);
         return DISPLAY_FAILURE;
     }
-    deInitFunc_ = reinterpret_cast<AdapterDeInitFunc>(loader_->GetSymbol(deinitFunctionName));
+    deInitFunc_ = reinterpret_cast<AdapterDeInitFunc>(loader_->GetSymbol(DEINIT_FUNCTION_NAME));
     if (deInitFunc_ == nullptr) {
-        DISPLAY_LOGE("failed to get function %{public}s", deinitFunctionName);
+        DISPLAY_LOGE("failed to get function %{public}s", DEINIT_FUNCTION_NAME);
         return DISPLAY_FAILURE;
     }
     int ret = initFunc_(&funcs_);

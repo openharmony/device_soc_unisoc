@@ -40,9 +40,9 @@ public:
     int32_t FbFresh(int32_t devFd, DisplayFrameInfo &frame);
 
 private:
-    static constexpr const char *libNameAdapter = "libdisplay_adapter_impl.z.so";
-    static constexpr const char *initFunctionName = "DisplayAdapaterInitialize";
-    static constexpr const char *deinitFunctionName = "DisplayAdapaterUninitialize";
+    static constexpr const char *LIB_NAME_ADAPTER = "libdisplay_adapter_impl.z.so";
+    static constexpr const char *INIT_FUNCTION_NAME = "DisplayAdapaterInitialize";
+    static constexpr const char *DEINIT_FUNCTION_NAME = "DisplayAdapaterUninitialize";
 
     std::unique_ptr<DisplayModuleLoader> loader_;
     DisplayAdapterFuncs *funcs_ = nullptr;

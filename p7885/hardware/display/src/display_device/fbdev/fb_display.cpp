@@ -29,7 +29,7 @@
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
-std::unique_ptr<HdiLayer> FbDisplay::CreateHdiLayer(LayerType type) const
+std::unique_ptr<HdiLayer> FbDisplay::CreateHdiLayer(LayerType type)
 {
     DISPLAY_LOGD();
     auto layer = HdiDisplay::CreateHdiLayer(type);
@@ -48,7 +48,7 @@ FbDisplay::~FbDisplay()
     DISPLAY_LOGD();
 }
 
-int32_t FbDisplay::Init() const
+int32_t FbDisplay::Init()
 {
     int ret;
     int deviceFd = deviceFds_[0];
@@ -86,7 +86,7 @@ int32_t FbDisplay::Init() const
     return DISPLAY_SUCCESS;
 }
 
-int32_t FbDisplay::GetDisplayCapability(DisplayCapability *info) const
+int32_t FbDisplay::GetDisplayCapability(DisplayCapability *info)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((info == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("inof is nullptr"));
@@ -94,7 +94,7 @@ int32_t FbDisplay::GetDisplayCapability(DisplayCapability *info) const
     return DISPLAY_SUCCESS;
 }
 
-int32_t FbDisplay::GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes) const
+int32_t FbDisplay::GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((num == NULL), DISPLAY_NULL_PTR, DISPLAY_LOGE("num and modes is nullptr"));
@@ -110,7 +110,7 @@ int32_t FbDisplay::GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *mode
     return DISPLAY_SUCCESS;
 }
 
-int32_t FbDisplay::GetDisplayMode(uint32_t *modeId) const
+int32_t FbDisplay::GetDisplayMode(uint32_t *modeId)
 {
     DISPLAY_LOGD();
     *modeId = mActiveModeId;
@@ -121,7 +121,7 @@ int32_t FbDisplay::GetDisplayMode(uint32_t *modeId) const
     return DISPLAY_SUCCESS;
 }
 
-int32_t FbDisplay::SetDisplayMode(uint32_t modeId) const
+int32_t FbDisplay::SetDisplayMode(uint32_t modeId)
 {
     DISPLAY_LOGD();
     if (modeId < modes_.size()) {
@@ -132,7 +132,7 @@ int32_t FbDisplay::SetDisplayMode(uint32_t modeId) const
     return DISPLAY_SUCCESS;
 }
 
-int32_t FbDisplay::GetDisplayPowerStatus(DispPowerStatus *status) const
+int32_t FbDisplay::GetDisplayPowerStatus(DispPowerStatus *status)
 {
     DISPLAY_LOGD();
     DISPLAY_CHK_RETURN((status == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("the status is nullptr"));
@@ -147,13 +147,7 @@ int32_t FbDisplay::SetDisplayPowerStatus(DispPowerStatus status)
     return DISPLAY_SUCCESS;
 }
 
-int32_t FbDisplay::GetDisplayBacklight(uint32_t *) const
-{
-    DISPLAY_LOGD();
-    return DISPLAY_NOT_SUPPORT;
-}
-
-int32_t FbDisplay::SetDisplayBacklight(uint32_t value) const
+int32_t FbDisplay::GetDisplayBacklight(uint32_t *value)
 {
     HDI_UNUSED(value);
 
@@ -161,7 +155,15 @@ int32_t FbDisplay::SetDisplayBacklight(uint32_t value) const
     return DISPLAY_NOT_SUPPORT;
 }
 
-int32_t FbDisplay::RegDisplayVBlankCallback(VBlankCallback cb, const void *data)
+int32_t FbDisplay::SetDisplayBacklight(uint32_t value)
+{
+    HDI_UNUSED(value);
+
+    DISPLAY_LOGD();
+    return DISPLAY_NOT_SUPPORT;
+}
+
+int32_t FbDisplay::RegDisplayVBlankCallback(VBlankCallback cb, void *data)
 {
     HDI_UNUSED(data);
 
@@ -171,7 +173,7 @@ int32_t FbDisplay::RegDisplayVBlankCallback(VBlankCallback cb, const void *data)
     return DISPLAY_SUCCESS;
 }
 
-bool FbDisplay::IsConnected() const
+bool FbDisplay::IsConnected()
 {
     DISPLAY_LOGD();
     return true;
