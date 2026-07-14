@@ -86,7 +86,7 @@ static std::atomic<int> g_uniAICompileStatus { static_cast<int>(unisoc::Status::
 static std::string g_lastUniAICreateBackendPath;
 static void* g_lastCreatedUniAI = nullptr;
 
-extern "C" int __wrap_dup(int oldfd)
+extern "C" int WrapDup(int oldfd) __asm__("__wrap_dup")
 {
     if (g_forceDupFail.exchange(false)) {
         errno = EBADF;
