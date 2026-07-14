@@ -77,6 +77,10 @@ namespace OMX {
 #define MEMORY_ALLOC_SIZE_ZERO 0
 // Memory offset zero value
 #define MEMORY_OFFSET_ZERO 0
+// Black luma value for limited-range YUV padding
+#define YUV_BLACK_LUMA 0x10
+// Neutral chroma value for YUV padding
+#define YUV_NEUTRAL_CHROMA 0x80
 SPRDAVCDecoderOhos::SPRDAVCDecoderOhos(
     const char *name,
     const OMX_CALLBACKTYPE *callbacks,
@@ -514,17 +518,25 @@ bool SPRDAVCDecoderOhos::prepareCopyParams(OMX_BUFFERHEADERTYPE *header, BufferH
     const uint32_t dstStride = static_cast<uint32_t>(bufferhandle->stride);
     const uint32_t dstHeight = static_cast<uint32_t>(bufferhandle->height);
     const uint32_t dstCapacity = static_cast<uint32_t>(bufferhandle->size);
-    copyHeight = (dstHeight < mSliceHeight) ? dstHeight : mSliceHeight;
-    copyWidth = (dstStride < mStride) ? dstStride : mStride;
+    copyHeight = (dstHeight < mCropHeight) ? dstHeight : mCropHeight;
+    copyWidth = (dstStride < mCropWidth) ? dstStride : mCropWidth;
     if (copyHeight == 0 || copyWidth == 0) {
         dispatchFillBufferDone(header);
         return false;
     }
+    if (mCropLeftOffset + copyWidth > mStride || mCropTopOffset + copyHeight > mSliceHeight) {
+        OMX_LOGE("invalid crop window, skip copy: crop=%u,%u %ux%u, src=%ux%u, copy=%ux%u",
+            mCropLeftOffset, mCropTopOffset, mCropWidth, mCropHeight, mStride, mSliceHeight,
+            copyWidth, copyHeight);
+        dispatchFillBufferDone(header);
+        return false;
+    }
 
-    const uint64_t dstRequired = static_cast<uint64_t>(dstStride) * copyHeight *
+    const uint64_t dstRequired = static_cast<uint64_t>(dstStride) * dstHeight *
         (YUV_CHROMA_OFFSET_DIVIDER + 1) / YUV_CHROMA_OFFSET_DIVIDER;
     const uint64_t srcRequired = static_cast<uint64_t>(mStride) * mSliceHeight +
-        static_cast<uint64_t>(mStride) * (copyHeight / YUV_CHROMA_OFFSET_DIVIDER);
+        static_cast<uint64_t>(mStride) * (mCropTopOffset / YUV_CHROMA_OFFSET_DIVIDER) + mCropLeftOffset +
+        static_cast<uint64_t>(mStride) * ((copyHeight + 1) / YUV_CHROMA_OFFSET_DIVIDER);
     const uint64_t srcCapacity = static_cast<uint64_t>(static_cast<uint32_t>(header->nAllocLen));
     if (dstRequired > dstCapacity || srcRequired > srcCapacity) {
         OMX_LOGE("buffer size mismatch, skip copy: dstNeed=%llu dstCap=%u srcNeed=%llu srcCap=%u copyWidth=%u "
@@ -544,8 +556,9 @@ void SPRDAVCDecoderOhos::notifyFillBufferDone(OMX_BUFFERHEADERTYPE *header)
     if (!prepareCopyParams(header, bufferhandle, copyWidth, copyHeight)) {
         return;
     }
-    OMX_LOGD("notifyFillBufferDone mStride=%u, mSliceHeight=%u, dstStride=%d, dstHeight=%d, copyWidth=%u, "
-        "copyHeight=%u", mStride, mSliceHeight, bufferhandle->stride, bufferhandle->height, copyWidth, copyHeight);
+    OMX_LOGD("notifyFillBufferDone mStride=%u, mSliceHeight=%u, crop=%u,%u %ux%u, dstStride=%d, dstHeight=%d, "
+        "copyWidth=%u, copyHeight=%u", mStride, mSliceHeight, mCropLeftOffset, mCropTopOffset,
+        mCropWidth, mCropHeight, bufferhandle->stride, bufferhandle->height, copyWidth, copyHeight);
     OMX_U8 *buffInfo = reinterpret_cast<OMX_U8 *>(header->pBuffer);
     OMX_U8 *dstInfo = reinterpret_cast<OMX_U8 *>(bufferhandle->virAddr);
     copyOhosLumaPlane(dstInfo, buffInfo, bufferhandle);
@@ -560,14 +573,22 @@ void SPRDAVCDecoderOhos::copyOhosLumaPlane(OMX_U8 *dstInfo, OMX_U8 *buffInfo, co
     }
     const uint32_t dstStride = static_cast<uint32_t>(bufferhandle->stride);
     const uint32_t dstHeight = static_cast<uint32_t>(bufferhandle->height);
-    const uint32_t copyHeight = (dstHeight < mSliceHeight) ? dstHeight : mSliceHeight;
-    const uint32_t copyWidth = (dstStride < mStride) ? dstStride : mStride;
+    const uint32_t copyHeight = (dstHeight < mCropHeight) ? dstHeight : mCropHeight;
+    const uint32_t copyWidth = (dstStride < mCropWidth) ? dstStride : mCropWidth;
+    const OMX_U8 *srcBase = buffInfo + static_cast<size_t>(mCropTopOffset) * mStride + mCropLeftOffset;
     for (uint32_t i = VIDEO_PORT_FORMAT_START_INDEX; i < copyHeight; i++) {
         errno_t ret = memmove_s(&dstInfo[i * dstStride], dstStride,
-            &buffInfo[i * mStride], copyWidth);
+            &srcBase[i * mStride], copyWidth);
         if (ret != 0) {
             OMX_LOGE("memmove_s failed at line %d, ret=%d", __LINE__, ret);
         }
+        if (dstStride > copyWidth) {
+            (void)memset_s(&dstInfo[i * dstStride + copyWidth], dstStride - copyWidth,
+                YUV_BLACK_LUMA, dstStride - copyWidth);
+        }
+    }
+    for (uint32_t i = copyHeight; i < dstHeight; i++) {
+        (void)memset_s(&dstInfo[i * dstStride], dstStride, YUV_BLACK_LUMA, dstStride);
     }
 }
 
@@ -583,16 +604,25 @@ void SPRDAVCDecoderOhos::copyOhosChromaPlane(
     }
     const uint32_t dstStride = static_cast<uint32_t>(bufferhandle->stride);
     const uint32_t dstHeight = static_cast<uint32_t>(bufferhandle->height);
-    const uint32_t copyHeight = (dstHeight < mSliceHeight) ? dstHeight : mSliceHeight;
-    const uint32_t copyWidth = (dstStride < mStride) ? dstStride : mStride;
-    uint32_t dstSize = copyHeight * dstStride;
-    uint32_t srcSize = mSliceHeight * mStride;
+    const uint32_t copyHeight = (dstHeight < mCropHeight) ? dstHeight : mCropHeight;
+    const uint32_t copyWidth = (dstStride < mCropWidth) ? dstStride : mCropWidth;
+    const uint32_t dstSize = dstHeight * dstStride;
+    const uint32_t srcSize = mSliceHeight * mStride +
+        (mCropTopOffset / YUV_CHROMA_OFFSET_DIVIDER) * mStride + mCropLeftOffset;
     for (uint32_t i = VIDEO_PORT_FORMAT_START_INDEX; i < copyHeight / YUV_CHROMA_OFFSET_DIVIDER; i++) {
         errno_t ret = memmove_s(&dstInfo[dstSize + i * dstStride], dstStride,
             &buffInfo[srcSize + i * mStride], copyWidth);
         if (ret != 0) {
             OMX_LOGE("memmove_s failed at line %d, ret=%d", __LINE__, ret);
         }
+        if (dstStride > copyWidth) {
+            (void)memset_s(&dstInfo[dstSize + i * dstStride + copyWidth], dstStride - copyWidth,
+                YUV_NEUTRAL_CHROMA, dstStride - copyWidth);
+        }
+    }
+    for (uint32_t i = copyHeight / YUV_CHROMA_OFFSET_DIVIDER;
+         i < dstHeight / YUV_CHROMA_OFFSET_DIVIDER; i++) {
+        (void)memset_s(&dstInfo[dstSize + i * dstStride], dstStride, YUV_NEUTRAL_CHROMA, dstStride);
     }
 }
 
@@ -604,10 +634,11 @@ void SPRDAVCDecoderOhos::copyOhosChromaPlaneAsNV21(
     }
     const uint32_t dstStride = static_cast<uint32_t>(bufferhandle->stride);
     const uint32_t dstHeight = static_cast<uint32_t>(bufferhandle->height);
-    const uint32_t copyHeight = (dstHeight < mSliceHeight) ? dstHeight : mSliceHeight;
-    const uint32_t copyWidth = (dstStride < mStride) ? dstStride : mStride;
-    const uint32_t dstSize = copyHeight * dstStride;
-    const uint32_t srcSize = mSliceHeight * mStride;
+    const uint32_t copyHeight = (dstHeight < mCropHeight) ? dstHeight : mCropHeight;
+    const uint32_t copyWidth = (dstStride < mCropWidth) ? dstStride : mCropWidth;
+    const uint32_t dstSize = dstHeight * dstStride;
+    const uint32_t srcSize = mSliceHeight * mStride +
+        (mCropTopOffset / YUV_CHROMA_OFFSET_DIVIDER) * mStride + mCropLeftOffset;
     for (uint32_t i = VIDEO_PORT_FORMAT_START_INDEX; i < copyHeight / YUV_CHROMA_OFFSET_DIVIDER; i++) {
         OMX_U8 *dst = &dstInfo[dstSize + i * dstStride];
         OMX_U8 *src = &buffInfo[srcSize + i * mStride];
@@ -615,6 +646,14 @@ void SPRDAVCDecoderOhos::copyOhosChromaPlaneAsNV21(
             dst[j] = src[j + 1];
             dst[j + 1] = src[j];
         }
+        if (dstStride > copyWidth) {
+            (void)memset_s(dst + copyWidth, dstStride - copyWidth,
+                YUV_NEUTRAL_CHROMA, dstStride - copyWidth);
+        }
+    }
+    for (uint32_t i = copyHeight / YUV_CHROMA_OFFSET_DIVIDER;
+         i < dstHeight / YUV_CHROMA_OFFSET_DIVIDER; i++) {
+        (void)memset_s(&dstInfo[dstSize + i * dstStride], dstStride, YUV_NEUTRAL_CHROMA, dstStride);
     }
 }
 void SPRDAVCDecoderOhos::drainOneOutputBuffer(int32_t picId, const void *pBufferHeader, OMX_U64 pts)
@@ -862,12 +901,20 @@ void SPRDAVCDecoderOhos::initDefaultOutputBufferCtrl(
         bufferCtrl->phyAddr = bufferPrivate->phyAddr;
         bufferCtrl->bufferSize = bufferPrivate->bufferSize;
         bufferCtrl->bufferFd = bufferPrivate->bufferFd;
+        bufferCtrl->width = 0;
+        bufferCtrl->height = 0;
+        bufferCtrl->stride = 0;
+        bufferCtrl->nativeBufferFd = -1;
         return;
     }
     bufferCtrl->pMem = nullptr;
     bufferCtrl->phyAddr = MEMORY_ADDRESS_ZERO;
     bufferCtrl->bufferSize = BUFFER_SIZE_ZERO;
     bufferCtrl->bufferFd = BUFFER_SIZE_ZERO;
+    bufferCtrl->width = 0;
+    bufferCtrl->height = 0;
+    bufferCtrl->stride = 0;
+    bufferCtrl->nativeBufferFd = -1;
 }
 
 OMX_ERRORTYPE SPRDAVCDecoderOhos::initOhosInputPrivate(
@@ -885,6 +932,10 @@ OMX_ERRORTYPE SPRDAVCDecoderOhos::initOhosInputPrivate(
     pBufCtrl->phyAddr = bufferPrivate != nullptr ? bufferPrivate->phyAddr : MEMORY_ADDRESS_ZERO;
     pBufCtrl->bufferSize = bufferPrivate != nullptr ? bufferPrivate->bufferSize : BUFFER_SIZE_ZERO;
     pBufCtrl->bufferFd = BUFFER_SIZE_ZERO;
+    pBufCtrl->width = 0;
+    pBufCtrl->height = 0;
+    pBufCtrl->stride = 0;
+    pBufCtrl->nativeBufferFd = -1;
     return OMX_ErrorNone;
 }
 

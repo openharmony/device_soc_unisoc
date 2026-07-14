@@ -27,6 +27,10 @@ typedef struct BufferCtrlStruct {
     int bufferFd;
     unsigned long phyAddr;
     size_t bufferSize;
+    uint32_t width;
+    uint32_t height;
+    uint32_t stride;
+    int nativeBufferFd;
     int id;
 } BufferCtrlStruct;
 typedef struct BufferPrivateStruct {

@@ -25,6 +25,7 @@
 #include <OMX_IndexExt.h>
 #include "sprd_omx_typedef.h"
 #include "OMXGraphicBufferMapper.h"
+#include "OMXHardwareAPI.h"
 #include "OMXMetadataBufferType.h"
 #include "codec_omx_ext.h"
 #include "Dynamic_buffer.h"
@@ -125,8 +126,7 @@
 /* Buffer handle access flags */
 #define PROT_READ_WRITE                 (PROT_READ | PROT_WRITE)
 #define MAP_SHARED_FLAGS                MAP_SHARED
-/* Port index constants for get/set parameters */
-#define K_INPUT_PORT_INDEX              0
+
 /* Control rate type constants */
 #define CONTROL_RATE_VARIABLE           0
 #define CONTROL_RATE_CONSTANT           1
@@ -228,9 +228,82 @@
 /* Resolution thresholds for DDR frequency setting */
 #define LOW_RESOLUTION_MAX_WIDTH        720
 #define LOW_RESOLUTION_MAX_HEIGHT       480
+namespace {
+int32_t ResolveHevcInputFormat(int32_t configuredFormat, int32_t bufferFormat)
+{
+    switch (bufferFormat) {
+        case COLOR_FORMAT_RGBA_8888:
+        case COLOR_FORMAT_N_V12:
+        case COLOR_FORMAT_N_V21:
+            return bufferFormat;
+        default:
+            return configuredFormat;
+    }
+}
+}
+
 namespace OHOS {
 namespace OMX {
 static constexpr int32_t K_DEFERRED_CLOSE_DELAY_SECONDS = 2;
+
+namespace {
+bool IsFullRange(uint32_t range)
+{
+    return range == SprdColorAspects::kRangeFull;
+}
+
+void UpdateColorAspects(ColorAspectsT &dst, uint32_t range, uint32_t primaries,
+    uint32_t transfer, uint32_t matrixCoeffs)
+{
+    dst.videoSignalTypePresentFlag = true;
+    dst.videoFormat = 0; /* unspecified */
+    dst.videoFullRangeFlag = IsFullRange(range);
+    dst.colourDescriptionPresentFlag = true;
+    dst.colourPrimaries = static_cast<uint8>(primaries);
+    dst.transferCharacteristics = static_cast<uint8>(transfer);
+    dst.matrixCoefficients = static_cast<uint8>(matrixCoeffs);
+}
+
+OMX_ERRORTYPE UpdateColorAspectsFromCodec(ColorAspectsT &dst, const OMX_PTR params, const char *logTag)
+{
+    const CodecVideoColorspace *colorAspects =
+        static_cast<const CodecVideoColorspace *>(params);
+    if (colorAspects == nullptr) {
+        OMX_LOGE("CodecVideoColorspace is nullptr");
+        return OMX_ErrorBadParameter;
+    }
+    UpdateColorAspects(dst, colorAspects->aspects.range, colorAspects->aspects.primaries,
+        colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
+    OMX_LOGI("%s: range=%d, primaries=%u, transfer=%u, matrix=%u", logTag,
+        colorAspects->aspects.range, colorAspects->aspects.primaries,
+        colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
+    return OMX_ErrorNone;
+}
+
+OMX_ERRORTYPE UpdateColorAspectsFromDescribe(ColorAspectsT &dst, OMX_PTR params)
+{
+    DescribeColorAspectsParams *colorAspectsParams =
+        static_cast<DescribeColorAspectsParams *>(params);
+    if (colorAspectsParams == nullptr ||
+        colorAspectsParams->nPortIndex != OHOS::OMX::K_INPUT_PORT_INDEX) {
+        OMX_LOGE("invalid DescribeColorAspectsParams");
+        return OMX_ErrorBadPortIndex;
+    }
+    if (colorAspectsParams->bRequestingDataSpace || colorAspectsParams->bDataSpaceChanged) {
+        colorAspectsParams->nDataSpace = 0;
+        OMX_LOGI("unsupported encoder color aspects dataspace request");
+        return OMX_ErrorUnsupportedSetting;
+    }
+    UpdateColorAspects(dst, colorAspectsParams->sAspects.rangeMode,
+        colorAspectsParams->sAspects.primaryId, colorAspectsParams->sAspects.transferId,
+        colorAspectsParams->sAspects.matrixCoeffId);
+    OMX_LOGI("SetConfig DescribeColorAspects: range=%u, primaries=%u, transfer=%u, matrix=%u",
+        colorAspectsParams->sAspects.rangeMode, colorAspectsParams->sAspects.primaryId,
+        colorAspectsParams->sAspects.transferId, colorAspectsParams->sAspects.matrixCoeffId);
+    return OMX_ErrorNone;
+}
+}
+
 static std::mutex g_hevcDeferredCloseMutex;
 static std::vector<void *> gHevcDeferredCloseHandles;
 static bool g_hevcDeferredCloseWorkerRunning = false;
@@ -757,7 +830,7 @@ OMX_ERRORTYPE SPRDHEVCEncoder::getSupportBufferType(UseBufferType *defParams)
         OMX_LOGE("port index error.");
         return OMX_ErrorUnsupportedIndex;
     }
-    defParams->bufferType = (defParams->portIndex == K_INPUT_PORT_INDEX) ?
+    defParams->bufferType = (defParams->portIndex == OHOS::OMX::K_INPUT_PORT_INDEX) ?
         BUFFER_TYPE_DYNAMIC_HANDLE : CODEC_BUFFER_TYPE_AVSHARE_MEM_FD;
     return OMX_ErrorNone;
 }
@@ -826,8 +899,26 @@ OMX_ERRORTYPE SPRDHEVCEncoder::internalSetParameter(
         case OMX_IndexCodecVideoPortFormat: {
             return setCodecVideoPortFormat(static_cast<const CodecVideoPortFormatParam *>(params));
         }
+        case OMX_IndexColorAspects: {
+            return UpdateColorAspectsFromCodec(mColorAspects, params, "SetColorAspects");
+        }
         default:
             return SprdVideoEncoderBase::internalSetParameter(index, params);
+    }
+}
+
+OMX_ERRORTYPE SPRDHEVCEncoder::internalSetConfig(
+    OMX_INDEXTYPE index, const OMX_PTR params, bool *frameConfig)
+{
+    switch (static_cast<int>(index)) {
+        case OMX_IndexColorAspects: {
+            return UpdateColorAspectsFromCodec(mColorAspects, params, "SetConfig ColorAspects");
+        }
+        case OMX_INDEX_DESCRIBE_COLOR_ASPECTS: {
+            return UpdateColorAspectsFromDescribe(mColorAspects, params);
+        }
+        default:
+            return SprdVideoEncoderBase::internalSetConfig(index, params, frameConfig);
     }
 }
 
@@ -1023,10 +1114,13 @@ bool SPRDHEVCEncoder::mapInputGraphicBuffer(OMX_BUFFERHEADERTYPE *inHeader, Mapp
     DynamicBuffer* buffer = (DynamicBuffer*)inHeader->pBuffer;
     BufferHandle *bufferHandle = buffer->bufferHandle;
     mappedBuffer.bufferHandle = bufferHandle;
-    mappedBuffer.width = 0;
-    mappedBuffer.height = 0;
+    mappedBuffer.stride = bufferHandle->stride > 0 ? static_cast<uint32_t>(bufferHandle->stride) :
+        (bufferHandle->width > 0 ? static_cast<uint32_t>(bufferHandle->width) : mFrameWidth);
+    mappedBuffer.width = bufferHandle->width > 0 ? static_cast<uint32_t>(bufferHandle->width) : mFrameWidth;
+    mappedBuffer.height = bufferHandle->height > 0 ? static_cast<uint32_t>(bufferHandle->height) : mFrameHeight;
     mappedBuffer.cropX = 0;
     mappedBuffer.cropY = 0;
+    mappedBuffer.format = bufferHandle->format;
     mappedBuffer.needUnmap = false;
     mappedBuffer.iova = 0;
     mappedBuffer.iovaLen = 0;
@@ -1081,8 +1175,13 @@ void SPRDHEVCEncoder::UnmapInputGraphicBuffer(const MappedInputBuffer &mappedBuf
 void SPRDHEVCEncoder::configureEncodeInput(MMEncIn &vidIn, OMX_BUFFERHEADERTYPE *inHeader,
     const MappedInputBuffer &mappedBuffer)
 {
+    const int32_t inputFormat = ResolveHevcInputFormat(mVideoColorFormat, mappedBuffer.format);
+    const uint32_t inputWidth = mappedBuffer.width > 0 ? mappedBuffer.width : mFrameWidth;
+    const uint32_t inputHeight = mappedBuffer.height > 0 ? mappedBuffer.height : mFrameHeight;
+    const uint32_t inputStride = mappedBuffer.stride > 0 ? mappedBuffer.stride : inputWidth;
+    const size_t lumaPlaneSize = static_cast<size_t>(inputStride) * inputHeight;
     (void)memset_s(&vidIn, sizeof(MMEncIn), 0, sizeof(MMEncIn));
-    switch (mVideoColorFormat) {
+    switch (inputFormat) {
         case COLOR_FORMAT_RGBA_8888:
             vidIn.yuvFormat = MMENC_RGBA32;
             break;
@@ -1105,13 +1204,15 @@ void SPRDHEVCEncoder::configureEncodeInput(MMEncIn &vidIn, OMX_BUFFERHEADERTYPE 
     vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcV = nullptr;
     vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcYPhy = mappedBuffer.physicalAddr;
     vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcVPhy = nullptr;
-    uint32_t planeOffset = mappedBuffer.width != 0 && mappedBuffer.height != 0 ?
-        mappedBuffer.width * mappedBuffer.height * YUV_PLANE_OFFSET_MULTIPLIER :
-        mFrameWidth * mFrameHeight * YUV_PLANE_OFFSET_MULTIPLIER;
-    vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcU = mappedBuffer.virtualAddr + planeOffset;
-    vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcUPhy = mappedBuffer.physicalAddr + planeOffset;
-    vidIn.orgImgWidth = static_cast<int32_t>(mappedBuffer.width);
-    vidIn.orgImgHeight = static_cast<int32_t>(mappedBuffer.height);
+    if (inputFormat == COLOR_FORMAT_RGBA_8888) {
+        vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcU = nullptr;
+        vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcUPhy = nullptr;
+    } else {
+        vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcU = mappedBuffer.virtualAddr + lumaPlaneSize;
+        vidIn.srcYuvAddr[STREAM_BUFFER_INDEX_0].pSrcUPhy = mappedBuffer.physicalAddr + lumaPlaneSize;
+    }
+    vidIn.orgImgWidth = static_cast<int32_t>(inputWidth);
+    vidIn.orgImgHeight = static_cast<int32_t>(inputHeight);
     vidIn.cropX = static_cast<int32_t>(mappedBuffer.cropX);
     vidIn.cropY = static_cast<int32_t>(mappedBuffer.cropY);
 }
@@ -1164,8 +1265,11 @@ bool SPRDHEVCEncoder::encodeInputBuffer(OMX_BUFFERHEADERTYPE *inHeader, EncodeOu
     (void)memset_s(&vidOut, sizeof(MMEncOut), 0, sizeof(MMEncOut));
     configureEncodeInput(vidIn, inHeader, mappedBuffer);
     if (mDumpYUVEnabled) {
-        size_t yuvSize = mFrameWidth * mFrameHeight * YUV_SIZE_MULTIPLIER_NUMERATOR / YUV_SIZE_MULTIPLIER_DENOMINATOR;
-        DumpFiles(mappedBuffer.virtualAddr, yuvSize, DUMP_YUV);
+        const size_t dumpSize = vidIn.yuvFormat == MMENC_RGBA32 ?
+            static_cast<size_t>(mappedBuffer.stride) * mappedBuffer.height * sizeof(uint32_t) :
+            static_cast<size_t>(mappedBuffer.stride) * mappedBuffer.height *
+            YUV_SIZE_MULTIPLIER_NUMERATOR / YUV_SIZE_MULTIPLIER_DENOMINATOR;
+        DumpFiles(mappedBuffer.virtualAddr, dumpSize, DUMP_YUV);
     }
     SyncInputStreamBuffers();
     int64_t startEncode = systemTime();
