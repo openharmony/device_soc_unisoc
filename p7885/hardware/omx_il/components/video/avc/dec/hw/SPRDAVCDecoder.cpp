@@ -260,6 +260,10 @@ OMX_ERRORTYPE SPRDAVCDecoder::initOutputPrivate(
     pBufCtrl->phyAddr = 0;
     pBufCtrl->bufferSize = 0;
     pBufCtrl->bufferFd = 0;
+    pBufCtrl->width = 0;
+    pBufCtrl->height = 0;
+    pBufCtrl->stride = 0;
+    pBufCtrl->nativeBufferFd = -1;
     if (mAllocateBuffers && bufferPrivate != nullptr) {
         pBufCtrl->pMem = bufferPrivate->pMem;
         pBufCtrl->phyAddr = bufferPrivate->phyAddr;
@@ -281,6 +285,10 @@ OMX_ERRORTYPE SPRDAVCDecoder::initSecureInputPrivate(
     pBufCtrl->phyAddr = 0;
     pBufCtrl->bufferSize = 0;
     pBufCtrl->bufferFd = 0;
+    pBufCtrl->width = 0;
+    pBufCtrl->height = 0;
+    pBufCtrl->stride = 0;
+    pBufCtrl->nativeBufferFd = -1;
     if (bufferPrivate != nullptr) {
         pBufCtrl->pMem = bufferPrivate->pMem;
         pBufCtrl->phyAddr = bufferPrivate->phyAddr;
@@ -1444,6 +1452,8 @@ void SPRDAVCDecoder::UpdateDecoderPictureState(const H264SwDecInfo *info)
 {
     mFrameWidth = info->cropParams.cropOutWidth;
     mFrameHeight = info->cropParams.cropOutHeight;
+    mCropLeftOffset = info->cropParams.cropLeftOffset;
+    mCropTopOffset = info->cropParams.cropTopOffset;
     mhigh10En = info->high10En;
     mStride = info->picWidth;
     mSliceHeight = info->picHeight;
@@ -1471,10 +1481,10 @@ void SPRDAVCDecoder::UpdateOutputBufferCount(
 }
 bool SPRDAVCDecoder::HandleCropRectEvent(const CropParams *crop)
 {
-    mCropHeight = (mCropHeight+MEMORY_ALIGNMENT_16 - 1) & (~(MEMORY_ALIGNMENT_16 - 1));
-    if (mCropWidth != crop->cropOutWidth ||
-            mCropHeight != ((crop->cropOutHeight+MEMORY_ALIGNMENT_16 - 1)&(~(MEMORY_ALIGNMENT_16 - 1)))) {
-        OMX_LOGI("%s, crop w h: %d %d", __FUNCTION__, crop->cropOutWidth, crop->cropOutHeight);
+    if (mCropWidth != crop->cropOutWidth || mCropHeight != crop->cropOutHeight ||
+        mCropLeftOffset != crop->cropLeftOffset || mCropTopOffset != crop->cropTopOffset) {
+        OMX_LOGI("%s, crop left/top/w/h: %d %d %d %d", __FUNCTION__,
+            crop->cropLeftOffset, crop->cropTopOffset, crop->cropOutWidth, crop->cropOutHeight);
         return true;
     }
     return false;
@@ -1659,8 +1669,8 @@ void SPRDAVCDecoder::UpdatePortDefinitions(bool updateCrop, bool updateInputSize
         mCropWidth = mFrameWidth;
         mCropHeight = mFrameHeight;
     }
-    OMX_LOGI("mStride:%d, mSliceHeight:%d, mFrameWidth:%d, mFrameHeight:%d",
-        mStride, mSliceHeight, mFrameWidth, mFrameHeight);
+    OMX_LOGI("mStride:%d, mSliceHeight:%d, mFrameWidth:%d, mFrameHeight:%d, crop left/top:%d/%d",
+        mStride, mSliceHeight, mFrameWidth, mFrameHeight, mCropLeftOffset, mCropTopOffset);
     outDef->format.video.nFrameWidth = mStride;
     outDef->format.video.nFrameHeight = mSliceHeight;
     outDef->format.video.nStride = mStride;

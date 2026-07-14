@@ -24,6 +24,24 @@
 #define NV12_UV_VERTICAL_SUBSAMPLING_RATIO 2
 namespace OHOS {
 namespace OMX {
+namespace {
+bool IsValidNv12CropBuffer(const OMX_BUFFERHEADERTYPE *header)
+{
+    return header != nullptr && header->pBuffer != nullptr && header->pPlatformPrivate != nullptr;
+}
+
+void CopyNv12Plane(OMX_U8 *dstBase, const OMX_U8 *srcBase, uint32_t dstStride, uint32_t srcStride, uint32_t rows)
+{
+    for (uint32_t row = 0; row < rows; ++row) {
+        errno_t ret = memmove_s(dstBase + row * dstStride, static_cast<size_t>(dstStride),
+            srcBase + row * srcStride, static_cast<size_t>(dstStride));
+        if (ret != 0) {
+            OMX_LOGE("memmove_s failed in line %d, ret=%d", __LINE__, ret);
+        }
+    }
+}
+}
+
 SprdVideoDecoderBase::SprdVideoDecoderBase(const DecoderComponentInitParams &params)
     : SprdVideoDecoderOMXComponent(params)
 {
@@ -195,37 +213,21 @@ OMX_ERRORTYPE SprdVideoDecoderBase::getExtensionIndex(
 void SprdVideoDecoderBase::NV12Crop(OMX_BUFFERHEADERTYPE *header,
                                     uint32_t srcWidth, uint32_t srcHeight, uint32_t dstWidth, uint32_t dstHeight)
 {
-    if (header == nullptr || header->pBuffer == nullptr || header->pPlatformPrivate == nullptr) {
+    if (!IsValidNv12CropBuffer(header)) {
         return;
     }
+
     OMX_LOGD("NV12Crop start, srcWidth = %u, srcHeight = %u",
         srcWidth, srcHeight);
     OMX_LOGD("dstWidth = %u, dstHeight = %u",
         dstWidth, dstHeight);
-    OMX_U8* buffInfo = reinterpret_cast<OMX_U8*>(header->pBuffer);
-    OMX_U8* dstInfo = reinterpret_cast<OMX_U8*>(header->pPlatformPrivate);
-    for (uint32_t i = 0; i < dstHeight; i++) {
-        errno_t ret = memmove_s(
-            static_cast<void*>(&dstInfo[i * dstWidth]),
-            static_cast<size_t>(dstWidth),
-            static_cast<const void*>(&buffInfo[i * srcWidth]),
-            static_cast<size_t>(dstWidth));
-        if (ret != 0) {
-            OMX_LOGE("memmove_s failed in line %d, ret=%d", __LINE__, ret);
-        }
-    }
-    uint32_t dstSize = dstHeight * dstWidth;
-    uint32_t srcSize = srcHeight * srcWidth;
-    for (uint32_t i = 0; i < dstHeight / NV12_UV_VERTICAL_SUBSAMPLING_RATIO; i++) {
-        errno_t ret = memmove_s(
-            static_cast<void*>(&dstInfo[dstSize + i * dstWidth]),
-            static_cast<size_t>(dstWidth),
-            static_cast<const void*>(&buffInfo[srcSize + i * srcWidth]),
-            static_cast<size_t>(dstWidth));
-        if (ret != 0) {
-            OMX_LOGE("memmove_s failed in line %d, ret=%d", __LINE__, ret);
-        }
-    }
+    OMX_U8 *buffInfo = reinterpret_cast<OMX_U8*>(header->pBuffer);
+    OMX_U8 *dstInfo = reinterpret_cast<OMX_U8*>(header->pPlatformPrivate);
+    const uint32_t dstSize = dstHeight * dstWidth;
+    const uint32_t srcSize = srcHeight * srcWidth;
+    CopyNv12Plane(dstInfo, buffInfo, dstWidth, srcWidth, dstHeight);
+    CopyNv12Plane(dstInfo + dstSize, buffInfo + srcSize, dstWidth, srcWidth,
+        dstHeight / NV12_UV_VERTICAL_SUBSAMPLING_RATIO);
 }
 };    // namespace OMX
 };    // namespace OHOS
