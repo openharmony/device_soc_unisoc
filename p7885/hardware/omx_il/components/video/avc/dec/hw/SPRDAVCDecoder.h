@@ -174,6 +174,8 @@ protected:
         YUV420_FRAME_SIZE_MULTIPLIER / YUV420_FRAME_SIZE_DIVISOR;
     uint32_t mCropWidth = DEFAULT_FRAME_WIDTH;
     uint32_t mCropHeight = DEFAULT_FRAME_HEIGHT;
+    uint32_t mCropLeftOffset = 0;
+    uint32_t mCropTopOffset = 0;
     uint8_t mhigh10En = 0;
     std::mutex mLock;
     uint8_t *mCodecInterBuffer = nullptr;
