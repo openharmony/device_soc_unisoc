@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "SprdVideoDecoderBase.h"
-#include "SprdOMXComponent.h"
 #include "OMXHardwareAPI.h"
 #include <securec.h>
 #include <cstring>
@@ -29,46 +28,6 @@ namespace {
 bool IsValidNv12CropBuffer(const OMX_BUFFERHEADERTYPE *header)
 {
     return header != nullptr && header->pBuffer != nullptr && header->pPlatformPrivate != nullptr;
-}
-
-bool ValidateNv12CropGeometry(uint32_t srcWidth, uint32_t srcHeight, uint32_t dstWidth, uint32_t dstHeight)
-{
-    if (srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0) {
-        OMX_LOGE("NV12Crop invalid params, src(%u x %u), dst(%u x %u)",
-            srcWidth, srcHeight, dstWidth, dstHeight);
-        return false;
-    }
-    if (dstWidth > srcWidth || dstHeight > srcHeight) {
-        OMX_LOGE("NV12Crop skip, dst(%u x %u) exceeds src(%u x %u)",
-            dstWidth, dstHeight, srcWidth, srcHeight);
-        return false;
-    }
-    return true;
-}
-
-bool ValidateNv12CropCapacity(const OMX_BUFFERHEADERTYPE *header, uint32_t srcWidth, uint32_t srcHeight,
-    uint32_t dstWidth, uint32_t dstHeight)
-{
-    const uint64_t requiredSrcSize = static_cast<uint64_t>(srcWidth) * srcHeight * 3 / 2;
-    if (requiredSrcSize > header->nAllocLen || requiredSrcSize > header->nFilledLen) {
-        OMX_LOGE("NV12Crop skip, src capacity too small, required=%llu, alloc=%u, filled=%u, src(%u x %u)",
-            static_cast<unsigned long long>(requiredSrcSize), header->nAllocLen, header->nFilledLen,
-            srcWidth, srcHeight);
-        return false;
-    }
-
-    size_t dstCapacity = header->nAllocLen;
-    BufferCtrlStruct *outCtrl = reinterpret_cast<BufferCtrlStruct*>(header->pOutputPortPrivate);
-    if (outCtrl != nullptr && outCtrl->bufferSize > 0 && (dstCapacity == 0 || outCtrl->bufferSize < dstCapacity)) {
-        dstCapacity = outCtrl->bufferSize;
-    }
-    const uint64_t requiredDstSize = static_cast<uint64_t>(dstWidth) * dstHeight * 3 / 2;
-    if (requiredDstSize > dstCapacity) {
-        OMX_LOGE("NV12Crop skip, dst capacity too small, required=%llu, capacity=%zu, src(%u x %u), dst(%u x %u)",
-            static_cast<unsigned long long>(requiredDstSize), dstCapacity, srcWidth, srcHeight, dstWidth, dstHeight);
-        return false;
-    }
-    return true;
 }
 
 void CopyNv12Plane(OMX_U8 *dstBase, const OMX_U8 *srcBase, uint32_t dstStride, uint32_t srcStride, uint32_t rows)
@@ -255,10 +214,6 @@ void SprdVideoDecoderBase::NV12Crop(OMX_BUFFERHEADERTYPE *header,
                                     uint32_t srcWidth, uint32_t srcHeight, uint32_t dstWidth, uint32_t dstHeight)
 {
     if (!IsValidNv12CropBuffer(header)) {
-        return;
-    }
-    if (!ValidateNv12CropGeometry(srcWidth, srcHeight, dstWidth, dstHeight) ||
-        !ValidateNv12CropCapacity(header, srcWidth, srcHeight, dstWidth, dstHeight)) {
         return;
     }
 

@@ -79,6 +79,10 @@ OMX_ERRORTYPE SPRDAVCDecoder::allocateOneDecOutputBuffer(H264SwDecInfo *decoderI
     pBufCtrl->bufferFd = fd;
     pBufCtrl->phyAddr = phyAddr;
     pBufCtrl->bufferSize = bufferSize;
+    pBufCtrl->width = 0;
+    pBufCtrl->height = 0;
+    pBufCtrl->stride = 0;
+    pBufCtrl->nativeBufferFd = -1;
     BufferInfo* bufNode = new BufferInfo;
     bufNode->mHeader = header;
     bufNode->mNodeId = nodeId;
