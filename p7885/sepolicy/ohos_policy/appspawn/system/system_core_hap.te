@@ -73,3 +73,9 @@ allowxperm system_core_hap medialibrary_hap_data_file:file ioctl { 0xf546 0xf50c
 # avc:  denied  { search } for  pid=2878 comm="hos.photos:form" name="etc" dev="sda49" ino=12 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sys_prod_file:s0 tclass=dir permissive=0
 allow system_core_hap sys_prod_file:dir { search };
 
+# avc:  denied  { search } for  pid=6119 comm="OS_FFRT_2_2" name="com.example.previewtest" dev="sda63" ino=4479 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:debug_hap_data_file:s0 tclass=dir permissive=0
+allow system_core_hap debug_hap_data_file:dir { search };
+
+# avc:  denied  { ioctl } for  pid=6119 comm="view_system_app" path="/storage/Users/currentUser/appdata/el2/base/com.example.previewtest/haps/entry/files/test.jpg" dev="sharefs" ino=4919 ioctlcmd=0xf207 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sharefs:s0 tclass=file permissive=1
+allow system_core_hap sharefs:file { ioctl };
+allowxperm system_core_hap sharefs:file ioctl { 0xf207 };
