@@ -51,10 +51,12 @@ protected:
         unsigned long iova;
         size_t iovaLen;
         bool needUnmap;
+        uint32_t stride;
         uint32_t width;
         uint32_t height;
         uint32_t cropX;
         uint32_t cropY;
+        int32_t format;
     };
     OMX_BOOL mPrependSPSPPS;
     virtual ~SPRDHEVCEncoder();
@@ -62,6 +64,8 @@ protected:
     OMX_INDEXTYPE index, OMX_PTR params) override;
     OMX_ERRORTYPE internalSetParameter(
     OMX_INDEXTYPE index, const OMX_PTR params) override;
+    OMX_ERRORTYPE internalSetConfig(
+    OMX_INDEXTYPE index, const OMX_PTR params, bool *frameConfig) override;
     OMX_ERRORTYPE initCheck() const override;
     void onQueueFilled(OMX_U32 portIndex) override;
     OMX_ERRORTYPE getExtensionIndex(
@@ -71,10 +75,28 @@ protected:
         (void)pPFrames;
         (void)hevcType;
     }
-    virtual void CheckUpdateColorAspects(const MMEncConfig *encConfig) const
+    virtual void CheckUpdateColorAspects(MMEncConfig *encConfig)
     {
-        (void)encConfig;
+        if (encConfig == nullptr) {
+            return;
+        }
+        encConfig->vuiColorAspects.videoSignalTypePresentFlag = mColorAspects.videoSignalTypePresentFlag;
+        encConfig->vuiColorAspects.videoFormat = mColorAspects.videoFormat;
+        encConfig->vuiColorAspects.videoFullRangeFlag = mColorAspects.videoFullRangeFlag;
+        encConfig->vuiColorAspects.colourDescriptionPresentFlag = mColorAspects.colourDescriptionPresentFlag;
+        encConfig->vuiColorAspects.colourPrimaries = mColorAspects.colourPrimaries;
+        encConfig->vuiColorAspects.transferCharacteristics = mColorAspects.transferCharacteristics;
+        encConfig->vuiColorAspects.matrixCoefficients = mColorAspects.matrixCoefficients;
     }
+    ColorAspectsT mColorAspects = {
+        false,   /* videoSignalTypePresentFlag */
+        0,       /* videoFormat: unspecified */
+        false,   /* videoFullRangeFlag: limited range */
+        false,   /* colourDescriptionPresentFlag */
+        2,       /* colourPrimaries: BT.709 */
+        2,       /* transferCharacteristics: BT.709 */
+        2,       /* matrixCoefficients: BT.709 */
+    };
 private:
     enum {
         K_NUM_BUFFERS = 4,
