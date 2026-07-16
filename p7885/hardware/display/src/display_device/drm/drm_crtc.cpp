@@ -27,26 +27,26 @@ int32_t DrmCrtc::Init(DrmDevice &drmDevice)
     DISPLAY_LOGD();
     int32_t ret;
     DrmProperty prop;
-    ret = drmDevice.GetCrtcProperty(*this, PROP_MODEID, &prop);
+    ret = drmDevice.GetCrtcProperty(*this, PROP_MODEID, prop);
     mModePropId = prop.propId;
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("can not get mode prop id"));
 
-    ret = drmDevice.GetCrtcProperty(*this, PROP_OUTFENCE, &prop);
+    ret = drmDevice.GetCrtcProperty(*this, PROP_OUTFENCE, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("cat not get out fence prop id"));
     mOutFencePropId = prop.propId;
 
-    ret = drmDevice.GetCrtcProperty(*this, PROP_ACTIVE, &prop);
+    ret = drmDevice.GetCrtcProperty(*this, PROP_ACTIVE, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("cat not get out fence prop id"));
     mActivePropId = prop.propId;
 
-    ret = drmDevice.GetCrtcProperty(*this, PROP_FPSCHANGE, &prop);
+    ret = drmDevice.GetCrtcProperty(*this, PROP_FPSCHANGE, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE,
         DISPLAY_LOGE("cat not get frame rate change prop id"));
     mFpsChangePropId = prop.propId;
 
     return DISPLAY_SUCCESS;
 }
-int32_t DrmCrtc::BindToDisplay(uint32_t id) const
+int32_t DrmCrtc::BindToDisplay(uint32_t id)
 {
     DISPLAY_CHK_RETURN((mDisplayId != INVALIDE_DISPLAY_ID), DISPLAY_FAILURE,
         DISPLAY_LOGE("the crtc has bind to %{public}d", mDisplayId));
@@ -63,7 +63,7 @@ void DrmCrtc::UnBindDisplay(uint32_t id)
         DISPLAY_LOGE("can not unbind");
     }
 }
-bool DrmCrtc::CanBind() const
+bool DrmCrtc::CanBind()
 {
     return (mDisplayId == INVALIDE_DISPLAY_ID);
 }

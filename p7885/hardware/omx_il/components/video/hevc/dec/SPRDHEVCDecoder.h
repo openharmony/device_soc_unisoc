@@ -80,7 +80,10 @@ private:
     uint32_t mPictureSize = 320 * 240 * 3 / 2;
     uint32_t mCropWidth = 320;
     uint32_t mCropHeight = 240;
+    uint32_t mCropLeftOffset = 0;
+    uint32_t mCropTopOffset = 0;
     uint8_t mhigh10En = 0;
+    bool mOutputNV21 = false;
     Mutex mLock;
     uint8_t *mCodecInterBuffer = nullptr;
     uint8_t *mCodecExtraBuffer = nullptr;
@@ -130,6 +133,16 @@ private:
     OMX_ERRORTYPE setProcessName(const ProcessNameParam *nameParams);
     OMX_ERRORTYPE setPortDefinitionParam(const OMX_PARAM_PORTDEFINITIONTYPE *defParams);
     OMX_ERRORTYPE setCodecVideoPortFormat(const CodecVideoPortFormatParam *formatParams);
+    bool DirectCropOutput(OMX_BUFFERHEADERTYPE *header);
+    bool CanDirectCropOutput(const OMX_BUFFERHEADERTYPE *header) const;
+    bool ValidateDirectCropBuffers(const OMX_BUFFERHEADERTYPE *header, size_t &dstCapacity, uint64_t &dstSize) const;
+    bool CopyDirectCropLuma(
+        OMX_U8 *dst, uint32_t dstStride, uint32_t dstHeight, const OMX_U8 *src, uint64_t srcCapacity) const;
+    bool CopyDirectCropChroma(
+        OMX_U8 *dstUv, uint32_t dstStride, uint32_t dstHeight, const OMX_U8 *src, uint64_t srcCapacity) const;
+    bool CopyDirectCropNv21Row(OMX_U8 *dstRow, const OMX_U8 *srcRow) const;
+    void ConvertOutputToNV21(OMX_BUFFERHEADERTYPE *header);
+    void SyncNativeOutputBuffer(int fd, unsigned long flags) const;
     void initOmxHeader(OMX_BUFFERHEADERTYPE *header, OMX_U32 portIndex, OMX_PTR appPrivate,
         OMX_U32 size, OMX_U8 *ptr);
     OMX_ERRORTYPE initOutputPrivate(OMX_BUFFERHEADERTYPE *header, OMX_U8 *ptr, BufferPrivateStruct *bufferPrivate);

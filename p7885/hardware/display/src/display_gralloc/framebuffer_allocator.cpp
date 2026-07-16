@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 #include "framebuffer_allocator.h"
+#include <cstdlib>
 #include <fcntl.h>
 #include <cerrno>
 #include <securec.h>
@@ -45,7 +46,7 @@ int32_t FramebufferAllocator::SetFdFormatAndVirtualRes(struct fb_var_screeninfo 
     varInfo.blue.offset = 16; // offset 16 of blue channel
 
     varInfo.xres_virtual = varInfo.xres;
-    varInfo.yres_virtual = varInfo.yres * fbBuffersNum;
+    varInfo.yres_virtual = varInfo.yres * FB_BUFFERS_NUM;
 
     // set framebuffer vary info
     ret = DisplayAdapter::GetInstance()->Ioctl(deviceFd_, FBIOPUT_VSCREENINFO, &varInfo);
@@ -79,7 +80,7 @@ int32_t FramebufferAllocator::InitFb()
     smemStart_ = fixInfo_.smem_start;
     dmaBufferFb_ = DisplayAdapter::GetInstance()->FbGetDmaBuffer(deviceFd_);
     DISPLAY_LOGD("the dmabuffer fd of framebuffer is %{public}d", dmaBufferFb_);
-    for (uint32_t i = 0; i < bufferSize_; i++) {
+    for (uint32_t i = 0; i < buffersNum_; i++) {
         freeBuffers_.push(smemStart_ + i * bufferSize_);
     }
     DISPLAY_LOGD();
@@ -93,7 +94,7 @@ int32_t FramebufferAllocator::Init()
         DISPLAY_LOGE("framebuffer allocator must depend on the display adapter");
         return DISPLAY_FAILURE;
     }
-    deviceFd_ = DisplayAdapter::GetInstance()->OpenDevice(fbdevPath, O_RDWR, 0);
+    deviceFd_ = DisplayAdapter::GetInstance()->OpenDevice(FBDEV_PATH, O_RDWR, 0);
     if (deviceFd_ < 0) {
         DISPLAY_LOGE("Failed to open fbdev %{public}d", deviceFd_);
         return DISPLAY_FAILURE;
@@ -115,21 +116,37 @@ int32_t FramebufferAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandl
     handle.fd = DisplayAdapter::GetInstance()->FbGetDmaBuffer(deviceFd_);
     DISPLAY_LOGD("fd is %{public}d", handle.fd);
     handle.format = PIXEL_FMT_RGBA_8888;
-    handle.width = bufferInfo.width;
-    handle.height = bufferInfo.height;
+    handle.width = bufferInfo.width_;
+    handle.height = bufferInfo.height_;
     handle.stride = fixInfo_.line_length;
     handle.size = bufferSize_;
-    handle.usage = bufferInfo.usage;
+    handle.usage = bufferInfo.usage_;
+    handle.reserveFds = 0;
+    handle.reserveInts = 0;
+    handle.virAddr = nullptr;
     freeBuffers_.pop();
     return DISPLAY_SUCCESS;
 }
 
 int32_t FramebufferAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle **handle)
 {
-    ALLOC_UNUSED(bufferInfo);
-
-    DISPLAY_LOGE("AllocMem do not implement");
-    return DISPLAY_NOT_SUPPORT;
+    DISPLAY_CHK_RETURN((handle == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("handle is nullptr"));
+    BufferHandle *priBuffer = static_cast<BufferHandle *>(malloc(sizeof(BufferHandle)));
+    DISPLAY_CHK_RETURN((priBuffer == nullptr), DISPLAY_NOMEM, DISPLAY_LOGE("malloc buffer handle failed"));
+    errno_t eok = memset_s(priBuffer, sizeof(BufferHandle), 0, sizeof(BufferHandle));
+    if (eok != EOK) {
+        free(priBuffer);
+        DISPLAY_LOGE("memset_s failed");
+        return DISPLAY_FAILURE;
+    }
+    priBuffer->fd = -1;
+    int32_t ret = Allocate(bufferInfo, *priBuffer);
+    if (ret != DISPLAY_SUCCESS) {
+        free(priBuffer);
+        return ret;
+    }
+    *handle = priBuffer;
+    return DISPLAY_SUCCESS;
 }
 
 FramebufferAllocator::~FramebufferAllocator()

@@ -17,7 +17,6 @@
 #include "display_adapter.h"
 #include "sprd_allocator.h"
 
-
 /* GRALLOC_USAGE_* constants from sprd_ar_src hardware/gralloc.h */
 #ifndef GRALLOC_USAGE_SW_READ_OFTEN
 #define GRALLOC_USAGE_SW_READ_OFTEN     0x00000003U
@@ -35,6 +34,38 @@
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
+namespace {
+constexpr uint64_t SPRD_PRIMARY_USAGE_MASK =
+    HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_HW_RENDER |
+    HBM_USE_HW_TEXTURE | HBM_USE_MEM_DMA;
+
+bool HasPrimaryUsage(uint64_t usage)
+{
+    return (usage & SPRD_PRIMARY_USAGE_MASK) != 0;
+}
+
+bool CanUseLegacyFallbackUsage(uint64_t usage, PixelFormat format)
+{
+    if (HasPrimaryUsage(usage)) {
+        return true;
+    }
+    return format == PIXEL_FMT_BGRA_8888 || format == PIXEL_FMT_RGBA_8888;
+}
+}
+
+int32_t SprdAllocator::GetHandleKey(const BufferHandle *handle)
+{
+    if (handle == nullptr) {
+        return -1;
+    }
+    if (handle->fd >= 0) {
+        return handle->fd;
+    }
+    if (handle->reserveFds > 0 && handle->reserve[0] >= 0) {
+        return handle->reserve[0];
+    }
+    return -1;
+}
 
 SprdAllocator::~SprdAllocator()
 {
@@ -55,23 +86,23 @@ int32_t SprdAllocator::Init()
 int32_t SprdAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle **handle)
 {
     DISPLAY_LOGD("");
-    if (!bufferInfo.width || !bufferInfo.height) {
+    if (!bufferInfo.width_ || !bufferInfo.height_) {
         DISPLAY_LOGE("param error, width or height error!");
         return DISPLAY_FAILURE;
     }
 
-    mUsage = ConvertUsageToGpu(bufferInfo.usage);
+    mUsage = ConvertUsageToGpu(bufferInfo.usage_, bufferInfo.format_);
     DISPLAY_CHK_RETURN((mUsage == 0), DISPLAY_FAILURE, DISPLAY_LOGE("usage is error"));
-    mFormat = ConvertFormatToGpu(bufferInfo.format);
+    mFormat = ConvertFormatToGpu(bufferInfo.format_);
     DISPLAY_CHK_RETURN((mFormat == ADAPTER_PIXEL_FORMAT_UNKNOWN), DISPLAY_PARAM_ERR, DISPLAY_LOGE("format is error"));
 
     DISPLAY_LOGD("bufferInfo %{public}d x %{public}d, "
         "stride:%{public}d x %{public}d",
-        bufferInfo.width, bufferInfo.height,
-        bufferInfo.widthStride, bufferInfo.heightStride);
+        bufferInfo.width_, bufferInfo.height_,
+        bufferInfo.widthStride_, bufferInfo.heightStride_);
     std::lock_guard<std::mutex> lock(m);
 
-    void *gbuffer = AdapterGraphicBufferAllocate(bufferInfo.widthStride, bufferInfo.heightStride,
+    void *gbuffer = AdapterGraphicBufferAllocate(bufferInfo.widthStride_, bufferInfo.heightStride_,
         mFormat, mUsage, "SprdAllocMem");
     if (gbuffer == nullptr) {
         DISPLAY_LOGE("memory allocate failed.");
@@ -91,14 +122,24 @@ int32_t SprdAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle **han
         return ret;
     }
 
-    // 记录 wrapper 对象，用于 FreeMem 时释放
-    mBufferMap[*handle] = gbuffer;
+    int32_t key = GetHandleKey(*handle);
+    if (key < 0) {
+        DISPLAY_LOGW("allocate success but handle key invalid");
+    } else {
+        mBufferMap[key] = gbuffer;
+    }
     return DISPLAY_SUCCESS;
+}
+
+bool SprdAllocator::SupportsFormat(PixelFormat format)
+{
+    return ConvertFormatToGpu(format) != ADAPTER_PIXEL_FORMAT_UNKNOWN;
 }
 
 int32_t SprdAllocator::Allocate(const BufferInfo &bufferInfo, BufferHandle &handle)
 {
     ALLOC_UNUSED(bufferInfo);
+    ALLOC_UNUSED(handle);
 
     DISPLAY_LOGE("AllocMem do not implement");
     return DISPLAY_NOT_SUPPORT;
@@ -110,11 +151,13 @@ int32_t SprdAllocator::FreeMem(BufferHandle *handle)
     std::lock_guard<std::mutex> lock(m);
     DISPLAY_CHK_RETURN((handle == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("buffer is null"));
 
-    // 释放 wrapper 对象（内部会释放 GraphicBuffer 及相关资源）
-    auto it = mBufferMap.find(handle);
-    if (it != mBufferMap.end()) {
-        AdapterGraphicBufferFree(it->second);
-        mBufferMap.erase(it);
+    int32_t key = GetHandleKey(handle);
+    if (key >= 0) {
+        auto it = mBufferMap.find(key);
+        if (it != mBufferMap.end()) {
+            AdapterGraphicBufferFree(it->second);
+            mBufferMap.erase(it);
+        }
     }
 
     if (handle->fd >= 0) {
@@ -150,13 +193,13 @@ int32_t SprdAllocator::InitBufferhandle(const BufferInfo &bufferInfo, BufferHand
         return DISPLAY_NOMEM;
     }
 
-    priBuffer->width    = bufferInfo.width;
-    priBuffer->height   = bufferInfo.height;
-    priBuffer->stride   = bufferInfo.widthStride * bufferInfo.bytesPerPixel;
-    priBuffer->size     = bufferInfo.size;
-    priBuffer->format   = bufferInfo.format;
-    priBuffer->usage    = bufferInfo.usage;
-    priBuffer->reserveFds  = mHandle->numFds;
+    priBuffer->width = bufferInfo.width_;
+    priBuffer->height = bufferInfo.height_;
+    priBuffer->stride = bufferInfo.widthStride_ * bufferInfo.bytesPerPixel_;
+    priBuffer->size = bufferInfo.size_;
+    priBuffer->format = bufferInfo.format_;
+    priBuffer->usage = bufferInfo.usage_;
+    priBuffer->reserveFds = mHandle->numFds;
     priBuffer->reserveInts = mHandle->numInts;
     for (int i = 0; i < mHandle->numFds; i++) {
         priBuffer->reserve[i] = dup(mHandle->data[i]);
@@ -171,7 +214,7 @@ int32_t SprdAllocator::InitBufferhandle(const BufferInfo &bufferInfo, BufferHand
         sizeof(int32_t) * mHandle->numInts);
 
     priBuffer->fd = priBuffer->reserve[0];
-    priBuffer->virAddr = NULL;
+    priBuffer->virAddr = nullptr;
     priBuffer->phyAddr = 0;
     *handle = priBuffer;
     DISPLAY_LOGI("buffer handle size %{public}d, width %{public}d, height %{public}d, "
@@ -184,17 +227,18 @@ int32_t SprdAllocator::InitBufferhandle(const BufferInfo &bufferInfo, BufferHand
         priBuffer->virAddr);
     return DISPLAY_SUCCESS;
 
-    ERR_FD:
-        for (uint32_t i = 0; i < priBuffer->reserveFds; i++) {
-            if (priBuffer->reserve[i] >= 0)
-                close(priBuffer->reserve[i]);
+ERR_FD:
+    for (uint32_t i = 0; i < priBuffer->reserveFds; i++) {
+        if (priBuffer->reserve[i] >= 0) {
+            close(priBuffer->reserve[i]);
         }
-        free(priBuffer);
+    }
+    free(priBuffer);
 
     return DISPLAY_FD_ERR;
 }
 
-uint64_t SprdAllocator::ConvertUsageToGpu(uint64_t inUsage)
+uint64_t SprdAllocator::ConvertUsageToGpu(uint64_t inUsage, PixelFormat format)
 {
     DISPLAY_LOGD();
     uint64_t outUsage = 0;
@@ -210,13 +254,15 @@ uint64_t SprdAllocator::ConvertUsageToGpu(uint64_t inUsage)
     if (inUsage & HBM_USE_HW_TEXTURE) {
         outUsage |= GRALLOC_USAGE_HW_TEXTURE;
     }
+    if ((outUsage == 0) && CanUseLegacyFallbackUsage(inUsage, format)) {
+        outUsage = GRALLOC_USAGE_HW_TEXTURE;
+    }
 
     return outUsage;
 }
 
 AdapterPixelFormat SprdAllocator::ConvertFormatToGpu(PixelFormat inFormat)
 {
-    DISPLAY_LOGD();
     AdapterPixelFormat outFormat = ADAPTER_PIXEL_FORMAT_UNKNOWN;
 
     if (inFormat == PIXEL_FMT_RGBA_8888) {
@@ -225,7 +271,7 @@ AdapterPixelFormat SprdAllocator::ConvertFormatToGpu(PixelFormat inFormat)
         outFormat = ADAPTER_PIXEL_FORMAT_RGBX_8888;
     } else if (inFormat == PIXEL_FMT_RGB_888) {
         outFormat = ADAPTER_PIXEL_FORMAT_RGB_888;
-    } else if (inFormat == PIXEL_FMT_RGB_565) {
+    } else if (inFormat == PIXEL_FMT_BGR_565) {
         outFormat = ADAPTER_PIXEL_FORMAT_RGB_565;
     } else if (inFormat == PIXEL_FMT_BGRA_8888) {
         outFormat = ADAPTER_PIXEL_FORMAT_BGRA_8888;
@@ -244,6 +290,6 @@ AdapterPixelFormat SprdAllocator::ConvertFormatToGpu(PixelFormat inFormat)
     return outFormat;
 }
 
-}; /*namespace DISPLAY*/
-}; /*namespace HDI*/
-}; /*namespace OHOS*/
+} /*namespace DISPLAY*/
+} /*namespace HDI*/
+} /*namespace OHOS*/

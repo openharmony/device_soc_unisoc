@@ -35,8 +35,8 @@
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
-DrmDisplay::DrmDisplay(const std::shared_ptr<DrmConnector> &connector, const std::shared_ptr<DrmCrtc> &crtc,
-    const std::shared_ptr<DrmDevice> &drmDevice)
+DrmDisplay::DrmDisplay(std::shared_ptr<DrmConnector> &connector, std::shared_ptr<DrmCrtc> &crtc,
+    std::shared_ptr<DrmDevice> &drmDevice)
     : mDrmDevice(drmDevice), mConnector(connector), mCrtc(crtc)
 {}
 
@@ -47,7 +47,7 @@ DrmDisplay::~DrmDisplay()
     }
 }
 
-int32_t DrmDisplay::Init() const
+int32_t DrmDisplay::Init()
 {
     int ret;
     DISPLAY_CHK_RETURN((mCrtc == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("crtc is null"));
@@ -76,31 +76,36 @@ int32_t DrmDisplay::Init() const
     return DISPLAY_SUCCESS;
 }
 
-int32_t DrmDisplay::GetDisplayCapability(DisplayCapability *info) const
+int32_t DrmDisplay::GetDisplayCapability(DisplayCapability *info)
 {
-    mConnector->GetDisplayCap(info);
+    mConnector->GetDisplayCap(*info);
     return DISPLAY_SUCCESS;
 }
 
-int32_t DrmDisplay::GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes) const
+int32_t DrmDisplay::GetDisplaySupportedModes(uint32_t *num, DisplayModeInfo *modes)
 {
     mConnector->GetDisplaySupportedModes(num, modes);
     return DISPLAY_SUCCESS;
 }
 
-int32_t DrmDisplay::GetDisplayMode(uint32_t *modeId) const
+int32_t DrmDisplay::GetDisplayMode(uint32_t *modeId)
 {
     DISPLAY_CHK_RETURN((modeId == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("the in modeId is nullptr"));
     *modeId = mCrtc->GetActiveModeId();
     return DISPLAY_SUCCESS;
 }
 
-int32_t DrmDisplay::SetDisplayMode(uint32_t modeId) const
+int32_t DrmDisplay::SetDisplayMode(uint32_t modeId)
 {
+    DISPLAY_CHK_RETURN((mConnector == nullptr), DISPLAY_FAILURE, DISPLAY_LOGE("connector is null"));
+    DrmMode mode;
+    DISPLAY_CHK_RETURN((mConnector->GetModeFromId(static_cast<int32_t>(modeId), mode) != DISPLAY_SUCCESS),
+        DISPLAY_FAILURE,
+        DISPLAY_LOGE("invalid modeId %{public}u", modeId));
     return mCrtc->SetActivieMode(modeId);
 }
 
-int32_t DrmDisplay::GetDisplayPowerStatus(DispPowerStatus *status) const
+int32_t DrmDisplay::GetDisplayPowerStatus(DispPowerStatus *status)
 {
     DISPLAY_CHK_RETURN((status == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("status is nullptr"));
     return ConvertToHdiPowerState(mConnector->GetDpmsState(), *status);
@@ -157,7 +162,7 @@ int32_t DrmDisplay::SetDisplayPowerStatus(DispPowerStatus status)
     mStatus = status;
     int ret = ConvertToDrmPowerState(status, drmPowerState);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_PARAM_ERR,
-        DISPLAY_LOGE("unknown power status %{public}d", status));
+    DISPLAY_LOGE("unknown power status %{public}d", status));
 
     //SetTpSuspend is slow, so we make a thread to do this.
     std::thread setTpSuspendThread(SetTpSuspend, POWER_STATUS_ON == status?0:1);
@@ -168,7 +173,7 @@ int32_t DrmDisplay::SetDisplayPowerStatus(DispPowerStatus status)
 
     if (POWER_STATUS_ON == mStatus) {
         DrmVsyncWorker::GetInstance().EnableVsync(true);
-        drmComp->powerOff = 0;
+        drmComp->PowerOff = 0;
         uint32_t brightness = 0;
         constexpr uint32_t defaultBrightness = 102;
         mConnector->GetBrightness(brightness);
@@ -177,13 +182,13 @@ int32_t DrmDisplay::SetDisplayPowerStatus(DispPowerStatus status)
         }
     } else {
         DrmVsyncWorker::GetInstance().EnableVsync(false);
-        drmComp->powerOff = 1;
+        drmComp->PowerOff = 1;
     }
-    DISPLAY_LOGI("the mStatus %{public}d  drmComp->powerOff %{public}d ", mStatus, drmComp->powerOff);
+    DISPLAY_LOGI("the mStatus %{public}d  drmComp->PowerOff %{public}d ", mStatus, drmComp->PowerOff );
     return DISPLAY_SUCCESS;
 }
 
-int32_t DrmDisplay::ConvertToHdiPowerState(uint32_t drmPowerState, DispPowerStatus &hdiPowerState) const
+int32_t DrmDisplay::ConvertToHdiPowerState(uint32_t drmPowerState, DispPowerStatus &hdiPowerState)
 {
     int32_t ret = DISPLAY_SUCCESS;
     switch (drmPowerState) {
@@ -208,7 +213,7 @@ int32_t DrmDisplay::ConvertToHdiPowerState(uint32_t drmPowerState, DispPowerStat
     return ret;
 }
 
-int32_t DrmDisplay::ConvertToDrmPowerState(DispPowerStatus hdiPowerState, uint32_t &drmPowerState) const
+int32_t DrmDisplay::ConvertToDrmPowerState(DispPowerStatus hdiPowerState, uint32_t &drmPowerState)
 {
     int32_t ret = DISPLAY_SUCCESS;
     switch (hdiPowerState) {
@@ -231,7 +236,7 @@ int32_t DrmDisplay::ConvertToDrmPowerState(DispPowerStatus hdiPowerState, uint32
     return ret;
 }
 
-std::unique_ptr<HdiLayer> DrmDisplay::CreateHdiLayer(LayerType type) const
+std::unique_ptr<HdiLayer> DrmDisplay::CreateHdiLayer(LayerType type)
 {
     DISPLAY_LOGD();
     return std::make_unique<HdiDrmLayer>(type);
@@ -239,12 +244,13 @@ std::unique_ptr<HdiLayer> DrmDisplay::CreateHdiLayer(LayerType type) const
 
 int32_t DrmDisplay::WaitForVBlank(uint64_t *ns)
 {
+    constexpr uint64_t usecToNsec = 1000;
+
 #ifndef DRM_WAIT_VBK
 #ifdef HIHOPE_OS_DEBUG
     HITRACE_METER_NAME(HITRACE_TAG_GRAPHIC_AGP, "DrmDisplay::WaitForVBlank");
 #endif
     constexpr uint64_t secToNsec = 1000 * 1000 * 1000;
-    constexpr uint64_t usecToNsec = 1000;
     drmVBlank vblank = {
         .request =
             drmVBlankReq {
@@ -259,21 +265,20 @@ int32_t DrmDisplay::WaitForVBlank(uint64_t *ns)
         DISPLAY_LOGE("wait vblank failed ret : %{public}d errno %{public}d", ret, errno));
     *ns = static_cast<uint64_t>(vblank.reply.tval_sec * secToNsec + vblank.reply.tval_usec * usecToNsec);
 #else
-    constexpr uint32_t VSYNC_WAIT_TIME_US = 5000;
-    constexpr uint32_t VSYNC_WAIT_TIME_NS = 5000000;
-    usleep(VSYNC_WAIT_TIME_US);
-    *ns = VSYNC_WAIT_TIME_NS;
+    constexpr uint32_t vblankSleepTime = 5000;
+    usleep(vblankSleepTime);
+    *ns = static_cast<uint64_t>(vblankSleepTime) * usecToNsec;
 #endif
     return DISPLAY_SUCCESS;
 }
 
-bool DrmDisplay::IsConnected() const
+bool DrmDisplay::IsConnected()
 {
     DISPLAY_LOGD("conneted %{public}d", mConnector->IsConnected());
     return mConnector->IsConnected();
 }
 
-int32_t DrmDisplay::AllocMem(const AllocInfo& info, BufferHandle*& handle) const
+int32_t DrmDisplay::AllocMem(const AllocInfo& info, BufferHandle*& handle)
 {
     constexpr const char *libHdiImpl = "libdisplay_buffer_vdi_impl.z.so";
 
@@ -298,11 +303,11 @@ int32_t DrmDisplay::AllocMem(const AllocInfo& info, BufferHandle*& handle) const
     return func(info, handle);
 }
 
-int32_t DrmDisplay::PushFirstFrame() const
+int32_t DrmDisplay::PushFirstFrame()
 {
     int ret = DISPLAY_SUCCESS;
     DrmMode mode;
-    ret = mConnector->GetModeFromId(mCrtc->GetActiveModeId(), &mode);
+    ret = mConnector->GetModeFromId(mCrtc->GetActiveModeId(), mode);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE,
         DISPLAY_LOGE("can not get the mode from id %{public}d", mCrtc->GetActiveModeId()));
     AllocInfo info = {
@@ -326,7 +331,7 @@ int32_t DrmDisplay::PushFirstFrame() const
     return DISPLAY_SUCCESS;
 }
 
-int32_t DrmDisplay::ChosePreferenceMode() const
+int32_t DrmDisplay::ChosePreferenceMode()
 {
     int32_t ret;
     int32_t modeId = mConnector->GetPreferenceId();
@@ -342,7 +347,7 @@ int32_t DrmDisplay::ChosePreferenceMode() const
     return PushFirstFrame();
 }
 
-int32_t DrmDisplay::RegDisplayVBlankCallback(VBlankCallback cb, const void *data)
+int32_t DrmDisplay::RegDisplayVBlankCallback(VBlankCallback cb, void *data)
 {
     DISPLAY_LOGD("the VBlankCallback %{public}p ", cb);
     std::shared_ptr<VsyncCallBack> vsyncCb = std::make_shared<VsyncCallBack>(cb, data);
@@ -352,7 +357,7 @@ int32_t DrmDisplay::RegDisplayVBlankCallback(VBlankCallback cb, const void *data
 
 int32_t DrmDisplay::SetDisplayVsyncEnabled(bool enabled)
 {
-    if (POWER_STATUS_OFF == mStatus && enabled) {
+    if (POWER_STATUS_OFF == mStatus and enabled) {
         DISPLAY_LOGE("vsync will NOT enable in POWER_STATUS_OFF");
         return DISPLAY_NOT_SUPPORT;
     }
@@ -361,13 +366,13 @@ int32_t DrmDisplay::SetDisplayVsyncEnabled(bool enabled)
     return DISPLAY_SUCCESS;
 }
 
-int32_t DrmDisplay::GetDisplayBacklight(uint32_t *value) const
+int32_t DrmDisplay::GetDisplayBacklight(uint32_t *value)
 {
     DISPLAY_CHK_RETURN((value == nullptr), DISPLAY_NULL_PTR, DISPLAY_LOGE("value is nullptr"));
     return mConnector->GetBrightness(*value);
 }
 
-int32_t DrmDisplay::SetDisplayBacklight(uint32_t value) const
+int32_t DrmDisplay::SetDisplayBacklight(uint32_t value)
 {
 #ifdef HIHOPE_OS_DEBUG
     CountTrace(HITRACE_TAG_GRAPHIC_AGP, "brightness", value);

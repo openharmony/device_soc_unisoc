@@ -25,6 +25,7 @@
 #include <OMX_IndexExt.h>
 #include "sprd_omx_typedef.h"
 #include "OMXGraphicBufferMapper.h"
+#include "OMXHardwareAPI.h"
 #include "OMXMetadataBufferType.h"
 #include "codec_omx_ext.h"
 #include "Dynamic_buffer.h"
@@ -125,8 +126,7 @@
 /* Buffer handle access flags */
 #define PROT_READ_WRITE                 (PROT_READ | PROT_WRITE)
 #define MAP_SHARED_FLAGS                MAP_SHARED
-/* Port index constants for get/set parameters */
-#define K_INPUT_PORT_INDEX              0
+
 /* Control rate type constants */
 #define CONTROL_RATE_VARIABLE           0
 #define CONTROL_RATE_CONSTANT           1
@@ -245,6 +245,65 @@ int32_t ResolveHevcInputFormat(int32_t configuredFormat, int32_t bufferFormat)
 namespace OHOS {
 namespace OMX {
 static constexpr int32_t K_DEFERRED_CLOSE_DELAY_SECONDS = 2;
+
+namespace {
+bool IsFullRange(uint32_t range)
+{
+    return range == SprdColorAspects::kRangeFull;
+}
+
+void UpdateColorAspects(ColorAspectsT &dst, uint32_t range, uint32_t primaries,
+    uint32_t transfer, uint32_t matrixCoeffs)
+{
+    dst.videoSignalTypePresentFlag = true;
+    dst.videoFormat = 0; /* unspecified */
+    dst.videoFullRangeFlag = IsFullRange(range);
+    dst.colourDescriptionPresentFlag = true;
+    dst.colourPrimaries = static_cast<uint8>(primaries);
+    dst.transferCharacteristics = static_cast<uint8>(transfer);
+    dst.matrixCoefficients = static_cast<uint8>(matrixCoeffs);
+}
+
+OMX_ERRORTYPE UpdateColorAspectsFromCodec(ColorAspectsT &dst, const OMX_PTR params, const char *logTag)
+{
+    const CodecVideoColorspace *colorAspects =
+        static_cast<const CodecVideoColorspace *>(params);
+    if (colorAspects == nullptr) {
+        OMX_LOGE("CodecVideoColorspace is nullptr");
+        return OMX_ErrorBadParameter;
+    }
+    UpdateColorAspects(dst, colorAspects->aspects.range, colorAspects->aspects.primaries,
+        colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
+    OMX_LOGI("%s: range=%d, primaries=%u, transfer=%u, matrix=%u", logTag,
+        colorAspects->aspects.range, colorAspects->aspects.primaries,
+        colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
+    return OMX_ErrorNone;
+}
+
+OMX_ERRORTYPE UpdateColorAspectsFromDescribe(ColorAspectsT &dst, OMX_PTR params)
+{
+    DescribeColorAspectsParams *colorAspectsParams =
+        static_cast<DescribeColorAspectsParams *>(params);
+    if (colorAspectsParams == nullptr ||
+        colorAspectsParams->nPortIndex != OHOS::OMX::K_INPUT_PORT_INDEX) {
+        OMX_LOGE("invalid DescribeColorAspectsParams");
+        return OMX_ErrorBadPortIndex;
+    }
+    if (colorAspectsParams->bRequestingDataSpace || colorAspectsParams->bDataSpaceChanged) {
+        colorAspectsParams->nDataSpace = 0;
+        OMX_LOGI("unsupported encoder color aspects dataspace request");
+        return OMX_ErrorUnsupportedSetting;
+    }
+    UpdateColorAspects(dst, colorAspectsParams->sAspects.rangeMode,
+        colorAspectsParams->sAspects.primaryId, colorAspectsParams->sAspects.transferId,
+        colorAspectsParams->sAspects.matrixCoeffId);
+    OMX_LOGI("SetConfig DescribeColorAspects: range=%u, primaries=%u, transfer=%u, matrix=%u",
+        colorAspectsParams->sAspects.rangeMode, colorAspectsParams->sAspects.primaryId,
+        colorAspectsParams->sAspects.transferId, colorAspectsParams->sAspects.matrixCoeffId);
+    return OMX_ErrorNone;
+}
+}
+
 static std::mutex g_hevcDeferredCloseMutex;
 static std::vector<void *> gHevcDeferredCloseHandles;
 static bool g_hevcDeferredCloseWorkerRunning = false;
@@ -771,7 +830,7 @@ OMX_ERRORTYPE SPRDHEVCEncoder::getSupportBufferType(UseBufferType *defParams)
         OMX_LOGE("port index error.");
         return OMX_ErrorUnsupportedIndex;
     }
-    defParams->bufferType = (defParams->portIndex == K_INPUT_PORT_INDEX) ?
+    defParams->bufferType = (defParams->portIndex == OHOS::OMX::K_INPUT_PORT_INDEX) ?
         BUFFER_TYPE_DYNAMIC_HANDLE : CODEC_BUFFER_TYPE_AVSHARE_MEM_FD;
     return OMX_ErrorNone;
 }
@@ -841,23 +900,7 @@ OMX_ERRORTYPE SPRDHEVCEncoder::internalSetParameter(
             return setCodecVideoPortFormat(static_cast<const CodecVideoPortFormatParam *>(params));
         }
         case OMX_IndexColorAspects: {
-            const CodecVideoColorspace *colorAspects =
-                static_cast<const CodecVideoColorspace *>(params);
-            if (colorAspects == nullptr) {
-                OMX_LOGE("CodecVideoColorspace is nullptr");
-                return OMX_ErrorBadParameter;
-            }
-            mColorAspects.videoSignalTypePresentFlag = true;
-            mColorAspects.videoFormat = 0; /* unspecified */
-            mColorAspects.videoFullRangeFlag = colorAspects->aspects.range ? true : false;
-            mColorAspects.colourDescriptionPresentFlag = true;
-            mColorAspects.colourPrimaries = colorAspects->aspects.primaries;
-            mColorAspects.transferCharacteristics = colorAspects->aspects.transfer;
-            mColorAspects.matrixCoefficients = colorAspects->aspects.matrixCoeffs;
-            OMX_LOGI("SetColorAspects: range=%d, primaries=%u, transfer=%u, matrix=%u",
-                colorAspects->aspects.range, colorAspects->aspects.primaries,
-                colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
-            return OMX_ErrorNone;
+            return UpdateColorAspectsFromCodec(mColorAspects, params, "SetColorAspects");
         }
         default:
             return SprdVideoEncoderBase::internalSetParameter(index, params);
@@ -869,23 +912,10 @@ OMX_ERRORTYPE SPRDHEVCEncoder::internalSetConfig(
 {
     switch (static_cast<int>(index)) {
         case OMX_IndexColorAspects: {
-            const CodecVideoColorspace *colorAspects =
-                static_cast<const CodecVideoColorspace *>(params);
-            if (colorAspects == nullptr) {
-                OMX_LOGE("CodecVideoColorspace is nullptr");
-                return OMX_ErrorBadParameter;
-            }
-            mColorAspects.videoSignalTypePresentFlag = true;
-            mColorAspects.videoFormat = 0; /* unspecified */
-            mColorAspects.videoFullRangeFlag = colorAspects->aspects.range ? true : false;
-            mColorAspects.colourDescriptionPresentFlag = true;
-            mColorAspects.colourPrimaries = colorAspects->aspects.primaries;
-            mColorAspects.transferCharacteristics = colorAspects->aspects.transfer;
-            mColorAspects.matrixCoefficients = colorAspects->aspects.matrixCoeffs;
-            OMX_LOGI("SetConfig ColorAspects: range=%d, primaries=%u, transfer=%u, matrix=%u",
-                colorAspects->aspects.range, colorAspects->aspects.primaries,
-                colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
-            return OMX_ErrorNone;
+            return UpdateColorAspectsFromCodec(mColorAspects, params, "SetConfig ColorAspects");
+        }
+        case OMX_INDEX_DESCRIBE_COLOR_ASPECTS: {
+            return UpdateColorAspectsFromDescribe(mColorAspects, params);
         }
         default:
             return SprdVideoEncoderBase::internalSetConfig(index, params, frameConfig);

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 #include "SprdVideoDecoderBase.h"
-#include "SprdOMXComponent.h"
 #include "OMXHardwareAPI.h"
 #include <securec.h>
 #include <cstring>
@@ -25,6 +24,24 @@
 #define NV12_UV_VERTICAL_SUBSAMPLING_RATIO 2
 namespace OHOS {
 namespace OMX {
+namespace {
+bool IsValidNv12CropBuffer(const OMX_BUFFERHEADERTYPE *header)
+{
+    return header != nullptr && header->pBuffer != nullptr && header->pPlatformPrivate != nullptr;
+}
+
+void CopyNv12Plane(OMX_U8 *dstBase, const OMX_U8 *srcBase, uint32_t dstStride, uint32_t srcStride, uint32_t rows)
+{
+    for (uint32_t row = 0; row < rows; ++row) {
+        errno_t ret = memmove_s(dstBase + row * dstStride, static_cast<size_t>(dstStride),
+            srcBase + row * srcStride, static_cast<size_t>(dstStride));
+        if (ret != 0) {
+            OMX_LOGE("memmove_s failed in line %d, ret=%d", __LINE__, ret);
+        }
+    }
+}
+}
+
 SprdVideoDecoderBase::SprdVideoDecoderBase(const DecoderComponentInitParams &params)
     : SprdVideoDecoderOMXComponent(params)
 {
@@ -196,40 +213,7 @@ OMX_ERRORTYPE SprdVideoDecoderBase::getExtensionIndex(
 void SprdVideoDecoderBase::NV12Crop(OMX_BUFFERHEADERTYPE *header,
                                     uint32_t srcWidth, uint32_t srcHeight, uint32_t dstWidth, uint32_t dstHeight)
 {
-    if (header == nullptr || header->pBuffer == nullptr || header->pPlatformPrivate == nullptr) {
-        return;
-    }
-    if (srcWidth == 0 || srcHeight == 0 || dstWidth == 0 || dstHeight == 0) {
-        OMX_LOGE("NV12Crop invalid params, src(%u x %u), dst(%u x %u)",
-            srcWidth, srcHeight, dstWidth, dstHeight);
-        return;
-    }
-    if (dstWidth > srcWidth || dstHeight > srcHeight) {
-        OMX_LOGE("NV12Crop skip, dst(%u x %u) exceeds src(%u x %u)",
-            dstWidth, dstHeight, srcWidth, srcHeight);
-        return;
-    }
-
-    uint64_t requiredSrcSize = static_cast<uint64_t>(srcWidth) * srcHeight * 3 / 2;
-    if (requiredSrcSize > header->nAllocLen || requiredSrcSize > header->nFilledLen) {
-        OMX_LOGE("NV12Crop skip, src capacity too small, required=%llu, alloc=%u, filled=%u, src(%u x %u)",
-            static_cast<unsigned long long>(requiredSrcSize), header->nAllocLen, header->nFilledLen,
-            srcWidth, srcHeight);
-        return;
-    }
-
-    size_t dstCapacity = header->nAllocLen;
-    BufferCtrlStruct *outCtrl = reinterpret_cast<BufferCtrlStruct*>(header->pOutputPortPrivate);
-    if (outCtrl != nullptr && outCtrl->bufferSize > 0) {
-        // Use conservative capacity to avoid trusting stale metadata during port reconfiguration.
-        if (dstCapacity == 0 || outCtrl->bufferSize < dstCapacity) {
-            dstCapacity = outCtrl->bufferSize;
-        }
-    }
-    uint64_t requiredDstSize = static_cast<uint64_t>(dstWidth) * dstHeight * 3 / 2;
-    if (requiredDstSize > dstCapacity) {
-        OMX_LOGE("NV12Crop skip, dst capacity too small, required=%llu, capacity=%zu, src(%u x %u), dst(%u x %u)",
-            static_cast<unsigned long long>(requiredDstSize), dstCapacity, srcWidth, srcHeight, dstWidth, dstHeight);
+    if (!IsValidNv12CropBuffer(header)) {
         return;
     }
 
@@ -237,30 +221,13 @@ void SprdVideoDecoderBase::NV12Crop(OMX_BUFFERHEADERTYPE *header,
         srcWidth, srcHeight);
     OMX_LOGD("dstWidth = %u, dstHeight = %u",
         dstWidth, dstHeight);
-    OMX_U8* buffInfo = reinterpret_cast<OMX_U8*>(header->pBuffer);
-    OMX_U8* dstInfo = reinterpret_cast<OMX_U8*>(header->pPlatformPrivate);
-    for (uint32_t i = 0; i < dstHeight; i++) {
-        errno_t ret = memmove_s(
-            static_cast<void*>(&dstInfo[i * dstWidth]),
-            static_cast<size_t>(dstWidth),
-            static_cast<const void*>(&buffInfo[i * srcWidth]),
-            static_cast<size_t>(dstWidth));
-        if (ret != 0) {
-            OMX_LOGE("memmove_s failed in line %d, ret=%d", __LINE__, ret);
-        }
-    }
-    uint32_t dstSize = dstHeight * dstWidth;
-    uint32_t srcSize = srcHeight * srcWidth;
-    for (uint32_t i = 0; i < dstHeight / NV12_UV_VERTICAL_SUBSAMPLING_RATIO; i++) {
-        errno_t ret = memmove_s(
-            static_cast<void*>(&dstInfo[dstSize + i * dstWidth]),
-            static_cast<size_t>(dstWidth),
-            static_cast<const void*>(&buffInfo[srcSize + i * srcWidth]),
-            static_cast<size_t>(dstWidth));
-        if (ret != 0) {
-            OMX_LOGE("memmove_s failed in line %d, ret=%d", __LINE__, ret);
-        }
-    }
+    OMX_U8 *buffInfo = reinterpret_cast<OMX_U8*>(header->pBuffer);
+    OMX_U8 *dstInfo = reinterpret_cast<OMX_U8*>(header->pPlatformPrivate);
+    const uint32_t dstSize = dstHeight * dstWidth;
+    const uint32_t srcSize = srcHeight * srcWidth;
+    CopyNv12Plane(dstInfo, buffInfo, dstWidth, srcWidth, dstHeight);
+    CopyNv12Plane(dstInfo + dstSize, buffInfo + srcSize, dstWidth, srcWidth,
+        dstHeight / NV12_UV_VERTICAL_SUBSAMPLING_RATIO);
 }
 };    // namespace OMX
 };    // namespace OHOS

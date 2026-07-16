@@ -148,6 +148,84 @@ int32_t ResolveAvcInputFormat(int32_t configuredFormat, int32_t bufferFormat)
 namespace OHOS {
 namespace OMX {
 static constexpr int32_t K_DEFERRED_CLOSE_DELAY_SECONDS = 2;
+
+namespace {
+bool IsFullRange(uint32_t range)
+{
+    return range == SprdColorAspects::kRangeFull;
+}
+
+void UpdateColorAspects(ColorAspectsT &dst, uint32_t range, uint32_t primaries,
+    uint32_t transfer, uint32_t matrixCoeffs)
+{
+    dst.videoSignalTypePresentFlag = true;
+    dst.videoFormat = 0; /* unspecified */
+    dst.videoFullRangeFlag = IsFullRange(range);
+    dst.colourDescriptionPresentFlag = true;
+    dst.colourPrimaries = static_cast<uint8>(primaries);
+    dst.transferCharacteristics = static_cast<uint8>(transfer);
+    dst.matrixCoefficients = static_cast<uint8>(matrixCoeffs);
+}
+
+OMX_ERRORTYPE UpdateColorAspectsFromCodec(ColorAspectsT &dst, const OMX_PTR params, const char *logTag)
+{
+    const CodecVideoColorspace *colorAspects =
+        static_cast<const CodecVideoColorspace *>(params);
+    if (colorAspects == nullptr) {
+        OMX_LOGE("CodecVideoColorspace is nullptr");
+        return OMX_ErrorBadParameter;
+    }
+    UpdateColorAspects(dst, colorAspects->aspects.range, colorAspects->aspects.primaries,
+        colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
+    OMX_LOGI("%s: range=%d, primaries=%u, transfer=%u, matrix=%u", logTag,
+        colorAspects->aspects.range, colorAspects->aspects.primaries,
+        colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
+    return OMX_ErrorNone;
+}
+
+OMX_ERRORTYPE UpdateColorAspectsFromDescribe(ColorAspectsT &dst, OMX_PTR params)
+{
+    DescribeColorAspectsParams *colorAspectsParams =
+        static_cast<DescribeColorAspectsParams *>(params);
+    if (colorAspectsParams == nullptr ||
+        colorAspectsParams->nPortIndex != OHOS::OMX::K_INPUT_PORT_INDEX) {
+        OMX_LOGE("invalid DescribeColorAspectsParams");
+        return OMX_ErrorBadPortIndex;
+    }
+    if (colorAspectsParams->bRequestingDataSpace || colorAspectsParams->bDataSpaceChanged) {
+        colorAspectsParams->nDataSpace = 0;
+        OMX_LOGI("unsupported encoder color aspects dataspace request");
+        return OMX_ErrorUnsupportedSetting;
+    }
+    UpdateColorAspects(dst, colorAspectsParams->sAspects.rangeMode,
+        colorAspectsParams->sAspects.primaryId, colorAspectsParams->sAspects.transferId,
+        colorAspectsParams->sAspects.matrixCoeffId);
+    OMX_LOGI("SetConfig DescribeColorAspects: range=%u, primaries=%u, transfer=%u, matrix=%u",
+        colorAspectsParams->sAspects.rangeMode, colorAspectsParams->sAspects.primaryId,
+        colorAspectsParams->sAspects.transferId, colorAspectsParams->sAspects.matrixCoeffId);
+    return OMX_ErrorNone;
+}
+
+BufferHandle *GetInputBufferHandle(OMX_BUFFERHEADERTYPE *inHeader)
+{
+    if (inHeader == nullptr || inHeader->pBuffer == nullptr) {
+        OMX_LOGE("invalid input header for graphic buffer mapping");
+        return nullptr;
+    }
+    DynamicBuffer *buffer = reinterpret_cast<DynamicBuffer*>(inHeader->pBuffer);
+    if (buffer == nullptr || buffer->bufferHandle == nullptr) {
+        OMX_LOGE("invalid dynamic input buffer");
+        return nullptr;
+    }
+    BufferHandle *bufferHandle = buffer->bufferHandle;
+    if (bufferHandle->fd < 0 || bufferHandle->size <= 0) {
+        OMX_LOGE("invalid input buffer handle, fd=%d, size=%d", bufferHandle->fd, bufferHandle->size);
+        return nullptr;
+    }
+    return bufferHandle;
+}
+}
+
 static std::mutex g_avcDeferredCloseMutex;
 static std::vector<void *> gAvcDeferredCloseHandles;
 static bool g_avcDeferredCloseWorkerRunning = false;
@@ -813,23 +891,7 @@ OMX_ERRORTYPE SPRDAVCEncoder::internalSetParameter(
             return setVideoAvc(static_cast<const OMX_VIDEO_PARAM_AVCTYPE *>(params));
         }
         case OMX_IndexColorAspects: {
-            const CodecVideoColorspace *colorAspects =
-                static_cast<const CodecVideoColorspace *>(params);
-            if (colorAspects == nullptr) {
-                OMX_LOGE("CodecVideoColorspace is nullptr");
-                return OMX_ErrorBadParameter;
-            }
-            mColorAspects.videoSignalTypePresentFlag = true;
-            mColorAspects.videoFormat = 0; /* unspecified */
-            mColorAspects.videoFullRangeFlag = colorAspects->aspects.range ? true : false;
-            mColorAspects.colourDescriptionPresentFlag = true;
-            mColorAspects.colourPrimaries = colorAspects->aspects.primaries;
-            mColorAspects.transferCharacteristics = colorAspects->aspects.transfer;
-            mColorAspects.matrixCoefficients = colorAspects->aspects.matrixCoeffs;
-            OMX_LOGI("SetColorAspects: range=%d, primaries=%u, transfer=%u, matrix=%u",
-                colorAspects->aspects.range, colorAspects->aspects.primaries,
-                colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
-            return OMX_ErrorNone;
+            return UpdateColorAspectsFromCodec(mColorAspects, params, "SetColorAspects");
         }
         default:
             return SprdVideoEncoderBase::internalSetParameter(index, params);
@@ -841,23 +903,10 @@ OMX_ERRORTYPE SPRDAVCEncoder::internalSetConfig(
 {
     switch (static_cast<int>(index)) {
         case OMX_IndexColorAspects: {
-            const CodecVideoColorspace *colorAspects =
-                static_cast<const CodecVideoColorspace *>(params);
-            if (colorAspects == nullptr) {
-                OMX_LOGE("CodecVideoColorspace is nullptr");
-                return OMX_ErrorBadParameter;
-            }
-            mColorAspects.videoSignalTypePresentFlag = true;
-            mColorAspects.videoFormat = 0; /* unspecified */
-            mColorAspects.videoFullRangeFlag = colorAspects->aspects.range ? true : false;
-            mColorAspects.colourDescriptionPresentFlag = true;
-            mColorAspects.colourPrimaries = colorAspects->aspects.primaries;
-            mColorAspects.transferCharacteristics = colorAspects->aspects.transfer;
-            mColorAspects.matrixCoefficients = colorAspects->aspects.matrixCoeffs;
-            OMX_LOGI("SetConfig ColorAspects: range=%d, primaries=%u, transfer=%u, matrix=%u",
-                colorAspects->aspects.range, colorAspects->aspects.primaries,
-                colorAspects->aspects.transfer, colorAspects->aspects.matrixCoeffs);
-            return OMX_ErrorNone;
+            return UpdateColorAspectsFromCodec(mColorAspects, params, "SetConfig ColorAspects");
+        }
+        case OMX_INDEX_DESCRIBE_COLOR_ASPECTS: {
+            return UpdateColorAspectsFromDescribe(mColorAspects, params);
         }
         default:
             return SprdVideoEncoderBase::internalSetConfig(index, params, frameConfig);
@@ -1086,7 +1135,6 @@ bool SPRDAVCEncoder::generateCodecHeader(int fd, MMEncOut &header, int32_t heade
     const char *tag, bool log16Bytes)
 {
     (void)memset_s(&header, sizeof(MMEncOut), 0, sizeof(MMEncOut));
-    ++mNumInputFrames;
     int ret = (*mH264EncGenHeader)(mHandle, &header, headerType);
     if (ret < 0) {
         OMX_LOGE("%s, line:%d, mH264EncGenHeader failed, ret: %d", __FUNCTION__, __LINE__, ret);
@@ -1111,9 +1159,8 @@ bool SPRDAVCEncoder::emitCodecConfig(EncodeOutputState &output, std::list<Buffer
     }
     mSpsPpsHeaderReceived = true;
     if (mNumInputFrames != 0) {
-        OMX_LOGE("[%{public}s@%{public}s:%{public}d] OMX_CHECK((0) == (mNumInputFrames)) failed.",
-            __FUNCTION__, FILENAME_ONLY, __LINE__);
-        return false;
+        OMX_LOGW("reset input frame count after codec config, count=%lld", mNumInputFrames);
+        mNumInputFrames = 0;
     }
     return finalizeCodecConfigOutput(output, outQueue);
 }
@@ -1167,8 +1214,10 @@ void SPRDAVCEncoder::queueInputBufferInfo(OMX_BUFFERHEADERTYPE *inHeader)
 
 bool SPRDAVCEncoder::mapGraphicBuffer(OMX_BUFFERHEADERTYPE *inHeader, GraphicBufferMapping &mapping)
 {
-    DynamicBuffer* buffer = reinterpret_cast<DynamicBuffer*>(inHeader->pBuffer);
-    BufferHandle *bufferHandle = buffer->bufferHandle;
+    BufferHandle *bufferHandle = GetInputBufferHandle(inHeader);
+    if (bufferHandle == nullptr) {
+        return false;
+    }
     OMX_LOGI("size = %u, fd = %d, mStride = %d, mFrameHeight = %d",
         bufferHandle->size, bufferHandle->fd, mStride, mFrameHeight);
     mapping.bufferSize = bufferHandle->size;

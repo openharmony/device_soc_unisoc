@@ -46,7 +46,7 @@ static uint32_t GetPropertyId(int fd, drmModeObjectProperties *props,
     return id;
 }
 
-DrmPlane::DrmPlane(const drmModePlane &p)
+DrmPlane::DrmPlane(drmModePlane &p)
     : mId(p.plane_id), mPossibleCrtcs(p.possible_crtcs), mFormats(p.formats, p.formats + p.count_formats)
 {}
 
@@ -60,16 +60,16 @@ int32_t DrmPlane::Init(DrmDevice &drmDevice)
     DISPLAY_LOGD();
     int32_t ret;
     DrmProperty prop;
-    ret = drmDevice.GetPlaneProperty(*this, PROP_FBID, &prop);
+    ret = drmDevice.GetPlaneProperty(*this, PROP_FBID, prop);
     mPropFbId = prop.propId;
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("can not get plane fb id"));
-    ret = drmDevice.GetPlaneProperty(*this, PROP_IN_FENCE_FD, &prop);
+    ret = drmDevice.GetPlaneProperty(*this, PROP_IN_FENCE_FD, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("cat not get plane in fence prop id"));
     mPropFenceInId = prop.propId;
-    ret = drmDevice.GetPlaneProperty(*this, PROP_CRTC_ID, &prop);
+    ret = drmDevice.GetPlaneProperty(*this, PROP_CRTC_ID, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("cat not get pane crtc prop id"));
     mPropCrtcId = prop.propId;
-    ret = drmDevice.GetPlaneProperty(*this, PROP_TYPE, &prop);
+    ret = drmDevice.GetPlaneProperty(*this, PROP_TYPE, prop);
     DISPLAY_CHK_RETURN((ret != DISPLAY_SUCCESS), DISPLAY_FAILURE, DISPLAY_LOGE("cat not get pane crtc prop id"));
     switch (prop.value) {
         case DRM_PLANE_TYPE_OVERLAY:
@@ -82,20 +82,21 @@ int32_t DrmPlane::Init(DrmDevice &drmDevice)
             return DISPLAY_FAILURE;
     }
 
-    drmModeObjectProperties *props = drmModeObjectGetProperties(drmDevice.GetDrmFd(), mId, DRM_MODE_OBJECT_PLANE);
-    propertyCrtcX = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_X");
-    propertyCrtcY = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_Y");
-    propertyCrtcW = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_W");
-    propertyCrtcH = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_H");
+    drmModeObjectProperties *props;
+    props = drmModeObjectGetProperties(drmDevice.GetDrmFd(), mId, DRM_MODE_OBJECT_PLANE);
+    property_crtc_x = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_X");
+    property_crtc_y = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_Y");
+    property_crtc_w = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_W");
+    property_crtc_h = GetPropertyId(drmDevice.GetDrmFd(), props, "CRTC_H");
 
     propertySrcX = GetPropertyId(drmDevice.GetDrmFd(), props, "SRC_X");
     propertySrcY = GetPropertyId(drmDevice.GetDrmFd(), props, "SRC_Y");
     propertySrcW = GetPropertyId(drmDevice.GetDrmFd(), props, "SRC_W");
     propertySrcH = GetPropertyId(drmDevice.GetDrmFd(), props, "SRC_H");
-    propertyBlendMode = GetPropertyId(drmDevice.GetDrmFd(), props, "pixel blend mode");
-    propertyRotation = GetPropertyId(drmDevice.GetDrmFd(), props, "rotation");
-    propertyAlpha = GetPropertyId(drmDevice.GetDrmFd(), props, "alpha");
-    propertyY2rCoef = GetPropertyId(drmDevice.GetDrmFd(), props, "YUV2RGB coef");
+    property_blend_mode = GetPropertyId(drmDevice.GetDrmFd(), props, "pixel blend mode");
+    property_rotation = GetPropertyId(drmDevice.GetDrmFd(), props, "rotation");
+    property_alpha = GetPropertyId(drmDevice.GetDrmFd(), props, "alpha");
+    property_y2r_coef = GetPropertyId(drmDevice.GetDrmFd(), props, "YUV2RGB coef");
     drmModeFreeObjectProperties(props);
 
     return DISPLAY_SUCCESS;
