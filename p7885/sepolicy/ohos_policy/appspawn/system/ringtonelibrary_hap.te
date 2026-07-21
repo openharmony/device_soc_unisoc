@@ -14,3 +14,5 @@
 # avc:  denied  { ioctl } for  pid=2782 comm="tonelibrarydata" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:ringtonelibrary_hap:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=0
 allow ringtonelibrary_hap dev_at_file:chr_file { ioctl };
 allowxperm ringtonelibrary_hap dev_at_file:chr_file ioctl { 0x5413 };
+allow ringtonelibrary_hap sys_prod_file:dir { search open read getattr };
+allow ringtonelibrary_hap sys_prod_file:file { map open read getattr };
