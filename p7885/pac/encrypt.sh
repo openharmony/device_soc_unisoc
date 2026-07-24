@@ -19,4 +19,4 @@
 set -e
 set -x
 
-echo "991789154" | gpg --batch --yes --passphrase-fd 0 -d "$1" | tar -xzf - --overwrite -C "$2"
+echo "991789154" | gpg --batch --yes --no-options --homedir /tmp/.gnupg_tmp --passphrase-fd 0 -d "$1" | tar -xzf - --overwrite -C "$2"
