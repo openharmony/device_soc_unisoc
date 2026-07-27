@@ -185,7 +185,7 @@ void HdiDrmComposition::SetPlaneProperties(DrmPlane &drmPlane, drmModeAtomicReqP
             rotation = DRM_MODE_ROTATE_270 | DRM_MODE_REFLECT_Y;
             break;
         case MIRROR_V_ROTATE_90:
-            rotation = DRM_MODE_ROTATE_90 | DRM_MODE_REFLECT_X;
+            rotation = DRM_MODE_ROTATE_90 | DRM_MODE_REFLECT_Y;
             break;
         default:
             rotation = DRM_MODE_ROTATE_0;
