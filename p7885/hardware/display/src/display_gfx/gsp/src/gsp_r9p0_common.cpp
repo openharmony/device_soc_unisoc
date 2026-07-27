@@ -344,6 +344,11 @@ bool checkScaleSize(IRect *srcRect, IRect *dstRect,
         scaleDownLimit = SCALE_FACTOR_12;
     }
 
+    constexpr uint16_t GSP_MAX_SCALE_DOWN_LIMIT = 4;
+    if (scaleDownLimit > GSP_MAX_SCALE_DOWN_LIMIT) {
+        scaleDownLimit = GSP_MAX_SCALE_DOWN_LIMIT;
+    }
+
     if (IsLandScapeTransform(rot) == true) {
         srcw = srcRect->h;
         srch = srcRect->w;
