@@ -154,9 +154,57 @@ int32_t HdiGfxComposition::SetLayers(std::vector<HdiLayer *> &layers, HdiLayer &
     return DISPLAY_SUCCESS;
 }
 
+ScaleCapType HdiGfxComposition::CheckLayerScaleCapability(const HdiLayer &layer)
+{
+    IRect crop = layer.GetLayerCrop();
+    IRect dst = layer.GetLayerDisplayRect();
+
+    if (dst.w <= 0 || dst.h <= 0) {
+        return SCALE_CAP_DPU;
+    }
+
+    float scaleDownX = static_cast<float>(crop.w) / static_cast<float>(dst.w);
+    float scaleDownY = static_cast<float>(crop.h) / static_cast<float>(dst.h);
+    float maxScaleDown = std::max(scaleDownX, scaleDownY);
+
+    if (maxScaleDown > GSP_MAX_SCALE_DOWN_FACTOR) {
+        DISPLAY_LOGD("layer crop:[%{public}d, %{public}d] dst:[%{public}d, %{public}d] maxScaleDown:%{public}.2f exceeds GSP 4x limit -> CLIENT",
+            crop.w, crop.h, dst.w, dst.h, maxScaleDown);
+        return SCALE_CAP_CLIENT;
+    } else if (maxScaleDown > DPU_MAX_SCALE_DOWN_FACTOR) {
+        DISPLAY_LOGD("layer crop:[%{public}d, %{public}d] dst:[%{public}d, %{public}d] maxScaleDown:%{public}.2f exceeds DPU 2x limit -> GSP",
+            crop.w, crop.h, dst.w, dst.h, maxScaleDown);
+        return SCALE_CAP_GSP;
+    }
+
+    return SCALE_CAP_DPU;
+}
+
 void HdiGfxComposition::SetLayerAccelerator(HdiLayer *layer, std::vector<HdiLayer *> &layers,
                                             uint32_t i, int32_t mask, uint32_t &dpuSize)
 {
+    ScaleCapType scaleCap = CheckLayerScaleCapability(*layer);
+
+    if (scaleCap == SCALE_CAP_CLIENT) {
+        layer->SetAcceleratorType(ACCELERATOR_GPU);
+        layer->SetDeviceSelect(COMPOSITION_CLIENT);
+        if (mClientLayer->GetAcceleratorType() == ACCELERATOR_NON) {
+            dpuSize++;
+            mClientLayer->SetAcceleratorType(ACCELERATOR_DPU); // 输出结果给DPU显示
+        }
+        return;
+    }
+
+    if (scaleCap == SCALE_CAP_GSP) {
+        layer->SetAcceleratorType(ACCELERATOR_GSP);
+        layer->SetDeviceSelect(COMPOSITION_DEVICE);
+        if (mClientLayer->GetAcceleratorType() == ACCELERATOR_NON) {
+            dpuSize++;
+            mClientLayer->SetAcceleratorType(ACCELERATOR_DPU);
+        }
+        return;
+    }
+
 #ifdef SPRD_7863
     if (!(mask & MASK_SCALING_TRANSFORM) && (layers.size() < DPU_LAYERS_MAX))
 #else
@@ -190,15 +238,37 @@ void HdiGfxComposition::SetComplexLayerAccelerator(HdiLayer *layer, std::vector<
     // GSP+DPU
     int32_t tempMask = CheckLayers(layers, i);
     uint32_t tempSize = layers.size() - i;
+    ScaleCapType scaleCap = CheckLayerScaleCapability(*layer);
+
+    if (scaleCap == SCALE_CAP_GSP) {
+        layer->SetAcceleratorType(ACCELERATOR_GSP);
+        layer->SetDeviceSelect(COMPOSITION_DEVICE);
+        if (mClientLayer->GetAcceleratorType() == ACCELERATOR_NON) {
+            dpuSize++;
+            mClientLayer->SetAcceleratorType(ACCELERATOR_DPU);
+        }
+        return;
+    }
+
 #ifdef SPRD_7863
     if (tempMask & MASK_SCALING_TRANSFORM) {
 #else
     if (tempMask) { // 复杂场景交给GSP
 #endif
-        layer->SetAcceleratorType(ACCELERATOR_DPU);
-        layer->SetDeviceSelect(COMPOSITION_DEVICE);
-        dpuSize++;
-        return;
+        if (scaleCap == SCALE_CAP_DPU) {
+            layer->SetAcceleratorType(ACCELERATOR_DPU);
+            layer->SetDeviceSelect(COMPOSITION_DEVICE);
+            dpuSize++;
+            return;
+        } else {
+            layer->SetAcceleratorType(ACCELERATOR_GSP);
+            layer->SetDeviceSelect(COMPOSITION_DEVICE);
+            if (mClientLayer->GetAcceleratorType() == ACCELERATOR_NON) {
+                dpuSize++;
+                mClientLayer->SetAcceleratorType(ACCELERATOR_DPU);
+            }
+            return;
+        }
     }
 
 #ifdef SPRD_7863
@@ -207,7 +277,7 @@ void HdiGfxComposition::SetComplexLayerAccelerator(HdiLayer *layer, std::vector<
     bool canInsert = (dpuSize + tempSize) < DPU_7885_LAYERS_MAX;
 #endif
 
-    if (canInsert) {
+    if (canInsert && (scaleCap == SCALE_CAP_DPU)) {
         layer->SetAcceleratorType(ACCELERATOR_DPU);
         layer->SetDeviceSelect(COMPOSITION_DEVICE);
         dpuSize++;
