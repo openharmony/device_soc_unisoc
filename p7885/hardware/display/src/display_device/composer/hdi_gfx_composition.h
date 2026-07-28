@@ -20,6 +20,12 @@
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
+enum ScaleCapType {
+    SCALE_CAP_DPU = 0,    // <= 2x scale-down, DPU can handle
+    SCALE_CAP_GSP = 1,    // > 2x and <= 4x scale-down, DPU cannot handle, GSP can handle
+    SCALE_CAP_CLIENT = 2  // > 4x scale-down, neither DPU nor GSP can handle, fallback to Client
+};
+
 class HdiGfxComposition : public HdiComposition {
 public:
     int32_t Init(void) override;
@@ -33,6 +39,7 @@ public:
 private:
     bool CanHandle(HdiLayer &hdiLayer);
     int32_t CheckLayers(std::vector<HdiLayer *> &layers, uint32_t index);
+    ScaleCapType CheckLayerScaleCapability(const HdiLayer &layer);
     void SetLayerAccelerator(HdiLayer *layer, std::vector<HdiLayer *> &layers,
                              uint32_t i, int32_t mask, uint32_t &dpuSize);
     void SetComplexLayerAccelerator(HdiLayer *layer, std::vector<HdiLayer *> &layers,
@@ -48,6 +55,8 @@ private:
     static constexpr const char* LIB_HDI_GFX_NAME = "libdisplay_gfx.z.so";
     static constexpr const char* LIB_GFX_FUNC_INIT = "GfxInitialize";
     static constexpr const char* LIB_GFX_FUNC_DEINIT = "GfxUninitialize";
+    static constexpr float DPU_MAX_SCALE_DOWN_FACTOR = 2.0f;
+    static constexpr float GSP_MAX_SCALE_DOWN_FACTOR = 2.0f;
     bool valid_ = false;
 };
 } // namespace OHOS
