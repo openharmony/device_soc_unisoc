@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include "display_common.h"
+#include "hi_gbm_internal.h"
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
@@ -105,6 +106,23 @@ int32_t Allocator::UpdateRGBStrideAndSize(BufferInfo &bufferInfo)
     return DISPLAY_SUCCESS;
 }
 
+uint32_t Allocator::AdjustStrideFromFormat(uint32_t format, uint32_t height)
+{
+	uint32_t tmpHeight = height;
+	const FormatInfo *fmtInfo = GetFormatInfo(format);
+	if ((fmtInfo != nullptr) && (fmtInfo->planes != nullptr)){
+		uint32_t sum = fmtInfo->planes->ratio[0];
+		for (uint32_t i = 1; (i < fmtInfo->planes->numPlanes) && (i < MAX_PLANES); i++) {
+			sum += fmtInfo->planes->ratio[i];
+		}
+		if (sum > 0) {
+			tmpHeight = DivRoundUp((height * sum), fmtInfo->planes->ratio[0]);
+		}
+		DISPLAY_LOGD("height adjust to : %{public}d", tmpHeight);
+	}
+	return tmpHeight;
+}
+
 int32_t Allocator::UpdateYuvStrideAndSize(BufferInfo &bufferInfo)
 {
     int32_t ret = DISPLAY_NOT_SUPPORT;
@@ -112,7 +130,7 @@ int32_t Allocator::UpdateYuvStrideAndSize(BufferInfo &bufferInfo)
     DISPLAY_LOGD();
     constexpr uint32_t yuvPlanarSizeFactor = 3;
     FixedWidthStride(bufferInfo);
-    bufferInfo.heightStride_ = AlignUp(bufferInfo.height_, HEIGHT_ALIGN_YUV);
+    bufferInfo.heightStride_ = AlignUp(AdjustStrideFromFormat(bufferInfo.format_, bufferInfo.height_), HEIGHT_ALIGN);
     switch (bufferInfo.format_) {
         case PIXEL_FMT_YCBCR_420_SP:
         case PIXEL_FMT_YCRCB_420_SP:
