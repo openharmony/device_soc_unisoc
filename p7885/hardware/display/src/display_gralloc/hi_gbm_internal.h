@@ -23,6 +23,19 @@
 #define WIDTH_ALIGN_GBM 8U
 #define MAX_PLANES_GBM 3
 
+struct PlaneLayoutInfo {
+    uint32_t numPlanes;
+    uint32_t ratio[MAX_PLANES_GBM];
+};
+
+struct FormatInfo {
+    uint32_t format;
+    uint32_t bitsPerPixel;
+    const PlaneLayoutInfo *planes;
+};
+
+const FormatInfo *GetFormatInfo(uint32_t format);
+
 struct gbm_device {
     int fd;
 };

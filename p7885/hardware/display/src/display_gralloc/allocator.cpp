@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include "display_common.h"
+#include "hi_gbm_internal.h"
 namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
@@ -103,6 +104,23 @@ int32_t Allocator::UpdateRGBStrideAndSize(BufferInfo &bufferInfo)
     bufferInfo.heightStride_ = AlignUp(bufferInfo.height_, HEIGHT_ALIGN);
     bufferInfo.size_ = bufferInfo.widthStride_ * bufferInfo.heightStride_ * bufferInfo.bytesPerPixel_;
     return DISPLAY_SUCCESS;
+}
+
+uint32_t Allocator::AdjustStrideFromFormat(uint32_t format, uint32_t height)
+{
+    uint32_t tmpHeight = height;
+    const FormatInfo *fmtInfo = GetFormatInfo(format);
+    if ((fmtInfo != nullptr) && (fmtInfo->planes != nullptr)) {
+        uint32_t sum = fmtInfo->planes->ratio[0];
+        for (uint32_t i = 1; (i < fmtInfo->planes->numPlanes) && (i < maxPlanes); i++) {
+            sum += fmtInfo->planes->ratio[i];
+        }
+        if (sum > 0) {
+            tmpHeight = DivRoundUp((height * sum), fmtInfo->planes->ratio[0]);
+        }
+        DISPLAY_LOGD("height adjust to : %{public}d", tmpHeight);
+    }
+    return tmpHeight;
 }
 
 int32_t Allocator::UpdateYuvStrideAndSize(BufferInfo &bufferInfo)
