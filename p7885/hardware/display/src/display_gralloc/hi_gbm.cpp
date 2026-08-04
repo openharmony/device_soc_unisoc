@@ -28,18 +28,6 @@
 #include "display_common.h"
 #include "hi_gbm_internal.h"
 
-namespace {
-struct PlaneLayoutInfo {
-    uint32_t numPlanes;
-    uint32_t ratio[MAX_PLANES_GBM];
-};
-
-struct FormatInfo {
-    uint32_t format;
-    uint32_t bitsPerPixel;
-    const PlaneLayoutInfo *planes;
-};
-
 const PlaneLayoutInfo G_YUV420SP_LAYOUT = {
     .numPlanes = 2,
     .ratio = {4, 2},
@@ -97,6 +85,8 @@ const FormatInfo *GetFormatInfo(uint32_t format)
     DISPLAY_LOGE("unsupported drm format 0x%{public}x", format);
     return nullptr;
 }
+
+namespace {
 
 void InitGbmBo(struct gbm_bo *bo, const drm_mode_create_dumb *dumb)
 {
