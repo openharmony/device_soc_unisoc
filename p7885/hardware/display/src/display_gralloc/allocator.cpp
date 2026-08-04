@@ -130,7 +130,7 @@ int32_t Allocator::UpdateYuvStrideAndSize(BufferInfo &bufferInfo)
     DISPLAY_LOGD();
     constexpr uint32_t yuvPlanarSizeFactor = 3;
     FixedWidthStride(bufferInfo);
-    bufferInfo.heightStride_ = AlignUp(bufferInfo.height_, HEIGHT_ALIGN_YUV);
+    bufferInfo.heightStride_ = AlignUp(AdjustStrideFromFormat(bufferInfo.format_, bufferInfo.height_), HEIGHT_ALIGN);
     switch (bufferInfo.format_) {
         case PIXEL_FMT_YCBCR_420_SP:
         case PIXEL_FMT_YCRCB_420_SP:
