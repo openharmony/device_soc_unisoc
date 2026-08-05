@@ -30,6 +30,7 @@ ohos_shared_library("libstagefright_sprd_h264dec") {
     "//drivers/peripheral/base",
     "//drivers/peripheral/codec/interfaces/include",
     "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/display/buffer/hdi_service/include",
     "//device/soc/unisoc/p7885/hardware/omx_il/libstagefrighthw/include",
     "//device/soc/unisoc/p7885/hardware/omx_il/components/video/vpp/deintl/component",
     "//device/soc/unisoc/p7885/hardware/omx_il/components/video/vpp/deintl/core/vsp",
@@ -55,8 +56,11 @@ ohos_shared_library("libstagefright_sprd_h264dec") {
     "//device/soc/unisoc/p7885/hardware/omx_il/components/video/vpp/deintl:libstagefright_sprd_deintl",
     "//device/soc/unisoc/p7885/hardware/omx_il/libutils:libomx_utils",
     "//device/soc/unisoc/p7885/hardware/omx_il/libutils/memory/libmemion:libomx_memion",
+    "//device/soc/unisoc/p7885/hardware/display:libdisplay_buffer_vdi_impl",
   ]
-  external_deps = [ 
+  external_deps = [
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_buffer_idl_headers_1.2",
     "hilog:libhilog",
     "c_utils:utils",
     # "graphic_2d:buffer_handle",
