@@ -1063,6 +1063,10 @@ void SPRDAVCDecoder::copyInputDataToDecoder(
         return;
     }
     uint32_t copyLen = (bufferSize <= mPbufStreamSize) ? bufferSize : mPbufStreamSize;
+    if (copyLen < bufferSize) {
+        OMX_LOGE("input bitstream truncated, input=%u, streamBuffer=%zu, flags=0x%x, pts=%llu",
+            bufferSize, mPbufStreamSize, inHeader->nFlags, inHeader->nTimeStamp);
+    }
     if (mThumbnailMode) {
         uint32_t iIndex = 0;
         uint32_t remained = inHeader->nFilledLen - inHeader->nOffset;
@@ -1078,6 +1082,11 @@ void SPRDAVCDecoder::copyInputDataToDecoder(
         }
         copyLen = (bufferSize <= mPbufStreamSize - addStartcodeLen) ? bufferSize :
             (mPbufStreamSize - addStartcodeLen);
+        if (copyLen < bufferSize) {
+            OMX_LOGE("thumbnail input bitstream truncated, input=%u, streamBuffer=%zu, addStartcodeLen=%u, "
+                "flags=0x%x, pts=%llu", bufferSize, mPbufStreamSize, addStartcodeLen,
+                inHeader->nFlags, inHeader->nTimeStamp);
+        }
     }
     if (mPbufStreamV != nullptr) {
         errno_t ret = memmove_s(mPbufStreamV + addStartcodeLen, mPbufStreamSize - addStartcodeLen,

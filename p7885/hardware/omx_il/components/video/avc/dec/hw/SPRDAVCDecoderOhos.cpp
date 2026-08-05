@@ -16,10 +16,43 @@
 #include "OMX_VideoExt.h"
 #include <sys/mman.h>
 #include <algorithm>
+#include <memory>
+#include <vector>
+#include "idisplay_buffer_vdi.h"
 #undef LOG_TAG
 #define LOG_TAG "SPRDAVCDecoderOhos"
+
+extern "C" OHOS::HDI::Display::Buffer::V1_0::IDisplayBufferVdi *CreateDisplayBufferVdi();
+extern "C" void DestroyDisplayBufferVdi(OHOS::HDI::Display::Buffer::V1_0::IDisplayBufferVdi *vdi);
+
 namespace OHOS {
 namespace OMX {
+namespace {
+constexpr uint32_t ATTRKEY_CROP_REGION = 7;
+
+struct BufferHandleMetaRegion {
+    uint32_t left;
+    uint32_t top;
+    uint32_t width;
+    uint32_t height;
+} __attribute__((aligned(8)));
+
+using OHOS::HDI::Display::Buffer::V1_0::IDisplayBufferVdi;
+
+std::vector<uint8_t> BuildCropRegionValue(uint32_t left, uint32_t top, uint32_t width, uint32_t height)
+{
+    BufferHandleMetaRegion region = { left, top, width, height };
+    const uint8_t *begin = reinterpret_cast<const uint8_t *>(&region);
+    return std::vector<uint8_t>(begin, begin + sizeof(region));
+}
+
+std::shared_ptr<IDisplayBufferVdi> GetDisplayBufferVdi()
+{
+    static std::shared_ptr<IDisplayBufferVdi> vdi(CreateDisplayBufferVdi(), DestroyDisplayBufferVdi);
+    return vdi;
+}
+}
+
 // Memory alignment size for buffer allocation (4KB)
 #define ALIGNMENT_SIZE_4KB 4096
 // Default initial reference count for buffer control
@@ -492,7 +525,42 @@ void SPRDAVCDecoderOhos::releasePlatformBuffer(OMX_BUFFERHEADERTYPE *header, Buf
 
 void SPRDAVCDecoderOhos::dispatchFillBufferDone(OMX_BUFFERHEADERTYPE *header) const
 {
+    OMX_LOGD("dispatchFillBufferDone enter, header=%p, pPlatformPrivate=%p, crop=%u,%u %ux%u",
+        header, header == nullptr ? nullptr : header->pPlatformPrivate,
+        mCropLeftOffset, mCropTopOffset, mCropWidth, mCropHeight);
+    setOutputBufferCropMetadata(header);
     (*mCallbacks->FillBufferDone)(mComponent, mComponent->pApplicationPrivate, header);
+}
+
+void SPRDAVCDecoderOhos::setOutputBufferCropMetadata(OMX_BUFFERHEADERTYPE *header) const
+{
+    if (header == nullptr) {
+        OMX_LOGW("skip output crop metadata: header is null");
+        return;
+    }
+    if (header->pPlatformPrivate == nullptr) {
+        OMX_LOGW("skip output crop metadata: pPlatformPrivate is null, header=%p", header);
+        return;
+    }
+    if (mCropWidth == 0 || mCropHeight == 0) {
+        OMX_LOGW("skip output crop metadata: invalid crop=%u,%u %ux%u",
+            mCropLeftOffset, mCropTopOffset, mCropWidth, mCropHeight);
+        return;
+    }
+    std::shared_ptr<IDisplayBufferVdi> vdi = GetDisplayBufferVdi();
+    if (vdi == nullptr) {
+        OMX_LOGW("skip output crop metadata: CreateDisplayBufferVdi failed, header=%p, crop=%u,%u %ux%u",
+            header, mCropLeftOffset, mCropTopOffset, mCropWidth, mCropHeight);
+        return;
+    }
+    const BufferHandle *bufferHandle = reinterpret_cast<const BufferHandle *>(header->pPlatformPrivate);
+    const std::vector<uint8_t> crop =
+        BuildCropRegionValue(mCropLeftOffset, mCropTopOffset, mCropWidth, mCropHeight);
+    int32_t ret = vdi->SetMetadata(*bufferHandle, ATTRKEY_CROP_REGION, crop);
+    if (ret != 0) {
+        OMX_LOGW("set output crop metadata failed, ret=%d, crop=%u,%u %ux%u",
+            ret, mCropLeftOffset, mCropTopOffset, mCropWidth, mCropHeight);
+    }
 }
 
 bool SPRDAVCDecoderOhos::prepareCopyParams(OMX_BUFFERHEADERTYPE *header, BufferHandle *&bufferhandle,
