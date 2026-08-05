@@ -88,6 +88,7 @@ private:
         OMX_BUFFERHEADERTYPE **header, const OhosOutputBufferConfig &config);
     void releasePlatformBuffer(OMX_BUFFERHEADERTYPE *header, BufferCtrlStruct *bufferCtrl) const;
     void dispatchFillBufferDone(OMX_BUFFERHEADERTYPE *header) const;
+    void setOutputBufferCropMetadata(OMX_BUFFERHEADERTYPE *header) const;
     bool prepareCopyParams(OMX_BUFFERHEADERTYPE *header, BufferHandle *&bufferhandle,
         uint32_t &copyWidth, uint32_t &copyHeight) const;
     void copyOhosLumaPlane(OMX_U8 *dstInfo, OMX_U8 *buffInfo, const BufferHandle *bufferhandle) const;
