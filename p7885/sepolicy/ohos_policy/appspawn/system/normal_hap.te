@@ -41,3 +41,6 @@ allow normal_hap_attr sys_prod_file:dir { search };
 # avc:  denied  { getattr } for  pid=9971 comm="ThreadPoolForeg" path="/proc/sys/fs/inotify/max_user_watches" dev="proc" ino=105787 scontext=u:r:normal_hap:s0 tcontext=u:object_r:proc_max_user_watches:s0 tclass=file permissive=0
 allow normal_hap_attr proc_max_user_watches:file { getattr };
 
+# avc:  denied  { ioctl } for  pid=4682 comm="OS_IPC_1_4749" path="/dev/dri/card0" dev="tmpfs" ino=163 ioctlcmd=0x642e scontext=u:r:normal_hap:s0 tcontext=u:object_r:dev_dri_file:s0 tclass=chr_file permissive=0
+allow normal_hap_attr dev_dri_file:chr_file { ioctl };
+allowxperm normal_hap_attr dev_dri_file:chr_file ioctl { 0x642e };
