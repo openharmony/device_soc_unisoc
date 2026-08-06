@@ -417,6 +417,10 @@ OMX_ERRORTYPE SPRDAVCDecoderOhos::buildOhosOutputBufferConfig(
     size_t bufferSize = BUFFER_SIZE_ZERO;
     OMX_U8 *platformBuffer = nullptr;
     VideoMemAllocator *vm = nullptr;
+    if (ptr == nullptr) {
+        OMX_LOGE("Failed to use outport buffer: buffer handle pointer is null");
+        return OMX_ErrorBadParameter;
+    }
     bufferHandle = reinterpret_cast<BufferHandle *>(ptr);
     OMX_ERRORTYPE err = mapPlatformBuffer(bufferHandle, platformBuffer);
     if (err != OMX_ErrorNone) {
@@ -425,6 +429,8 @@ OMX_ERRORTYPE SPRDAVCDecoderOhos::buildOhosOutputBufferConfig(
     bufferHandle->virAddr = platformBuffer;
     err = allocateOhosOutputMemory(vm, phyAddr, bufferSize, size);
     if (err != OMX_ErrorNone) {
+        (void)munmap(platformBuffer, bufferHandle->size);
+        bufferHandle->virAddr = nullptr;
         return err;
     }
     config.size = size;
@@ -438,12 +444,24 @@ OMX_ERRORTYPE SPRDAVCDecoderOhos::buildOhosOutputBufferConfig(
 
 OMX_ERRORTYPE SPRDAVCDecoderOhos::mapPlatformBuffer(BufferHandle *bufferhandle, OMX_U8 *&pBufferPlatform) const
 {
-    if (bufferhandle->fd < PORT_INDEX_ZERO) {
-        OMX_LOGE("Failed to use outport buffer");
+    pBufferPlatform = nullptr;
+    if (bufferhandle == nullptr) {
+        OMX_LOGE("Failed to use outport buffer: buffer handle is null");
+        return OMX_ErrorBadParameter;
+    }
+    if (bufferhandle->fd < PORT_INDEX_ZERO || bufferhandle->size == 0) {
+        OMX_LOGE("Failed to use outport buffer: fd=%d, size=%u",
+            bufferhandle->fd, bufferhandle->size);
         return OMX_ErrorInsufficientResources;
     }
-    pBufferPlatform = reinterpret_cast<OMX_U8 *>(mmap(MEMORY_ZERO_ADDRESS, bufferhandle->size, MMAP_PROT_FLAGS,
-        MMAP_MAP_FLAGS, bufferhandle->fd, MEMORY_OFFSET_ZERO));
+    void *mapped = mmap(MEMORY_ZERO_ADDRESS, bufferhandle->size, MMAP_PROT_FLAGS,
+        MMAP_MAP_FLAGS, bufferhandle->fd, MEMORY_OFFSET_ZERO);
+    if (mapped == MAP_FAILED) {
+        OMX_LOGE("Failed to mmap outport buffer: fd=%d, size=%u, errno=%d(%s)",
+            bufferhandle->fd, bufferhandle->size, errno, strerror(errno));
+        return OMX_ErrorInsufficientResources;
+    }
+    pBufferPlatform = reinterpret_cast<OMX_U8 *>(mapped);
     return OMX_ErrorNone;
 }
 
@@ -515,7 +533,8 @@ void SPRDAVCDecoderOhos::releasePlatformBuffer(OMX_BUFFERHEADERTYPE *header, Buf
         return;
     }
     BufferHandle* bufferhandle = reinterpret_cast<BufferHandle*>(header->pPlatformPrivate);
-    if (munmap(bufferhandle->virAddr, bufferhandle->size) != 0) {
+    if (bufferhandle->virAddr != nullptr && bufferhandle->virAddr != MAP_FAILED &&
+        munmap(bufferhandle->virAddr, bufferhandle->size) != 0) {
         OMX_LOGE("Unmap failed");
     }
     bufferhandle->virAddr = nullptr;
@@ -575,7 +594,8 @@ bool SPRDAVCDecoderOhos::prepareCopyParams(OMX_BUFFERHEADERTYPE *header, BufferH
         return false;
     }
     bufferhandle = reinterpret_cast<BufferHandle *>(header->pPlatformPrivate);
-    if (bufferhandle->virAddr == nullptr || bufferhandle->stride <= 0 || bufferhandle->height <= 0 ||
+    if (bufferhandle->virAddr == nullptr || bufferhandle->virAddr == MAP_FAILED ||
+        bufferhandle->stride <= 0 || bufferhandle->height <= 0 ||
         bufferhandle->size == 0 || mStride == 0 || mSliceHeight == 0) {
         OMX_LOGE("invalid buffer layout, skip copy: dst(%p, stride=%d, height=%d), src(stride=%u, slice=%u)",
             bufferhandle->virAddr, bufferhandle->stride, bufferhandle->height, mStride, mSliceHeight);
