@@ -31,3 +31,6 @@ allow av_codec_service data_ashmem_file:file { read write map };
 
 # avc:  denied  { use } for  pid=9971 comm="PumaPlyrVideo" path="anon_inode:sync_file" dev="anon_inodefs" ino=10928 scontext=u:r:av_codec_service:s0 tcontext=u:r:normal_hap:s0 tclass=fd permissive=0
 allow av_codec_service normal_hap_attr:fd { use };
+
+# avc:  denied  { map } for  pid=852 comm="ReceiveFrame" path="/dev/dri/card0" dev="tmpfs" ino=163 scontext=u:r:av_codec_service:s0 tcontext=u:object_r:dev_dri_file:s0 tclass=chr_file permissive=0
+allow av_codec_service dev_dri_file:chr_file { map };
