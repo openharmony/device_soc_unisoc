@@ -280,10 +280,14 @@ AdapterPixelFormat SprdAllocator::ConvertFormatToGpu(PixelFormat inFormat)
     } else if (inFormat == PIXEL_FMT_RGBA_4444) {
         outFormat = ADAPTER_PIXEL_FORMAT_RGBA_4444;
     } else if ((inFormat == PIXEL_FMT_YCBCR_420_SP) ||
-               (inFormat == PIXEL_FMT_YCRCB_420_SP)) {
+            (inFormat == PIXEL_FMT_YCRCB_420_SP) ||
+            (inFormat == PIXEL_FMT_YCBCR_420_P) ||
+            (inFormat == PIXEL_FMT_YCRCB_420_P)) {
         outFormat = ADAPTER_PIXEL_FORMAT_YVU420_SP;
     } else if ((inFormat == PIXEL_FMT_YCBCR_422_SP) ||
-               (inFormat == PIXEL_FMT_YCRCB_422_SP)) {
+            (inFormat == PIXEL_FMT_YCRCB_422_SP) ||
+            (inFormat == PIXEL_FMT_YCBCR_422_P) ||
+            (inFormat == PIXEL_FMT_YCRCB_422_P)) {
         outFormat = ADAPTER_PIXEL_FORMAT_YUV422_SP;
     }
 
