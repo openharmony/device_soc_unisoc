@@ -1,17 +1,3 @@
-/*
- * Copyright (C) 2023 HiHope Open Source Organization.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 #ifndef HDI_FENCE_TRACE_H
 #define HDI_FENCE_TRACE_H
 
@@ -109,7 +95,7 @@ inline int32_t CountProcessFds()
     int32_t count = 0;
     for (dirent* entry = readdir(dir); entry != nullptr; entry = readdir(dir)) {
         if (entry->d_name[0] == '.' &&
-            (entry->d_name[1] == '\0' || strcmp(entry->d_name, "..") == 0)) {
+            (entry->d_name[1] == '\0' || (entry->d_name[1] == '.' && entry->d_name[2] == '\0'))) {
             continue;
         }
         ++count;
