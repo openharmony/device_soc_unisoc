@@ -1,17 +1,3 @@
-/*
- * Copyright (C) 2023 HiHope Open Source Organization.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 #include "hi_gbm.h"
 
 #include <cerrno>
@@ -27,6 +13,18 @@
 
 #include "display_common.h"
 #include "hi_gbm_internal.h"
+
+namespace {
+struct PlaneLayoutInfo {
+    uint32_t numPlanes;
+    uint32_t ratio[MAX_PLANES_GBM];
+};
+
+struct FormatInfo {
+    uint32_t format;
+    uint32_t bitsPerPixel;
+    const PlaneLayoutInfo *planes;
+};
 
 const PlaneLayoutInfo G_YUV420SP_LAYOUT = {
     .numPlanes = 2,
@@ -85,8 +83,6 @@ const FormatInfo *GetFormatInfo(uint32_t format)
     DISPLAY_LOGE("unsupported drm format 0x%{public}x", format);
     return nullptr;
 }
-
-namespace {
 
 void InitGbmBo(struct gbm_bo *bo, const drm_mode_create_dumb *dumb)
 {

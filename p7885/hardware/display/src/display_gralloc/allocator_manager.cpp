@@ -111,7 +111,7 @@ int32_t AllocatorManager::Init()
         }
     } else {
         drmAllocator_ = std::make_shared<DrmAllocator>();
-        ret = drmAllocator_->Init();
+        int ret = drmAllocator_->Init();
         if (ret == DISPLAY_SUCCESS) {
             frameBufferAllocator_ = drmAllocator_;
             allocator_ = drmAllocator_;

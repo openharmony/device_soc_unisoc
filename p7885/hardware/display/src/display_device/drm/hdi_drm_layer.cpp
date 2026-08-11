@@ -23,12 +23,6 @@ namespace OHOS {
 namespace HDI {
 namespace DISPLAY {
 namespace {
-enum Yuv420PlaneIndex {
-    yuv420YPlane,
-    yuv420UPlane,
-    yuv420VPlane,
-};
-
 bool IsValidLayerBuffer(const HdiLayerBuffer *hdl)
 {
     if (hdl == nullptr) {
@@ -104,6 +98,7 @@ void DrmGemBuffer::AllocateFbParams(HdiLayerBuffer &hdl, int widthStride, int bp
 {
     constexpr int subsampleFactor = 2;
     constexpr int alignment = 16;
+    constexpr int plane2 = 2;
     constexpr int bpp3 = 3;
     constexpr int bpp2 = 2;
 
@@ -123,21 +118,21 @@ void DrmGemBuffer::AllocateFbParams(HdiLayerBuffer &hdl, int widthStride, int bp
         case PIXEL_FMT_YCRCB_420_SP:
         case PIXEL_FMT_YCBCR_422_SP:
         case PIXEL_FMT_YCRCB_422_SP:
-            cfg.gemHandles[yuv420UPlane] = mGemHandle;
-            cfg.offsets[yuv420UPlane] = bpf;
-            cfg.pitches[yuv420YPlane] = widthStride * 1;
-            cfg.pitches[yuv420UPlane] = cfg.pitches[yuv420YPlane];
+            cfg.gemHandles[1] = mGemHandle;
+            cfg.offsets[1] = bpf;
+            cfg.pitches[0] = widthStride * 1;
+            cfg.pitches[1] = cfg.pitches[0];
             break;
         case PIXEL_FMT_YCBCR_420_P:
-            cfg.gemHandles[yuv420UPlane] = mGemHandle;
-            cfg.gemHandles[yuv420VPlane] = mGemHandle;
-            cfg.offsets[yuv420UPlane] = bpf;
-            cfg.offsets[yuv420VPlane] = bpf + (((widthStride / subsampleFactor + alignment) - 1) /
+            cfg.gemHandles[1] = mGemHandle;
+            cfg.gemHandles[plane2] = mGemHandle;
+            cfg.offsets[1] = bpf;
+            cfg.offsets[plane2] = bpf + (((widthStride / subsampleFactor + alignment) - 1) /
                 ((widthStride / subsampleFactor) * alignment)) * hdl.GetHeight() / subsampleFactor;
-            cfg.pitches[yuv420YPlane] = widthStride * 1;
-            cfg.pitches[yuv420UPlane] = (((widthStride / subsampleFactor + alignment) - 1) /
+            cfg.pitches[0] = widthStride * 1;
+            cfg.pitches[1] = (((widthStride / subsampleFactor + alignment) - 1) /
                 ((widthStride / subsampleFactor) * alignment));
-            cfg.pitches[yuv420VPlane] = cfg.pitches[yuv420UPlane];
+            cfg.pitches[plane2] = cfg.pitches[1];
             break;
         case PIXEL_FMT_YUV_422_I:
             cfg.pitches[0] = widthStride * bpp2;

@@ -194,7 +194,7 @@ int32_t SprdAllocator::InitBufferhandle(const BufferInfo &bufferInfo, BufferHand
     }
 
     priBuffer->width = bufferInfo.width_;
-    priBuffer->height = bufferInfo.height_;
+    priBuffer->height = bufferInfo.heightStride_;
     priBuffer->stride = bufferInfo.widthStride_ * bufferInfo.bytesPerPixel_;
     priBuffer->size = bufferInfo.size_;
     priBuffer->format = bufferInfo.format_;

@@ -16,10 +16,6 @@
 #include "display_buffer_vdi_impl.h"
 #include <cstdlib>
 #include "cinttypes"
-#include <mutex>
-#include <string>
-#include <unordered_map>
-#include <vector>
 #include "securec.h"
 #include "display_log.h"
 #include "allocator.h"
@@ -32,24 +28,6 @@ namespace HDI {
 namespace DISPLAY {
 using namespace OHOS::HDI::Display::Composer::V1_0;
 using namespace OHOS::HDI::Display::Buffer::V1_2;
-
-namespace {
-std::mutex g_metadataMutex;
-std::unordered_map<int32_t, std::unordered_map<uint32_t, std::vector<uint8_t>>> g_metadataMap;
-} // namespace
-
-void DumpSetMetadata(const BufferHandle& handle, uint32_t key, const std::vector<uint8_t>& value)
-{
-    std::string valueStr;
-    for (size_t i = 0; i < value.size(); i++) {
-        char tmp[4] = { 0 };
-        if (sprintf_s(tmp, sizeof(tmp), "%02x ", value[i]) >= 0) {
-            valueStr += tmp;
-        }
-    }
-    DISPLAY_LOGI("SetMetadata fd=%{public}d key=%{public}u valueSize=%{public}zu value=[%{public}s]",
-        handle.fd, key, value.size(), valueStr.c_str());
-}
 
 DisplayBufferVdiImpl::DisplayBufferVdiImpl()
 {
@@ -119,49 +97,30 @@ int32_t DisplayBufferVdiImpl::RegisterBuffer(const BufferHandle& handle)
 }
 int32_t DisplayBufferVdiImpl::SetMetadata(const BufferHandle& handle, uint32_t key, const std::vector<uint8_t>& value)
 {
-    DumpSetMetadata(handle, key, value);
+    ALLOC_UNUSED(key);
 
-    std::lock_guard<std::mutex> lock(g_metadataMutex);
-    g_metadataMap[handle.fd][key] = value;
-    return HDF_SUCCESS;
+    DISPLAY_LOGE("%s is not supported", __func__);
+    return DISPLAY_NOT_SUPPORT;
 }
 int32_t DisplayBufferVdiImpl::GetMetadata(const BufferHandle& handle, uint32_t key, std::vector<uint8_t>& value)
 {
-    std::lock_guard<std::mutex> lock(g_metadataMutex);
-    auto iterFd = g_metadataMap.find(handle.fd);
-    if (iterFd == g_metadataMap.end()) {
-        return DISPLAY_PARAM_ERR;
-    }
-    auto iterKey = iterFd->second.find(key);
-    if (iterKey == iterFd->second.end()) {
-        return DISPLAY_PARAM_ERR;
-    }
-    value = iterKey->second;
-    return HDF_SUCCESS;
+    ALLOC_UNUSED(key);
+
+    DISPLAY_LOGE("%s is not supported", __func__);
+    return DISPLAY_NOT_SUPPORT;
 }
 int32_t DisplayBufferVdiImpl::ListMetadataKeys(const BufferHandle& handle, std::vector<uint32_t>& keys)
 {
-    std::lock_guard<std::mutex> lock(g_metadataMutex);
-    auto iterFd = g_metadataMap.find(handle.fd);
-    if (iterFd == g_metadataMap.end()) {
-        return DISPLAY_PARAM_ERR;
-    }
-    keys.clear();
-    for (auto& item : iterFd->second) {
-        keys.push_back(item.first);
-    }
-    return HDF_SUCCESS;
+    DISPLAY_LOGE("%s is not supported", __func__);
+    return DISPLAY_NOT_SUPPORT;
 }
 
 int32_t DisplayBufferVdiImpl::EraseMetadataKey(const BufferHandle& handle, uint32_t key)
 {
-    std::lock_guard<std::mutex> lock(g_metadataMutex);
-    auto iterFd = g_metadataMap.find(handle.fd);
-    if (iterFd == g_metadataMap.end()) {
-        return DISPLAY_PARAM_ERR;
-    }
-    iterFd->second.erase(key);
-    return HDF_SUCCESS;
+    ALLOC_UNUSED(key);
+
+    DISPLAY_LOGE("%s is not supported", __func__);
+    return DISPLAY_NOT_SUPPORT;
 }
 
 int32_t DisplayBufferVdiImpl::GetImageLayout(const BufferHandle& handle,

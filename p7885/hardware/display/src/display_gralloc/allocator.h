@@ -77,11 +77,9 @@ public:
     static constexpr uint32_t HEIGHT_ALIGN = 2;
     static constexpr uint32_t HEIGHT_ALIGN_YUV = 16;
     static constexpr uint32_t WIDTH_ALIGN = 16;
-    static constexpr uint32_t maxPlanes = 3;
 private:
     int32_t DmaBufferSync(const BufferHandle &handle, uint64_t flag);
     uint32_t UpdatePixelInfo(BufferInfo &bufferInfo);
-    uint32_t AdjustStrideFromFormat(uint32_t format, uint32_t height);
     int32_t UpdateStrideAndSize(BufferInfo &bufferInfo);
     int32_t UpdateRGBStrideAndSize(BufferInfo &bufferInfo);
     int32_t UpdateYuvStrideAndSize(BufferInfo &bufferInfo);
