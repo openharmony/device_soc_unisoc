@@ -39,3 +39,17 @@ allowxperm media_service system_file:file ioctl { 0xf207 };
 
 # avc:  denied  { read write } for  pid=950 comm="OS_HCodecLoop" path=2F646174612F6173686D656D2F616E64726F69642D6173686D656D2D3834332D5858584B4B41504E4E202864656C6574656429 dev="sda62" ino=17916 scontext=u:r:media_service:s0 tcontext=u:object_r:data_ashmem_file:s0 tclass=file permissive=1
 allow media_service data_ashmem_file:file { open read write map };
+
+# avc:  denied  { search } for  pid=981 comm="TranscoderServe" name="block" dev="tmpfs" ino=6 scontext=u:r:media_service:s0 tcontext=u:object_r:dev_block_volfile:s0 tclass=dir permissive=1
+allow media_service dev_block_volfile:dir { search };
+# avc:  denied  { search } for  pid=981 comm="TranscoderServe" name="by-name" dev="tmpfs" ino=14 scontext=u:r:media_service:s0 tcontext=u:object_r:dev_block_file:s0 tclass=dir permissive=1
+allow media_service dev_block_file:dir { search };
+
+# avc:  denied  { read } for  pid=981 comm="TranscoderServe" name="sml_a" dev="tmpfs" ino=309 scontext=u:r:media_service:s0 tcontext=u:object_r:sml_block_file:s0 tclass=lnk_file permissive=1
+# avc:  denied  { read } for  pid=981 comm="TranscoderServe" name="sda6" dev="tmpfs" ino=307 scontext=u:r:media_service:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+# avc:  denied  { open } for  pid=981 comm="TranscoderServe" path="/dev/block/sda6" dev="tmpfs" ino=307 scontext=u:r:media_service:s0 tcontext=u:object_r:sml_block_file:s0 tclass=blk_file permissive=1
+allow media_service sml_block_file:lnk_file { read };
+allow media_service sml_block_file:blk_file { read open };
+
+allow media_service dev_mali:chr_file { getattr ioctl map open read write };
+allowxperm media_service dev_mali:chr_file ioctl { 0x8000 0x8001 0x8002 0x8003 0x8005 0x8006 0x8007 0x800c 0x800e 0x800f 0x8011 0x8014 0x8016 0x8018 0x8019 0x801b 0x801d 0x801e 0x8024 0x8025 0x8026 0x8027 0x8029 0x802a 0x802b 0x802c 0x802d 0x802e 0x802f 0x8030 0x8031 0x8033 0x8034 0x8036 0x803a 0x803b 0x803c};
