@@ -18,6 +18,7 @@
 #include <cerrno>
 #include <fcntl.h>
 #include <memory>
+#include <unistd.h>
 #include <drm_fourcc.h>
 #include "display_common.h"
 #include "drm_display.h"
@@ -33,7 +34,20 @@ std::shared_ptr<HdiDeviceInterface> DrmDevice::Create()
     DISPLAY_LOGD();
     if (mDrmFd == nullptr) {
         const std::string name("SPRD");
-        int drmFd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC); //  drmOpen(name.c_str(), nullptr);
+        constexpr int32_t RETRY_MAX = 3;
+        constexpr int32_t RETRY_DELAY_US = 1000; // 1ms
+        int drmFd = -1;
+        for (int32_t retry = 0; retry < RETRY_MAX; retry++) {
+            drmFd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC); //  drmOpen(name.c_str(), nullptr);
+            if (drmFd >= 0) {
+                break;
+            }
+            DISPLAY_LOGW("drm file:%{public}s open failed %{public}s, retry %{public}d/%{public}d",
+                name.c_str(), strerror(errno), retry + 1, RETRY_MAX);
+            if (retry < RETRY_MAX - 1) {
+                usleep(RETRY_DELAY_US);
+            }
+        }
         if (drmFd < 0) {
             DISPLAY_LOGE("drm file:%{public}s open failed %{public}s", name.c_str(), strerror(errno));
             return nullptr;
