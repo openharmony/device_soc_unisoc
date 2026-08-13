@@ -200,6 +200,11 @@ int GnssEnable(GnssCallbackStruct* callbacks)
     if (callbacks == nullptr) {
         LBSLOGE(GNSS, "%{public}s callbacks == nullptr return", GNSSMGT);
     }
+    if (g_vendorLibHandle != nullptr) {
+        LBSLOGE(GNSS, "g_vendorLibHandle is loaded");
+        return SO_OK;
+    }
+
     LBSLOGE(GNSS, "%{public}s mayulong callbacks");
     DL_RET ret = SO_OK;
     g_GCS_ = *callbacks;
@@ -232,12 +237,7 @@ int GnssDisable(void)
         LBSLOGE(GNSS, "g_gpsCleanupPrvFn is null, %s maybe not load properyly\n", __func__, GNSSMGT);
     }
 
-    dlclose(g_vendorLibHandle);
-    g_vendorLibHandle = nullptr;
-    g_gpsInitPrvFn = nullptr;
-    g_gpsStartPrvFn = nullptr;
-    g_gpsStopPrvFn = nullptr;
-    g_gpsCleanupPrvFn = nullptr;
+    LBSLOGI(GNSS, "Not Close g_vendorLibHandle When Gnss Disable");
     return 0;
 }
 
