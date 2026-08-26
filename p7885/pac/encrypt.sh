@@ -15,8 +15,15 @@
 
 #$1 - *.tar.gz.gpg name
 #$2 - output dir
+#$3 - marker file path (created after successful extraction)
 
 set -e
 set -x
 
 echo "991789154" | gpg --batch --yes --no-options --homedir /tmp/.gnupg_tmp --passphrase-fd 0 -d "$1" | tar -xzf - --overwrite -C "$2"
+
+# Create marker file with input hash
+if [ -n "$3" ]; then
+    mkdir -p "$(dirname "$3")"
+    touch "$3"
+fi
