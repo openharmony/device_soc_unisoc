@@ -206,11 +206,6 @@ int GnssEnable(GnssCallbackStruct* callbacks)
     g_vendorLibHandle = dlopen(GNSSMGT, RTLD_LAZY);
     LBSLOGE(GNSS, "%{public}s GNSSMGT handle addr is %x", GNSSMGT, g_vendorLibHandle);
 
-    if (g_vendorLibHandle == nullptr) {
-        LBSLOGE(GNSS, "%{public}s load failed", GNSSMGT);
-        return LOAD_NOK;
-    }
-
     LoadVendorSymbs();
 
     if (g_gpsInitPrvFn == nullptr || g_gpsStartPrvFn == nullptr || g_gpsStopPrvFn == nullptr ||
