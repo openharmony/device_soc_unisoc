@@ -210,10 +210,6 @@ int GnssEnable(GnssCallbackStruct* callbacks)
         LBSLOGE(GNSS, "%{public}s load failed", GNSSMGT);
         return LOAD_NOK;
     }
-    if (g_vendorLibHandle != nullptr) {
-        LBSLOGE(GNSS, "g_vendorLibHandle is loaded");
-        return SO_OK;
-    }
 
     LoadVendorSymbs();
 
