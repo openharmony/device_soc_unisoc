@@ -15,6 +15,7 @@
 #include "prepared_model_impl_2_0.h"
 
 #include <unistd.h>
+#include <string>
 
 #include "nnrt_common.h"
 
@@ -354,16 +355,50 @@ int32_t PreparedModelImpl::Run(const std::vector<IOTensor>& inputs, const std::v
 
     std::vector<sptr<Ashmem>> outputAshmems;
     outputAshmems.reserve(outputs.size());
+    std::vector<unisoc::UniAITensor> outputTensors;
+    outputTensors.reserve(outputs.size());
     for (const auto& output : outputs) {
         sptr<Ashmem> ash;
         int32_t ret = CreateMappedAshmem(output.data, true, ashmems, ash);
         if (ret != static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS)) {
             return ret;
         }
-        outputAshmems.emplace_back(std::move(ash));
+        outputAshmems.emplace_back(ash);
+
+        auto dataPtr = ash->ReadFromAshmem(static_cast<int32_t>(output.data.dataSize),
+            static_cast<int32_t>(output.data.offset));
+        if (dataPtr == nullptr) {
+            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_BUFFER);
+        }
+        unisoc::TensorShape shape {};
+        if (!FillTensorShape(output.dimensions, shape)) {
+            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_SHAPE);
+        }
+        unisoc::DataType dataType {};
+        if (!ToUniAIDataType(output.dataType, dataType)) {
+            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_DATATYPE);
+        }
+        outputTensors.emplace_back(unisoc::UniAITensor(shape,
+            ToUniAIDataLayout(output.format), dataType, const_cast<void*>(dataPtr)));
     }
 
-    std::vector<unisoc::UniAITensor> outputTensors;
+    for (size_t i = 0; i < inputTensors.size(); i++) {
+        const auto& shape = inputTensors[i].GetShape();
+        std::string dimsStr;
+        for (unsigned int d = 0; d < shape.m_NumDims; d++) {
+            dimsStr += std::to_string(shape.m_Dims[d]);
+            if (d + 1 < shape.m_NumDims) dimsStr += ",";
+        }
+    }
+    for (size_t i = 0; i < outputTensors.size(); i++) {
+        const auto& shape = outputTensors[i].GetShape();
+        std::string dimsStr;
+        for (unsigned int d = 0; d < shape.m_NumDims; d++) {
+            dimsStr += std::to_string(shape.m_Dims[d]);
+            if (d + 1 < shape.m_NumDims) dimsStr += ",";
+        }
+    }
+
     auto ret = uniAI_->Inference(networkId_, inputTensors, outputTensors);
     if (ret != unisoc::Status::AI_SUCCESS) {
         return internal::ToNnrtResult(ret);
@@ -371,13 +406,6 @@ int32_t PreparedModelImpl::Run(const std::vector<IOTensor>& inputs, const std::v
 
     if (outputTensors.size() != outputs.size()) {
         return static_cast<int32_t>(NNRT_ReturnCode::NNRT_FAILED);
-    }
-
-    for (size_t i = 0; i < outputs.size(); i++) {
-        int32_t wret = internal::WriteUniAIOutputToAshmem(outputs[i], outputTensors[i], outputAshmems[i]);
-        if (wret != static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS)) {
-            return wret;
-        }
     }
 
     BuildOutputDimsFromUniAI(outputTensors, outputDims);

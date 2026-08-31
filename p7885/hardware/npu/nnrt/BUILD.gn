@@ -16,6 +16,7 @@ import("//device/soc/unisoc/p7885/soc_common.gni")
 NPU_LIB_PATH="//device/soc/unisoc/p7885/hardware/npu"
 
 ohos_shared_library("libnpu_vdi_impl") {
+  stl = "c++_shared"
   sources = [
     "nnrt_device_vdi_impl.cpp",
     "prepared_model_impl_2_0.cpp",
@@ -29,7 +30,6 @@ ohos_shared_library("libnpu_vdi_impl") {
   external_deps = [
     "ipc:ipc_single",
     "drivers_interface_nnrt:nnrt_idl_headers",
-    "drivers_interface_nnrt:libnnrt_stub_2.0",
     "hdf_core:libhdf_ipc_adapter",
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",

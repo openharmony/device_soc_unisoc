@@ -20,7 +20,6 @@
 #include "nnrt/v2_0/iprepared_model.h"
 #include "nnrt/v2_0/model_types.h"
 #include "nnrt/v2_0/nnrt_types.h"
-#include "nnrt/v2_0/nnrt_device_stub.h"
 
 #include <hdf_base.h>
 

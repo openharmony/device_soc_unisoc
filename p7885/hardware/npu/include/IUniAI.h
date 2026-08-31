@@ -25,19 +25,19 @@ namespace unisoc {
  * @brief Supported Frontend ML FW, Use to load different network
  */
 enum class FrontendId {
-    TFlite = 0,     ///< TFlite Framework
-    Onnx = 1,       ///< Onnx Framework
-    TF = 2,
+  TFlite = 0,     ///< TFlite Framework
+  Onnx = 1,       ///< Onnx Framework
+  TF = 2,
 };
 
 /**
  * @brief backend device state
  */
 enum class BackendState {
-    DEVICE_AVAILABLE = 0,
-    DEVICE_UNAVAILABLE = 1,
-    DEVICE_BUSY = 2,
-    DEVICE_INVALID = 3
+  DEVICE_AVAILABLE = 0,
+  DEVICE_UNAVAILABLE = 1,
+  DEVICE_BUSY = 2,
+  DEVICE_INVALID = 3
 };
 
 /**
@@ -45,8 +45,8 @@ enum class BackendState {
  */
 
 enum class ModelType {
-    UniAI_IR = 0,
-    UniAI_NativeModel = 1,  ///< Currently only IR & NativeModel model is supported,
+  UniAI_IR = 0,
+  UniAI_NativeModel = 1,  ///< Currently only IR & NativeModel model is supported,
 };
 
 /**
@@ -55,8 +55,8 @@ enum class ModelType {
  * \li m_NumDims : Dim num
  */
 struct TensorShape {
-    std::array<unsigned int, 5U> m_Dims;
-    unsigned int m_NumDims;
+  std::array<unsigned int, 5U> m_Dims;
+  unsigned int m_NumDims;
 };
 
 /**
@@ -74,69 +74,71 @@ enum class Priority {
  */
 
 enum class UniAIBackends {
-    CPU = 0,            ///< CPU backend
-    NPU = 1,            ///< NPU backend
-    GPU = 2,            ///< GPU backend
-    XTENSA = 3          ///< VDSP backend
+  CPU = 0,            ///< CPU backend
+  NPU = 1,            ///< NPU backend
+  GPU = 2,            ///< GPU backend
+  VDSP = 3            ///< VDSP backend
 };
 
 /**
  * @brief Model file data type
  */
 enum class DataType {
-    Float16 = 0,
-    Float32 = 1,
-    QuantisedAsymm8 = 2,
-    QuantisedSymm8 = 3,
-    QSymmS16 = 4,
-    Signed32 = 5,
-    Signed64 = 6,
+  Float16 = 0,
+  Float32 = 1,
+  QuantisedAsymm8 = 2,
+  QuantisedSymm8 = 3,
+  QSymmS16 = 4,
+  Signed32 = 5,
+  Signed64 = 6,
+  Boolean = 7,
 };
 
 /**
  * @brief data layout of the picture
  */
 enum class DataLayout {
-    UNDEFINED = 0, ///< reserved, not use now
-    NCHW = 1,      ///< [batch, in_channels, in_height, in_weight]
-    NHWC = 2       ///< [batch, in_height, in_weight, in_channels]
+  UNDEFINED = 0, ///< reserved, not use now
+  NCHW = 1,      ///< [batch, in_channels, in_height, in_weight]
+  NHWC = 2       ///< [batch, in_height, in_weight, in_channels]
 };
 
 /**
  * @brief Input / Output info of the network
  */
-struct IoInfo {
-    TensorShape m_Shape;
-    DataLayout m_Layout;
-    DataType m_DataType;
-    std::vector<float> m_Scales;
-    int32_t m_Offset;
+struct IoInfo{
+  TensorShape m_Shape;
+  DataLayout m_Layout;
+  DataType m_DataType;
+  std::vector<float> m_Scales;
+  int32_t m_Offset;
 };
 
 /**
  * @brief Status
  */
 enum class Status {
-    AI_FAILURE, ///< some errors occur, can see log details, see log details
-    AI_SUCCESS, ///< all operations work successfully
-    AI_UNKNOWN_FRONTEND_ID, ///< the given frontend id is invalid
-    AI_UNKNOWN_BACKEND_ID,  ///< the given backend id is invalid
-    AI_OPTIMIZE_ERROR,      ///< occur optimize error when NetworkCompile
-    AI_SMALL_INPUT_SIZE,    ///< the given input buffer is too small
-    AI_SMALL_OUTPUT_SIZE,   ///< the given output buffer is too small
-    AI_FILE_NOT_FOUND,      ///< the given file path is not found
-    AI_INVALID_NETWORK_ID,  ///< the given network id is invalid
-    AI_INVALID_ARGUMENT,    ///< the given argument is invalid, see log details
-    AI_INVALID_QUANTIZE_DATA_TYPE, ///< the given quantize dtaa type id is invalid
-    AI_INVALID_DATA_TYPE,          ///< the given data type id is invalid
-    AI_PARSE_ERROR, ///< parse error occur, should check input/output nodename
+  AI_FAILURE, ///< some errors occur, can see log details, see log details
+  AI_SUCCESS, ///< all operations work successfully
+  AI_UNKNOWN_FRONTEND_ID, ///< the given frontend id is invalid
+  AI_UNKNOWN_BACKEND_ID,  ///< the given backend id is invalid
+  AI_OPTIMIZE_ERROR,      ///< occur optimize error when NetworkCompile
+  AI_SMALL_INPUT_SIZE,    ///< the given input buffer is too small
+  AI_SMALL_OUTPUT_SIZE,   ///< the given output buffer is too small
+  AI_FILE_NOT_FOUND,      ///< the given file path is not found
+  AI_INVALID_NETWORK_ID,  ///< the given network id is invalid
+  AI_INVALID_ARGUMENT,    ///< the given argument is invalid, see log details
+  AI_INVALID_QUANTIZE_DATA_TYPE, ///< the given quantize dtaa type id is invalid
+  AI_INVALID_DATA_TYPE,          ///< the given data type id is invalid
+  AI_PARSE_ERROR, ///< parse error occur, should check input/output nodename
 };
 
 /**
  * @brief UniAI Tensor for inference
  */
-class UniAITensor {
-    public:
+class UniAITensor
+{
+  public:
     /**
      * @brief Create UniAITensor
      *
@@ -175,13 +177,12 @@ class UniAITensor {
      * @return a pointer to data of the specified type
      */
     template<typename T>
-    T* buffer() const
-    {
-        T* data = reinterpret_cast<T*>(m_Data);
-        return data;
+    T* buffer() const {
+       T* data = reinterpret_cast<T*>(m_Data);
+      return data;
     }
 
-    private:
+  protected:
     /**
      * @brief UniAITensor data layout
      */
@@ -230,23 +231,41 @@ using BackendId = unisoc::UniAIBackends;
 /**
  * @brief Compilation Parameter struct of NetworkCompile()
  */
-struct CompilationParameter {
-    CompilationParameter()
-        :networkid(),
-        modelType(),
-        preferentBackendList({UniAIBackends::CPU}),
-        saveCache(false),
-        cachePath(nullptr),
-        udoLibPath(nullptr)
-    {
-    }
-    NetworkId networkid;
-    ModelType modelType;
-    std::vector<BackendId> preferentBackendList;
-    bool saveCache;
-    const char *cachePath;
-    const char *udoLibPath;
+struct CompilationParameter
+{
+  CompilationParameter()
+      : networkid()
+      , modelType()
+      , preferentBackendList({UniAIBackends::CPU})
+      , saveCache(false)
+      , cachePath(nullptr)
+      , udoLibPath(nullptr)
+  {}
+
+  CompilationParameter(const NetworkId& pNetworkid,
+                       const ModelType& pModeType,
+                       std::vector<BackendId> pBackendList,
+                       bool pSaveCache             = false,
+                       const char* pCachePath      = nullptr,
+                       const char* pUdoLibPath     = nullptr
+                      )
+      : networkid(pNetworkid)
+      , modelType(pModeType)
+      , preferentBackendList(std::move(pBackendList))
+      , saveCache(pSaveCache)
+      , cachePath(pCachePath)
+      , udoLibPath(pUdoLibPath)
+  {}
+
+  NetworkId networkid;
+  ModelType modelType;
+  std::vector<BackendId> preferentBackendList;
+  bool saveCache;
+  const char *cachePath;
+  const char *udoLibPath;
 };
+
+class UniAI;
 
 /**
  * @brief UniAI class, contains all the public interfaces of UniAI
@@ -254,164 +273,173 @@ struct CompilationParameter {
 class IUniAI {
 public:
 
-    static IUniAIPtr Create(bool isProfiling = false);
+  static IUniAIPtr Create(bool isProfiling = false);
 
-    /**
-    * @brief Create UniAI init dynamic backend path
-    *
-    * @param dynamicBackendPath      dynamic backends path
-    * @return IUniAIPtr          the pointer to IUniAI @see {
-    * IUniAIPtr }
-    */
-    static IUniAIPtr Create(const char *dynamicBackendPath, bool isProfiling = false);
+  /**
+   * @brief Create UniAI init dynamic backend path
+   *
+   * @param dynamicBackendPath      dynamic backends path
+   * @return IUniAIPtr          the pointer to IUniAI @see {
+   * IUniAIPtr }
+   */
+  static IUniAIPtr Create(const char *dynamicBackendPath, bool isProfiling = false);
 
-    /**
-    * @brief Destory UniAI env
-    *
-    * @param UniAI the pointer to IUniAI @see { IUniAI }
-    */
-    static void Destroy(IUniAI *UniAI);
+  /**
+   * @brief Destory UniAI env
+   *
+   * @param UniAI the pointer to IUniAI @see { IUniAI }
+   */
+  static void Destroy(IUniAI *UniAI);
 
-    /**
-    * @brief Destory network
-    *
-    * @param networkid : network id, it is relate to the model file @see {
-    * NetworkId }
-    */
-    virtual void DestroyNetwork(NetworkId networkid) = 0;
+  /**
+   * @brief Destory network
+   *
+   * @param networkid : network id, it is relate to the model file @see {
+   * NetworkId }
+   */
+  void DestroyNetwork(NetworkId networkid);
 
-    /**
-    * @brief Get backend id list supported by UniAI
-    *
-    * @return std::vector<BackendId> the backend id list supported by UniAI
-    */
-    virtual std::vector<BackendId> GetSupportBackendId() = 0;
+  /**
+   * @brief Get backend id list supported by UniAI
+   *
+   * @return std::vector<BackendId> the backend id list supported by UniAI
+   */
+  std::vector<BackendId> GetSupportBackendId();
 
-    /**
-    * @brief Get the backend state selected by the user
-    *
-    * @param id            : backend id supported by UniAI @see { BackendId }
-    * @return BackendState : backend state @see { BackendState }
-    */
-    virtual BackendState GetBackendState(const BackendId id) = 0;
+  /**
+   * @brief Get the backend state selected by the user
+   *
+   * @param id            : backend id supported by UniAI @see { BackendId }
+   * @return BackendState : backend state @see { BackendState }
+   */
+  BackendState GetBackendState(const BackendId id);
 
-    /**
-    * @brief Get Data Type supported by UniAI
-    *
-    * @return data type list supported by UniAI
-    */
-    virtual std::vector<DataType> GetSupportedDataType() = 0;
+  /**
+   * @brief Get Data Type supported by UniAI
+   *
+   * @return data type list supported by UniAI
+   */
+  std::vector<DataType> GetSupportedDataType();
 
-    /**
-    * @brief LoadNetwork from binary file
-    *
-    * @param modelPath              The storage path of the model file
-    * @param networkid              network id, it is relate to the model file
-    * @see { NetworkId }
-    * @param modelType              modelType, type of the modle
-    * @see { ModelType }
-    * @return Status                Success will return 1, Failure will return 0
-    * @see { Status }
-    */
-    virtual Status LoadNetwork(const char* modelPath, NetworkId &networkid, ModelType& modelType) = 0;
+  /**
+   * @brief LoadNetwork from binary file
+   *
+   * @param modelPath              The storage path of the model file
+   * @param networkid              network id, it is relate to the model file
+   * @see { NetworkId }
+   * @param modelType              modelType, type of the modle
+   * @see { ModelType }
+   * @return Status                Success will return 1, Failure will return 0
+   * @see { Status }
+   */
+  Status LoadNetwork(const char* modelPath, NetworkId &networkid, ModelType& modelType);
 
-    /**
-    * @brief compile network
-    *
-    * @param networkid              network id, it is relate to the model file
-    * @see { NetworkId }
-    * @param modelType              modelType, type of the modle
-    * @see { ModelType }
-    * @param preferentBackendList   Compile network with the backend list
-    * @return Status                Success will return 1, Failure will return 0
-    * @see { Status }
-    */
-    virtual Status NetworkCompile(NetworkId& networkid, ModelType modelType,
-                    const std::vector<BackendId> &preferentBackendList,
-                    bool saveCache = false, const char* cachePath = nullptr) = 0;
+  /**
+   * @brief compile network
+   *
+   * @param networkid              network id, it is relate to the model file
+   * @see { NetworkId }
+   * @param modelType              modelType, type of the modle
+   * @see { ModelType }
+   * @param preferentBackendList   Compile network with the backend list
+   * @return Status                Success will return 1, Failure will return 0
+   * @see { Status }
+   */
+  Status NetworkCompile(NetworkId& networkid, ModelType modelType,
+                 const std::vector<BackendId> &preferentBackendList, bool saveCache = false, const char* cachePath = nullptr);
 
-    /**
-    * @brief get network input names
-    *
-    * @param networkid              network id
-    * @see { NetworkId }
-    * @return vector of Network input names
-    */
-    virtual std::vector<std::string>
-                GetNetworkInputNames(const NetworkId networkid) = 0;
+  /**
+   * @brief get network input names
+   *
+   * @param networkid              network id
+   * @see { NetworkId }
+   * @return vector of Network input names
+   */
+  std::vector<std::string>
+              GetNetworkInputNames(const NetworkId networkid);
 
-    /**
-    * @brief get network output names
-    *
-    * @param networkid              network id
-    * @see { NetworkId }
-    * @return vector of Network output names
-    */
-    virtual std::vector<std::string>
-                GetNetworkOutputNames(const NetworkId networkid) = 0;
+  /**
+   * @brief get network output names
+   *
+   * @param networkid              network id
+   * @see { NetworkId }
+   * @return vector of Network output names
+   */
+  std::vector<std::string>
+              GetNetworkOutputNames(const NetworkId networkid);
 
-    /**
-    * @brief Run Model file
-    *
-    * @param networkid  network id, it is relate to the model file @see {
-    * NetworkId }
-    * @param inputData  Input data @see { UniAITensor }
-    * @param outputData The result of Inference @see { UniAITensor }
-    * @param priority   The priority of Inference @see { priority }
-    * @return           Status Success will return 1, Failure will return 0 @see
-    * { Status }
-    */
-    virtual Status Inference(const NetworkId networkid,
-                            std::vector<UniAITensor> &inputTensors,
-                            std::vector<UniAITensor> &outputTensors) = 0;
+  /**
+   * @brief Run Model file
+   *
+   * @param networkid  network id, it is relate to the model file @see {
+   * NetworkId }
+   * @param inputData  Input data @see { UniAITensor }
+   * @param outputData The result of Inference @see { UniAITensor }
+   * @param priority   The priority of Inference @see { priority }
+   * @return           Status Success will return 1, Failure will return 0 @see
+   * { Status }
+   */
+  Status Inference(const NetworkId networkid,
+                           std::vector<UniAITensor> &inputTensors,
+                           std::vector<UniAITensor> &outputTensors);
 
-    /**
-    * @brief Get AISDK VERSION
-    *
-    * @return  AISDK VERSION string
-    */
-    virtual std::string GetUniAISdkVersion() = 0;
+  /**
+   * @brief Get AISDK VERSION
+   *
+   * @return  AISDK VERSION string
+   */
+  std::string GetUniAISdkVersion();
 
-    /**
-    * @brief record avaliable network ids
-    */
-    std::vector<NetworkId> m_NetworkIds;
+  /**
+   * @brief record avaliable network ids
+   */
+  std::vector<NetworkId> m_NetworkIds;
 
-    /**
-    * @brief Get Inputs info
-    *
-    * @return std::vector<IoInfo> the inputs info list
-    */
-    virtual  std::vector<IoInfo> GetInputAttributeInfo(NetworkId id) = 0;
+  /**
+   * @brief Get Inputs info
+   *
+   * @return std::vector<IoInfo> the inputs info list
+   */
+  std::vector<IoInfo> GetInputAttributeInfo(NetworkId id);
 
-    /**
-    * @brief Get Outputs info
-    *
-    * @return std::vector<IoInfo> the outputs info list
-    */
-    virtual  std::vector<IoInfo> GetOutputAttributeInfo(NetworkId id) = 0;
+  /**
+   * @brief Get Outputs info
+   *
+   * @return std::vector<IoInfo> the outputs info list
+   */
+  std::vector<IoInfo> GetOutputAttributeInfo(NetworkId id);
 
-    /**
-    * @brief compile network
-    *
-    * @param CompilationParameter  Compilation Parameter struct to avoid too much input Parameter.
-    */
-    virtual Status NetworkCompile(CompilationParameter& compilationParameter) = 0;
+  /**
+   * @brief compile network
+   *
+   * @param CompilationParameter  Compilation Parameter struct to avoid too much input Parameter.
+   */
+  Status NetworkCompile(CompilationParameter& compilationParameter);
 
-    /**
-    * @brief LoadNetwork from memory buffer
-    *
-    * @param modelBuffer            The memory buffer of the model file
-    * @param bufferSize             The size of model memory buffer
-    * @param networkid              network id, it is relate to the model file
-    * @see { NetworkId }
-    * @param modelType              modelType, type of the modle
-    * @see { ModelType }
-    * @return Status                Success will return 1, Failure will return 0
-    * @see { Status }
-    */
-    virtual Status LoadNetwork(const void* modelBuffer, const size_t bufferSize,
-        NetworkId &networkid, ModelType& modelType) = 0;
+  /**
+   * @brief LoadNetwork from memory buffer
+   *
+   * @param modelBuffer            The memory buffer of the model file
+   * @param bufferSize             The size of model memory buffer
+   * @param networkid              network id, it is relate to the model file
+   * @see { NetworkId }
+   * @param modelType              modelType, type of the modle
+   * @see { ModelType }
+   * @return Status                Success will return 1, Failure will return 0
+   * @see { Status }
+   */
+  Status LoadNetwork(const void* modelBuffer, const size_t bufferSize, NetworkId &networkid, ModelType& modelType);
+
+  protected:
+
+  ~IUniAI();
+
+  IUniAI(bool isProfiling);
+
+  IUniAI(const char *dynamicBackendPath, bool isProfiling);
+
+  std::unique_ptr<UniAI> pUniAIImpl;
+
 };
 
 } // namespace unisoc

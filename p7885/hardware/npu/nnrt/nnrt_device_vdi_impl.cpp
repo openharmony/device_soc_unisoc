@@ -75,7 +75,7 @@ public:
 
     int32_t GetDeviceName(std::string& name) override
     {
-        name = "P7885-NPU";
+        name = "NPU_P7885";
         return static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS);
     }
 
@@ -108,7 +108,11 @@ public:
                 status = DeviceStatus::BUSY;
                 return static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS);
             case unisoc::BackendState::DEVICE_UNAVAILABLE:
+                status = DeviceStatus::OFFLINE;
+                return static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS);
             case unisoc::BackendState::DEVICE_INVALID:
+                status = DeviceStatus::OFFLINE;
+                return static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS);
             default:
                 status = DeviceStatus::OFFLINE;
                 return static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS);
@@ -190,7 +194,8 @@ public:
         if (modelAshmem == nullptr) {
             return static_cast<int32_t>(NNRT_ReturnCode::NNRT_OUT_OF_MEMORY);
         }
-        if (!modelAshmem->MapReadOnlyAshmem()) {
+        bool mapOk = modelAshmem->MapReadOnlyAshmem();
+        if (!mapOk) {
             return static_cast<int32_t>(NNRT_ReturnCode::NNRT_MEMORY_ERROR);
         }
         const void* modelPtr = modelAshmem->ReadFromAshmem(static_cast<int32_t>(modelBuffer.dataSize),
