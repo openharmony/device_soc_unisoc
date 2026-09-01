@@ -382,23 +382,6 @@ int32_t PreparedModelImpl::Run(const std::vector<IOTensor>& inputs, const std::v
             ToUniAIDataLayout(output.format), dataType, const_cast<void*>(dataPtr)));
     }
 
-    for (size_t i = 0; i < inputTensors.size(); i++) {
-        const auto& shape = inputTensors[i].GetShape();
-        std::string dimsStr;
-        for (unsigned int d = 0; d < shape.m_NumDims; d++) {
-            dimsStr += std::to_string(shape.m_Dims[d]);
-            if (d + 1 < shape.m_NumDims) dimsStr += ",";
-        }
-    }
-    for (size_t i = 0; i < outputTensors.size(); i++) {
-        const auto& shape = outputTensors[i].GetShape();
-        std::string dimsStr;
-        for (unsigned int d = 0; d < shape.m_NumDims; d++) {
-            dimsStr += std::to_string(shape.m_Dims[d]);
-            if (d + 1 < shape.m_NumDims) dimsStr += ",";
-        }
-    }
-
     auto ret = uniAI_->Inference(networkId_, inputTensors, outputTensors);
     if (ret != unisoc::Status::AI_SUCCESS) {
         return internal::ToNnrtResult(ret);
