@@ -371,7 +371,6 @@ int32_t PreparedModelImpl::Run(const std::vector<IOTensor>& inputs, const std::v
         return static_cast<int32_t>(NNRT_ReturnCode::NNRT_FAILED);
     }
 
-
     BuildOutputDimsFromUniAI(outputTensors, outputDims);
 
     return static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS);

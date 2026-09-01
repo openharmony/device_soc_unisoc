@@ -172,8 +172,9 @@ public:
         return PrepareOfflineModel(modelCache, config, preparedModel);
     }
 
-    int32_t PrepareOfflineModel(const std::vector<SharedBuffer>& offlineModels, const ModelConfig& config,
-        sptr<IPreparedModel>& preparedModel) override
+    int32_t PrepareOfflineModel(const std::vector<SharedBuffer>& offlineModels,
+        const ModelConfig& config,
+        const ModelConfig& config, sptr<IPreparedModel>& preparedModel) override
     {
         if (offlineModels.empty()) {
             return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_MODEL);
