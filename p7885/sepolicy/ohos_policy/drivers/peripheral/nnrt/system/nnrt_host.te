@@ -1,0 +1,3 @@
+allow nnrt_host dev_vha:chr_file { read write open ioctl };
+allowxperm nnrt_host dev_vha:chr_file ioctl { 0x7100 0x7101 0x7102 0x7103 0x7105 0x7106 0x7107 0x7108 0x7109 0x710d 0x7110 };
+allow nnrt_host vendor_file:dir getattr;
