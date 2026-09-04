@@ -1,9 +1,0 @@
---- p7885/sepolicy/ohos_policy/appspawn/system/system_core_hap.te
-+++ p7885/sepolicy/ohos_policy/appspawn/system/system_core_hap.te
-@@ -79,3 +79,6 @@ allow system_core_hap debug_hap_data_file:dir { search };
- # avc:  denied  { ioctl } for  pid=6119 comm="view_system_app" path="/storage/Users/currentUser/appdata/el2/base/com.example.previewtest/haps/entry/files/test.jpg" dev="sharefs" ino=4919 ioctlcmd=0xf207 scontext=u:r:system_core_hap:s0 tcontext=u:object_r:sharefs:s0 tclass=file permissive=1
- allow system_core_hap sharefs:file { ioctl };
- allowxperm system_core_hap sharefs:file ioctl { 0xf207 };
-+allow system_core_hap data_service_el1_file:dir search;
-+allow system_core_hap data_app_el1_file:file ioctl;
-+allowxperm system_core_hap data_app_el1_file:file ioctl { 0xf207 };
