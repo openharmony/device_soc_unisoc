@@ -46,7 +46,7 @@
 
 /************************************************************************/
 
-static struct sensor_raw_resolution_info_tab s_0_trim_info = {
+static struct SensorRawResolutionInfoTab s_0_trim_info = {
     0x00,
     {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
      {0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
@@ -61,18 +61,18 @@ static struct sensor_raw_resolution_info_tab s_0_trim_info = {
 
 /************************************************************************/
 
-static struct sensor_raw_ioctrl s_0_ioctrl = {0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                              0, 0, 0, 0, 0, 0, 0, 0};
+static struct SensorRawIoctrl s_0_ioctrl = {0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0, 0, 0};
 
 /********************************************************************************
- * static struct sensor_version_info s_****_version_info, **** is the sensor
+ * static struct SensorVersionInfo s_****_version_info, **** is the sensor
  *name . Param[2]/ Param[3] are ASCII values of the sensor name string ****.
  * Please modify the sensor name by using rename sensor function of the ISP
  *TOOL, then the Param[2]/ Param[3] are changed accordingly. NO modifying
  *manually.
  ********************************************************************************/
 
-static struct sensor_version_info s_0_version_info = {
+static struct SensorVersionInfo s_0_version_info = {
     0x000D0010,
     {{0x00000030, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
       0x00000000, 0x00000000}},
@@ -105,7 +105,7 @@ static uint32_t s_0_libuse_info[] = {
 
 /************************************************************************/
 
-static struct sensor_raw_info s_0_mipi_raw_info = {
+static struct SensorRawInfo s_0_mipi_raw_info = {
     &s_0_version_info,
     {
         {s_0_tune_info_common, sizeof(s_0_tune_info_common)},
@@ -135,7 +135,7 @@ static struct sensor_raw_info s_0_mipi_raw_info = {
     },
     &s_0_trim_info,
     &s_0_ioctrl,
-    (struct sensor_libuse_info *)s_0_libuse_info,
+    (struct SensorLibuseInfo *)s_0_libuse_info,
     {
         &s_0_fix_info_common,
         &s_0_fix_info_prv_0,
