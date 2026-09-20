@@ -48,3 +48,7 @@ allow sandbox_manager_service system_usr_file:file { getattr map open read };
 # avc:  denied  { ioctl } for  pid=13102 comm="OS_FFRT_2_0" path="/dev/access_token_id" dev="tmpfs" ino=361 ioctlcmd=0x5413 scontext=u:r:sandbox_manager_service:s0 tcontext=u:object_r:dev_at_file:s0 tclass=chr_file permissive=1
 allow sandbox_manager_service dev_at_file:chr_file { ioctl };
 allowxperm sandbox_manager_service dev_at_file:chr_file ioctl { 0x5413 };
+
+# avc:  denied  { ioctl } for  pid=1844 comm="sandbox_manager" path="/dev/dec" dev="tmpfs" ino=363 ioctlcmd=0x730d scontext=u:r:sandbox_manager_service:s0 tcontext=u:object_r:dev_dec:s0 tclass=chr_file permissive=1
+allow sandbox_manager_service dev_dec:chr_file { ioctl };
+allowxperm sandbox_manager_service dev_dec:chr_file ioctl { 0x730d };

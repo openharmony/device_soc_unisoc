@@ -29,3 +29,9 @@ allowxperm appspawn dev_dec:chr_file ioctl { 0x7308 };
 
 # avc:  denied  { read } for  pid=2297 comm="os.settingsdata" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:appspawn:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
 allow appspawn hiviewdfx_hiview_param:file { read open map };
+
+# avc:  denied  { mounton } for  pid=4737 comm="duriapplication" path="/mnt/sandbox/100/com.acts.authorizeduriapplication/system/app/ArkWebCore/ArkWebCoreEx.hap" dev="sda47" ino=5743 scontext=u:r:appspawn:s0 tcontext=u:object_r:system_file:s0 tclass=file permissive=1
+allow appspawn system_file:file { mounton };
+
+# avc:  denied  { mounton } for  pid=32758 comm="duriapplication" path="/mnt/sandbox/100/com.acts.authorizeduriapplication/data/storage/el1/bundle/arkwebcore/feature.hap" dev="sda63" ino=6220 scontext=u:r:appspawn:s0 tcontext=u:object_r:data_app_el1_file:s0 tclass=file permissive=1
+allow appspawn data_app_el1_file:file { mounton };
