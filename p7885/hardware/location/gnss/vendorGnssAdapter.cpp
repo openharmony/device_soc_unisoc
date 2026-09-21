@@ -134,9 +134,7 @@ bool AGnssSetRefLocation(const AgnssReferenceInfo* refLoc);
 bool AGnssSetSetId(uint16_t type, const char* setid, size_t len);
 bool AGnssSetAgnssServer(uint16_t type, const char* server, size_t len, int32_t port);
 
-// // so vendorinface entry
-// GnssVendorDevice syml_GnssVendorInterface = {sizeof(GnssVendorDevice),
-//                                              GetGnssInterface};
+// so vendorinface entry
 GnssVendorInterfaceType g_gnssVendorIfc = {
     sizeof(GnssVendorInterfaceType),
     GnssEnable,
