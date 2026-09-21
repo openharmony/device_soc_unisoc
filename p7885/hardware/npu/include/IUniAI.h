@@ -223,23 +223,23 @@ using BackendId = unisoc::UniAIBackends;
  */
 struct CompilationParameter {
     CompilationParameter()
-        : networkid()
-        , modelType()
-        , preferentBackendList({UniAIBackends::CPU})
-        , saveCache(false)
-        , cachePath(nullptr)
-        , udoLibPath(nullptr)
+        : networkid(),
+          modelType(),
+          preferentBackendList({UniAIBackends::CPU}),
+          saveCache(false),
+          cachePath(nullptr),
+          udoLibPath(nullptr)
     {}
 
     CompilationParameter(const NetworkId& pNetworkid, const ModelType& pModeType,
                          std::vector<BackendId> pBackendList, bool pSaveCache = false,
                          const char* pCachePath = nullptr, const char* pUdoLibPath = nullptr)
-        : networkid(pNetworkid)
-        , modelType(pModeType)
-        , preferentBackendList(std::move(pBackendList))
-        , saveCache(pSaveCache)
-        , cachePath(pCachePath)
-        , udoLibPath(pUdoLibPath)
+        : networkid(pNetworkid),
+          modelType(pModeType),
+          preferentBackendList(std::move(pBackendList)),
+          saveCache(pSaveCache),
+          cachePath(pCachePath),
+          udoLibPath(pUdoLibPath)
     {}
 
     NetworkId networkid;
