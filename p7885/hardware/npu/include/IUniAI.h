@@ -1,24 +1,18 @@
-/*
- * Copyright (c) 2024 Huawei Device Co., Ltd.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/**
+ * @file IUniAI.h
+ * @brief UniAI interface declaration file
+ * @date 2024-01-03
+ * @copyright Copyright (c) 2024 UNISOC Technologies Co.,Ltd. All Rights
+ * Reserved
  */
 
-#pragma once
+#ifndef NPU_INCLUDE_IUNI_AI_H
+#define NPU_INCLUDE_IUNI_AI_H
 
-#include <array>
-#include <memory>
 #include <string>
 #include <vector>
+#include <memory>
+#include <array>
 
 namespace unisoc {
 
@@ -145,8 +139,7 @@ public:
      * @param dataType        Data type of tensor data @see { DataType }
      * @param data            The address of tensor data
      */
-    UniAITensor(TensorShape inputShape, DataLayout dataLayout,
-                DataType dataType, void* data = nullptr);
+    UniAITensor(TensorShape inputShape, DataLayout dataLayout, DataType dataType, void *data = nullptr);
 
     /**
      * @brief Get the data layout of the current UniAITensor
@@ -174,8 +167,9 @@ public:
      *
      * @return a pointer to data of the specified type
      */
-    template<typename T>
-    T* buffer() const {
+    template <typename T>
+    T* buffer() const
+    {
         T* data = reinterpret_cast<T*>(m_Data);
         return data;
     }
@@ -199,7 +193,7 @@ protected:
     /**
      * @brief UniAITensor data pointer
      */
-    void* m_Data;
+    void *m_Data;
 };
 
 /**
@@ -211,8 +205,7 @@ class IUniAI;
  * @brief using IUniAIPtr as std::unique_ptr<IUniAI, void (*)(IUniAI
  * *UniAI)>
  */
-using IUniAIPtr =
-    std::unique_ptr<IUniAI, void (*)(IUniAI* UniAI)>;
+using IUniAIPtr = std::unique_ptr<IUniAI, void (*)(IUniAI *UniAI)>;
 
 /**
  * @brief using NetworkId as int to record the current network id, it is relate
@@ -231,33 +224,30 @@ using BackendId = unisoc::UniAIBackends;
 struct CompilationParameter {
     CompilationParameter()
         : networkid()
-        ,modelType()
-        ,preferentBackendList({UniAIBackends::CPU})
-        ,saveCache(false)
-        ,cachePath(nullptr)
-        ,udoLibPath(nullptr)
+        , modelType()
+        , preferentBackendList({UniAIBackends::CPU})
+        , saveCache(false)
+        , cachePath(nullptr)
+        , udoLibPath(nullptr)
     {}
 
-    CompilationParameter(const NetworkId& pNetworkid,
-                         const ModelType& pModeType,
-                         std::vector<BackendId> pBackendList,
-                         bool pSaveCache         = false,
-                         const char* pCachePath  = nullptr,
-                         const char* pUdoLibPath = nullptr)
+    CompilationParameter(const NetworkId& pNetworkid, const ModelType& pModeType,
+                         std::vector<BackendId> pBackendList, bool pSaveCache = false,
+                         const char* pCachePath = nullptr, const char* pUdoLibPath = nullptr)
         : networkid(pNetworkid)
-        ,modelType(pModeType)
-        ,preferentBackendList(std::move(pBackendList))
-        ,saveCache(pSaveCache)
-        ,cachePath(pCachePath)
-        ,udoLibPath(pUdoLibPath)
+        , modelType(pModeType)
+        , preferentBackendList(std::move(pBackendList))
+        , saveCache(pSaveCache)
+        , cachePath(pCachePath)
+        , udoLibPath(pUdoLibPath)
     {}
 
     NetworkId networkid;
     ModelType modelType;
     std::vector<BackendId> preferentBackendList;
     bool saveCache;
-    const char* cachePath;
-    const char* udoLibPath;
+    const char *cachePath;
+    const char *udoLibPath;
 };
 
 class UniAI;
@@ -276,14 +266,14 @@ public:
      * @return IUniAIPtr          the pointer to IUniAI @see {
      * IUniAIPtr }
      */
-    static IUniAIPtr Create(const char* dynamicBackendPath, bool isProfiling = false);
+    static IUniAIPtr Create(const char *dynamicBackendPath, bool isProfiling = false);
 
     /**
      * @brief Destory UniAI env
      *
      * @param UniAI the pointer to IUniAI @see { IUniAI }
      */
-    static void Destroy(IUniAI* UniAI);
+    static void Destroy(IUniAI *UniAI);
 
     /**
      * @brief Destory network
@@ -326,7 +316,7 @@ public:
      * @return Status                Success will return 1, Failure will return 0
      * @see { Status }
      */
-    Status LoadNetwork(const char* modelPath, NetworkId& networkid, ModelType& modelType);
+    Status LoadNetwork(const char* modelPath, NetworkId &networkid, ModelType& modelType);
 
     /**
      * @brief compile network
@@ -340,8 +330,8 @@ public:
      * @see { Status }
      */
     Status NetworkCompile(NetworkId& networkid, ModelType modelType,
-                           const std::vector<BackendId>& preferentBackendList,
-                           bool saveCache = false, const char* cachePath = nullptr);
+                          const std::vector<BackendId> &preferentBackendList,
+                          bool saveCache = false, const char* cachePath = nullptr);
 
     /**
      * @brief get network input names
@@ -372,9 +362,8 @@ public:
      * @return           Status Success will return 1, Failure will return 0 @see
      * { Status }
      */
-    Status Inference(const NetworkId networkid,
-                     std::vector<UniAITensor>& inputTensors,
-                     std::vector<UniAITensor>& outputTensors);
+    Status Inference(const NetworkId networkid, std::vector<UniAITensor> &inputTensors,
+                     std::vector<UniAITensor> &outputTensors);
 
     /**
      * @brief Get AISDK VERSION
@@ -421,17 +410,18 @@ public:
      * @return Status                Success will return 1, Failure will return 0
      * @see { Status }
      */
-    Status LoadNetwork(const void* modelBuffer, const size_t bufferSize,
-                       NetworkId& networkid, ModelType& modelType);
+    Status LoadNetwork(const void* modelBuffer, const size_t bufferSize, NetworkId &networkid, ModelType& modelType);
 
 protected:
     ~IUniAI();
 
     IUniAI(bool isProfiling);
 
-    IUniAI(const char* dynamicBackendPath, bool isProfiling);
+    IUniAI(const char *dynamicBackendPath, bool isProfiling);
 
     std::unique_ptr<UniAI> pUniAIImpl;
 };
 
 } // namespace unisoc
+
+#endif // NPU_INCLUDE_IUNI_AI_H

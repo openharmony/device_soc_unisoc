@@ -59,6 +59,36 @@ bool ReadExtensionBool(const ModelConfig& config, const std::string& key, bool d
     return it->second[0] != 0;
 }
 
+int32_t MapOfflineModelBuffer(const SharedBuffer& modelBuffer, sptr<Ashmem>& modelAshmem, const void*& modelPtr)
+{
+    if (modelBuffer.fd < 0 || modelBuffer.bufferSize == 0 || modelBuffer.dataSize == 0 ||
+        modelBuffer.offset + modelBuffer.dataSize > modelBuffer.bufferSize) {
+        return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_BUFFER);
+    }
+
+    int dupFd = dup(modelBuffer.fd);
+    if (dupFd < 0) {
+        return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_BUFFER);
+    }
+
+    modelAshmem = new (std::nothrow) Ashmem(dupFd, static_cast<int32_t>(modelBuffer.bufferSize));
+    if (modelAshmem == nullptr) {
+        return static_cast<int32_t>(NNRT_ReturnCode::NNRT_OUT_OF_MEMORY);
+    }
+
+    if (!modelAshmem->MapReadOnlyAshmem()) {
+        return static_cast<int32_t>(NNRT_ReturnCode::NNRT_MEMORY_ERROR);
+    }
+
+    modelPtr = modelAshmem->ReadFromAshmem(static_cast<int32_t>(modelBuffer.dataSize),
+        static_cast<int32_t>(modelBuffer.offset));
+    if (modelPtr == nullptr) {
+        return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_BUFFER);
+    }
+
+    return static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS);
+}
+
 class NnrtDeviceVdiImpl final : public INnrtDeviceVdi {
 public:
     NnrtDeviceVdiImpl() = default;
@@ -173,7 +203,6 @@ public:
     }
 
     int32_t PrepareOfflineModel(const std::vector<SharedBuffer>& offlineModels,
-        const ModelConfig& config,
         const ModelConfig& config, sptr<IPreparedModel>& preparedModel) override
     {
         if (offlineModels.empty()) {
@@ -181,28 +210,11 @@ public:
         }
 
         const SharedBuffer& modelBuffer = offlineModels[0];
-        if (modelBuffer.fd < 0 || modelBuffer.bufferSize == 0 || modelBuffer.dataSize == 0 ||
-            modelBuffer.offset + modelBuffer.dataSize > modelBuffer.bufferSize) {
-            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_BUFFER);
-        }
-
-        int dupFd = dup(modelBuffer.fd);
-        if (dupFd < 0) {
-            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_BUFFER);
-        }
-
-        sptr<Ashmem> modelAshmem = new (std::nothrow) Ashmem(dupFd, static_cast<int32_t>(modelBuffer.bufferSize));
-        if (modelAshmem == nullptr) {
-            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_OUT_OF_MEMORY);
-        }
-        bool mapOk = modelAshmem->MapReadOnlyAshmem();
-        if (!mapOk) {
-            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_MEMORY_ERROR);
-        }
-        const void* modelPtr = modelAshmem->ReadFromAshmem(static_cast<int32_t>(modelBuffer.dataSize),
-            static_cast<int32_t>(modelBuffer.offset));
-        if (modelPtr == nullptr) {
-            return static_cast<int32_t>(NNRT_ReturnCode::NNRT_INVALID_BUFFER);
+        sptr<Ashmem> modelAshmem;
+        const void* modelPtr = nullptr;
+        auto mapRet = MapOfflineModelBuffer(modelBuffer, modelAshmem, modelPtr);
+        if (mapRet != static_cast<int32_t>(NNRT_ReturnCode::NNRT_SUCCESS)) {
+            return mapRet;
         }
 
         const std::string backendPath = ReadExtensionString(config, "uniai.backend_path");
