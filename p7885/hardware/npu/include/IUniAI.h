@@ -22,7 +22,7 @@ namespace unisoc {
 enum class FrontendId {
     TFlite = 0,     ///< TFlite Framework
     Onnx = 1,       ///< Onnx Framework
-    TF = 2,
+    TF = 2
 };
 
 /**
@@ -40,7 +40,7 @@ enum class BackendState {
  */
 enum class ModelType {
     UniAI_IR = 0,
-    UniAI_NativeModel = 1,  ///< Currently only IR & NativeModel model is supported,
+    UniAI_NativeModel = 1  ///< Currently only IR & NativeModel model is supported
 };
 
 /**
@@ -84,7 +84,7 @@ enum class DataType {
     QSymmS16 = 4,
     Signed32 = 5,
     Signed64 = 6,
-    Boolean = 7,
+    Boolean = 7
 };
 
 /**
@@ -121,9 +121,9 @@ enum class Status {
     AI_FILE_NOT_FOUND,      ///< the given file path is not found
     AI_INVALID_NETWORK_ID,  ///< the given network id is invalid
     AI_INVALID_ARGUMENT,    ///< the given argument is invalid, see log details
-    AI_INVALID_QUANTIZE_DATA_TYPE, ///< the given quantize dtaa type id is invalid
+    AI_INVALID_QUANTIZE_DATA_TYPE, ///< the given quantize data type id is invalid
     AI_INVALID_DATA_TYPE,          ///< the given data type id is invalid
-    AI_PARSE_ERROR, ///< parse error occur, should check input/output nodename
+    AI_PARSE_ERROR ///< parse error occur, should check input/output nodename
 };
 
 /**
@@ -168,9 +168,9 @@ public:
      * @return a pointer to data of the specified type
      */
     template <typename T>
-    T* buffer() const
+    T *buffer() const
     {
-        T* data = reinterpret_cast<T*>(m_Data);
+        T *data = reinterpret_cast<T*>(m_Data);
         return data;
     }
 
@@ -231,9 +231,9 @@ struct CompilationParameter {
           udoLibPath(nullptr)
     {}
 
-    CompilationParameter(const NetworkId& pNetworkid, const ModelType& pModeType,
+    CompilationParameter(const NetworkId &pNetworkid, const ModelType &pModeType,
                          std::vector<BackendId> pBackendList, bool pSaveCache = false,
-                         const char* pCachePath = nullptr, const char* pUdoLibPath = nullptr)
+                         const char *pCachePath = nullptr, const char *pUdoLibPath = nullptr)
         : networkid(pNetworkid),
           modelType(pModeType),
           preferentBackendList(std::move(pBackendList)),
@@ -269,14 +269,14 @@ public:
     static IUniAIPtr Create(const char *dynamicBackendPath, bool isProfiling = false);
 
     /**
-     * @brief Destory UniAI env
+     * @brief Destroy UniAI env
      *
      * @param UniAI the pointer to IUniAI @see { IUniAI }
      */
     static void Destroy(IUniAI *UniAI);
 
     /**
-     * @brief Destory network
+     * @brief Destroy network
      *
      * @param networkid : network id, it is relate to the model file @see {
      * NetworkId }
@@ -311,27 +311,27 @@ public:
      * @param modelPath              The storage path of the model file
      * @param networkid              network id, it is relate to the model file
      * @see { NetworkId }
-     * @param modelType              modelType, type of the modle
+     * @param modelType              modelType, type of the model
      * @see { ModelType }
      * @return Status                Success will return 1, Failure will return 0
      * @see { Status }
      */
-    Status LoadNetwork(const char* modelPath, NetworkId &networkid, ModelType& modelType);
+    Status LoadNetwork(const char *modelPath, NetworkId &networkid, ModelType &modelType);
 
     /**
      * @brief compile network
      *
      * @param networkid              network id, it is relate to the model file
      * @see { NetworkId }
-     * @param modelType              modelType, type of the modle
+     * @param modelType              modelType, type of the model
      * @see { ModelType }
      * @param preferentBackendList   Compile network with the backend list
      * @return Status                Success will return 1, Failure will return 0
      * @see { Status }
      */
-    Status NetworkCompile(NetworkId& networkid, ModelType modelType,
+    Status NetworkCompile(NetworkId &networkid, ModelType modelType,
                           const std::vector<BackendId> &preferentBackendList,
-                          bool saveCache = false, const char* cachePath = nullptr);
+                          bool saveCache = false, const char *cachePath = nullptr);
 
     /**
      * @brief get network input names
@@ -373,7 +373,7 @@ public:
     std::string GetUniAISdkVersion();
 
     /**
-     * @brief record avaliable network ids
+     * @brief record available network ids
      */
     std::vector<NetworkId> m_NetworkIds;
 
@@ -396,7 +396,7 @@ public:
      *
      * @param CompilationParameter  Compilation Parameter struct to avoid too much input Parameter.
      */
-    Status NetworkCompile(CompilationParameter& compilationParameter);
+    Status NetworkCompile(CompilationParameter &compilationParameter);
 
     /**
      * @brief LoadNetwork from memory buffer
@@ -405,12 +405,12 @@ public:
      * @param bufferSize             The size of model memory buffer
      * @param networkid              network id, it is relate to the model file
      * @see { NetworkId }
-     * @param modelType              modelType, type of the modle
+     * @param modelType              modelType, type of the model
      * @see { ModelType }
      * @return Status                Success will return 1, Failure will return 0
      * @see { Status }
      */
-    Status LoadNetwork(const void* modelBuffer, const size_t bufferSize, NetworkId &networkid, ModelType& modelType);
+    Status LoadNetwork(const void *modelBuffer, const size_t bufferSize, NetworkId &networkid, ModelType &modelType);
 
 protected:
     ~IUniAI();
