@@ -59,6 +59,9 @@ bool ReadExtensionBool(const ModelConfig& config, const std::string& key, bool d
     return it->second[0] != 0;
 }
 
+// Duplicates the model buffer fd and maps it as an Ashmem region for the NPU backend.
+// On success modelAshmem holds the mapping (released later via UnmapAshmem) and modelPtr
+// points to the start of the model data within the mapped region.
 int32_t MapOfflineModelBuffer(const SharedBuffer& modelBuffer, sptr<Ashmem>& modelAshmem, const void*& modelPtr)
 {
     if (modelBuffer.fd < 0 || modelBuffer.bufferSize == 0 || modelBuffer.dataSize == 0 ||
