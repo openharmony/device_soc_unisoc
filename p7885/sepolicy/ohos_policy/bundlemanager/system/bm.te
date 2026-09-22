@@ -14,5 +14,8 @@
 # avc:  denied  { read } for  pid=3404 comm="bm" name="u:object_r:persist_param:s0" dev="tmpfs" ino=92 scontext=u:r:bm:s0 tcontext=u:object_r:persist_param:s0 tclass=file permissive=0
 allow bm persist_param:file { read open map };
 
+# avc:  denied  { search } for  pid=2190 comm="sh" name="etc" dev="sda49" ino=12 scontext=u:r:aa:s0 tcontext=u:object_r:sys_prod_file:s0 tclass=dir permissive=1
+allow aa sys_prod_file:dir { search };
+
 # avc:  denied  { dac_read_search } for  pid=3428 comm="bm" capability=2  scontext=u:r:bm:s0 tcontext=u:r:bm:s0 tclass=capability permissive=0
 #allow bm bm:capability { dac_read_search };
