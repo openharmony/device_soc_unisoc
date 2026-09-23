@@ -36,7 +36,7 @@ allow chipset_init vendor_bin_file:file { execute_no_trans map read open };
 
 # avc:  denied  { siginh } for  pid=3134 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nnrt_host:s0 tclass=process permissive=0
 # avc:  denied  { rlimitinh } for  pid=3134 comm="hdf_devhost" scontext=u:r:chipset_init:s0 tcontext=u:r:nnrt_host:s0 tclass=process permissive=0
-#allow chipset_init nnrt_host:process { siginh rlimitinh };
+allow chipset_init nnrt_host:process { siginh rlimitinh transition };
 
 # avc:  denied  { read } for  pid=582 comm="modem_control.b" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:chipset_init:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0
 # avc:  denied  { read } for  pid=582 comm="modem_control.b" name="u:object_r:hiviewdfx_hiview_param:s0" dev="tmpfs" ino=131 scontext=u:r:chipset_init:s0 tcontext=u:object_r:hiviewdfx_hiview_param:s0 tclass=file permissive=0

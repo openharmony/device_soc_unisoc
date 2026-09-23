@@ -1,0 +1,4 @@
+allow hdf_devmgr nnrt_host:binder { call transfer };
+allow hdf_devmgr nnrt_host:dir { search };
+allow hdf_devmgr nnrt_host:file { open read };
+allow hdf_devmgr nnrt_host:process { getattr };

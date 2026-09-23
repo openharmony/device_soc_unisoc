@@ -215,5 +215,6 @@ allow init proc_file:filesystem { unmount };
 allow init dhardware:file { write };
 
 allow init hmdfs:dir { search };
+allow init nnrt_host:process { rlimitinh siginh transition };
 allow init hmdfs:filesystem { unmount };
 allow init pstorefs:filesystem { unmount };
