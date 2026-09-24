@@ -136,6 +136,28 @@ int32_t DrmDevice::GetProperty(uint32_t objId, uint32_t objType, const std::stri
 
 int32_t DrmDevice::Init()
 {
+    constexpr uint32_t masterRetryCount = 10;
+    constexpr useconds_t masterRetryDelayUs = 20000;
+    for (uint32_t retry = 0; ; ++retry) {
+        if (drmSetMaster(GetDrmFd()) == 0) {
+            break;
+        }
+        const int masterErrno = errno;
+        DISPLAY_CHK_RETURN((retry >= masterRetryCount || (masterErrno != EACCES && masterErrno != EBUSY)),
+            DISPLAY_FAILURE, DISPLAY_LOGE("can not set to master errno : %{public}d", masterErrno));
+
+        DISPLAY_LOGW("retry drm master with a new fd, retry %{public}u errno %{public}d", retry + 1, masterErrno);
+        // An fd opened while another client is master cannot acquire master without
+        // CAP_SYS_ADMIN. Reopen after it drops master; retrying the old fd is insufficient.
+        mDrmFd.reset();
+        usleep(masterRetryDelayUs);
+        int drmFd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
+        DISPLAY_CHK_RETURN((drmFd < 0), DISPLAY_FAILURE,
+            DISPLAY_LOGE("reopen drm device failed errno : %{public}d", errno));
+        mDrmFd = std::make_shared<HdiFd>(drmFd);
+    }
+
+    // Client capabilities belong to the fd, so configure them after the final reopen.
     int ret = drmSetClientCap(GetDrmFd(), DRM_CLIENT_CAP_UNIVERSAL_PLANES, 1);
     DISPLAY_CHK_RETURN((ret), DISPLAY_FAILURE,
         DISPLAY_LOGE("DRM_CLIENT_CAP_UNIVERSAL_PLANES set failed %{public}s", strerror(errno)));
