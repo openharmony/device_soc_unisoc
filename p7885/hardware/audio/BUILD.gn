@@ -50,6 +50,15 @@ ohos_prebuilt_etc("audio_param_dsp_vbc") {
   subsystem_name = "${SUBSYSTEM_NAME}"
 }
 
+ohos_prebuilt_executable("aw87xxx_acf") {
+  source = "aw87xxx_acf.bin"
+  module_install_dir = "firmware"
+  install_images = [ chipset_base_dir ]
+  install_enable = true
+  part_name = "${PART_NAME}"
+  subsystem_name = "${SUBSYSTEM_NAME}"
+}
+
 ohos_shared_library("sprd_mock_effect") {
   sources = [
     "src/audio_param.c",
@@ -87,5 +96,6 @@ group("audio_unsioc"){
         ":audio_param_dsp_smartamp",
         ":audio_param_dsp_vbc",
         ":sprd_mock_effect",
+        ":aw87xxx_acf",
     ]
 }
