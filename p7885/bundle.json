@@ -73,7 +73,6 @@
         "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/tuning/gc08a3:tuning_gc08a3",
         "//device/soc/unisoc/p7885/hardware/omx_il:lib_omx",
         "//device/soc/unisoc/p7885/hardware/camera_unisoc/soc_p7885/tuning/gc05a2_f:tuning_gc05a2_f",
-        "//device/soc/unisoc/p7885/modules:modules",
         "//device/soc/unisoc/p7885/pac:pac",
         "//device/soc/unisoc/p7885/hardware/location:location_group",
         "//device/soc/unisoc/p7885/unisoc_wrapper:unisoc_wrapper"
