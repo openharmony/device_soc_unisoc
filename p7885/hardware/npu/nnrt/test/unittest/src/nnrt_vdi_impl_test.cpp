@@ -167,7 +167,9 @@ TensorShape UniAITensor::GetShape() const
 }
 
 struct StubUniAI : public unisoc::IUniAI {
-    virtual ~StubUniAI() = default;
+    StubUniAI() : unisoc::IUniAI(false) {}
+    ~StubUniAI() = default;
+
     std::vector<unisoc::IoInfo> inputInfos;
     unisoc::Status inferStatus { unisoc::Status::AI_SUCCESS };
     std::vector<unisoc::UniAITensor> inferOutputs;
@@ -184,53 +186,32 @@ struct StubUniAI : public unisoc::IUniAI {
     bool lastSaveCache { false };
     std::string lastCachePath;
     std::vector<unisoc::BackendId> lastPreferentBackendList;
-
-    void DestroyNetwork(unisoc::NetworkId) override {}
-    std::vector<unisoc::BackendId> GetSupportBackendId() override { return supportedBackends; }
-    unisoc::BackendState GetBackendState([[maybe_unused]] unisoc::BackendId) override { return backendState; }
-    std::vector<unisoc::DataType> GetSupportedDataType() override { return supportedDataTypes; }
-    unisoc::Status LoadNetwork(const char*, unisoc::NetworkId&, unisoc::ModelType&) override
-    {
-        return unisoc::Status::AI_SUCCESS;
-    }
-    unisoc::Status NetworkCompile(unisoc::NetworkId& networkid, unisoc::ModelType modelType,
-        const std::vector<unisoc::BackendId>& preferentBackendList, bool saveCache, const char* cachePath) override
-    {
-        (void)networkid;
-        (void)modelType;
-        lastPreferentBackendList = preferentBackendList;
-        lastSaveCache = saveCache;
-        lastCachePath = cachePath == nullptr ? std::string() : std::string(cachePath);
-        return networkCompileStatus;
-    }
-    std::vector<std::string> GetNetworkInputNames(unisoc::NetworkId) override { return inputNames; }
-    std::vector<std::string> GetNetworkOutputNames(unisoc::NetworkId) override { return outputNames; }
-    unisoc::Status Inference(unisoc::NetworkId, std::vector<unisoc::UniAITensor>&,
-        std::vector<unisoc::UniAITensor>& outputs) override
-    {
-        outputs = inferOutputs;
-        return inferStatus;
-    }
-    std::string GetUniAISdkVersion() override
-    {
-        ++sdkVersionQueryCount;
-        return sdkVersion;
-    }
-    std::vector<unisoc::IoInfo> GetInputAttributeInfo(unisoc::NetworkId) override { return inputInfos; }
-    std::vector<unisoc::IoInfo> GetOutputAttributeInfo(unisoc::NetworkId) override { return {}; }
-    unisoc::Status NetworkCompile(unisoc::CompilationParameter&) override { return unisoc::Status::AI_SUCCESS; }
-    unisoc::Status LoadNetwork(const void* modelBuffer, const size_t bufferSize, unisoc::NetworkId& networkid,
-        unisoc::ModelType& modelType) override
-    {
-        (void)modelBuffer;
-        (void)bufferSize;
-        networkid = 1;
-        modelType = unisoc::ModelType::UniAI_IR;
-        return loadNetworkStatus;
-    }
 };
 
 namespace unisoc {
+
+class UniAI {};
+
+namespace {
+StubUniAI* AsStub(IUniAI* self)
+{
+    return static_cast<StubUniAI*>(self);
+}
+}
+
+IUniAI::IUniAI(bool isProfiling) : pUniAIImpl(nullptr)
+{
+    (void)isProfiling;
+}
+
+IUniAI::IUniAI(const char *dynamicBackendPath, bool isProfiling) : pUniAIImpl(nullptr)
+{
+    (void)dynamicBackendPath;
+    (void)isProfiling;
+}
+
+IUniAI::~IUniAI() = default;
+
 IUniAIPtr IUniAI::Create(bool isProfiling)
 {
     return IUniAI::Create(static_cast<const char*>(nullptr), isProfiling);
@@ -255,6 +236,104 @@ IUniAIPtr IUniAI::Create(const char* dynamicBackendPath, bool)
 void IUniAI::Destroy(IUniAI* UniAI)
 {
     delete static_cast<StubUniAI*>(UniAI);
+}
+
+void IUniAI::DestroyNetwork(NetworkId networkid)
+{
+    (void)networkid;
+}
+
+std::vector<BackendId> IUniAI::GetSupportBackendId()
+{
+    return AsStub(this)->supportedBackends;
+}
+
+BackendState IUniAI::GetBackendState(const BackendId id)
+{
+    (void)id;
+    return AsStub(this)->backendState;
+}
+
+std::vector<DataType> IUniAI::GetSupportedDataType()
+{
+    return AsStub(this)->supportedDataTypes;
+}
+
+Status IUniAI::LoadNetwork(const char *modelPath, NetworkId &networkid, ModelType &modelType)
+{
+    (void)modelPath;
+    (void)networkid;
+    (void)modelType;
+    return Status::AI_SUCCESS;
+}
+
+Status IUniAI::NetworkCompile(NetworkId &networkid, ModelType modelType,
+    const std::vector<BackendId> &preferentBackendList, bool saveCache, const char *cachePath)
+{
+    (void)networkid;
+    (void)modelType;
+    auto* stub = AsStub(this);
+    stub->lastPreferentBackendList = preferentBackendList;
+    stub->lastSaveCache = saveCache;
+    stub->lastCachePath = cachePath == nullptr ? std::string() : std::string(cachePath);
+    return stub->networkCompileStatus;
+}
+
+std::vector<std::string> IUniAI::GetNetworkInputNames(const NetworkId networkid)
+{
+    (void)networkid;
+    return AsStub(this)->inputNames;
+}
+
+std::vector<std::string> IUniAI::GetNetworkOutputNames(const NetworkId networkid)
+{
+    (void)networkid;
+    return AsStub(this)->outputNames;
+}
+
+Status IUniAI::Inference(const NetworkId networkid, std::vector<UniAITensor> &inputTensors,
+    std::vector<UniAITensor> &outputTensors)
+{
+    (void)networkid;
+    (void)inputTensors;
+    auto* stub = AsStub(this);
+    outputTensors = stub->inferOutputs;
+    return stub->inferStatus;
+}
+
+std::string IUniAI::GetUniAISdkVersion()
+{
+    auto* stub = AsStub(this);
+    ++stub->sdkVersionQueryCount;
+    return stub->sdkVersion;
+}
+
+std::vector<IoInfo> IUniAI::GetInputAttributeInfo(NetworkId id)
+{
+    (void)id;
+    return AsStub(this)->inputInfos;
+}
+
+std::vector<IoInfo> IUniAI::GetOutputAttributeInfo(NetworkId id)
+{
+    (void)id;
+    return {};
+}
+
+Status IUniAI::NetworkCompile(CompilationParameter &compilationParameter)
+{
+    (void)compilationParameter;
+    return Status::AI_SUCCESS;
+}
+
+Status IUniAI::LoadNetwork(const void *modelBuffer, const size_t bufferSize, NetworkId &networkid,
+    ModelType &modelType)
+{
+    (void)modelBuffer;
+    (void)bufferSize;
+    networkid = 1;
+    modelType = ModelType::UniAI_IR;
+    return AsStub(this)->loadNetworkStatus;
 }
 }
 
