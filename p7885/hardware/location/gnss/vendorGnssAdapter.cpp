@@ -156,6 +156,23 @@ AgnssModuleInterface g_AGMI_ = {
 void* g_vendorLibHandle = nullptr;
 GnssCallbackStruct g_GCS_ = {0};
 
+#define GNSS_ADAPTER_NAME "vendorGnssAdapter.so"
+
+static void PinAdapterInMemory()
+{
+    static void* selfHandle = nullptr;
+    if (selfHandle != nullptr) {
+        return;
+    }
+
+    selfHandle = dlopen(GNSS_ADAPTER_NAME, RTLD_LAZY | RTLD_NODELETE);
+    if (selfHandle == nullptr) {
+        LBSLOGE(GNSS, "%{public}s pin failed", GNSS_ADAPTER_NAME);
+        return;
+    }
+    LBSLOGI(GNSS, "%{public}s pinned in memory", GNSS_ADAPTER_NAME);
+}
+
 void LoadVendorSymbs()
 {
     g_gpsInitPrvFn = (PFnGnssmgtInit)dlsym(g_vendorLibHandle, "gnssmgt_init");
@@ -197,6 +214,8 @@ void LoadVendorSymbs()
 
 int GnssEnable(GnssCallbackStruct* callbacks)
 {
+    PinAdapterInMemory();
+
     LBSLOGE(GNSS, "%{public}s entered", GNSSMGT);
     if (callbacks == nullptr) {
         LBSLOGE(GNSS, "%{public}s callbacks == nullptr return", GNSSMGT);
