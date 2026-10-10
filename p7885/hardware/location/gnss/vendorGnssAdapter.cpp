@@ -510,9 +510,21 @@ bool AGnssSetCallback(AgnssCallbackIfaces* callbacks)
 {
     LBSLOGI(GNSS, "enter function %{public}s \n", __func__);
     g_GACS_ = *callbacks;
-    g_agpsInitPrvFn(&g_sAGpsCallbacks);
-    g_agpsRilInitPrvFn(&g_sAGpsRilCallbacks);
-    g_agpsSetPosModePrvFn(GPS_POSITION_MODE_MS_BASED, GPS_POSITION_RECURRENCE_PERIODIC, MIN_INTERVAL, 1, 1);
+    if (g_agpsInitPrvFn) {
+        g_agpsInitPrvFn(&g_sAGpsCallbacks);
+    } else {
+        LBSLOGE(GNSS, "g_agpsInitPrvFn is null, %s maybe not load properly\n", __func__, GNSSMGT);
+    }
+    if (g_agpsRilInitPrvFn) {
+        g_agpsRilInitPrvFn(&g_sAGpsRilCallbacks);
+    } else {
+        LBSLOGE(GNSS, "g_agpsRilInitPrvFn is null, %s maybe not load properly\n", __func__, GNSSMGT);
+    }
+    if (g_agpsSetPosModePrvFn) {
+        g_agpsSetPosModePrvFn(GPS_POSITION_MODE_MS_BASED, GPS_POSITION_RECURRENCE_PERIODIC, MIN_INTERVAL, 1, 1);
+    } else {
+        LBSLOGE(GNSS, "g_agpsSetPosModePrvFn is null, %s maybe not load properly\n", __func__, GNSSMGT);
+    }
     return true;
 }
 
