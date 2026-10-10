@@ -585,7 +585,11 @@ bool AGnssSetRefLocation(const AgnssReferenceInfo* refLoc)
 
     size_t size = sizeof(AGpsRefLocation);
     LBSLOGI(GNSS, "%{public}s: sRefLoc.u.cellID.size is %d \n", __func__, sRefLoc.u.cellID.type);
-    g_agpsRilRefLocationPrvFn(&sRefLoc, size);
+    if (g_agpsRilRefLocationPrvFn) {
+        g_agpsRilRefLocationPrvFn(&sRefLoc, size);
+    } else {
+        LBSLOGE(GNSS, "g_agpsRilRefLocationPrvFn is null, %s maybe not load properly\n", __func__, GNSSMGT);
+    }
     return true;
 }
 bool AGnssSetSetId(uint16_t type, const char* setid, size_t len)
@@ -593,7 +597,11 @@ bool AGnssSetSetId(uint16_t type, const char* setid, size_t len)
     UN_USED(len);
 
     LBSLOGI(GNSS, "enter function %{public}s \n", __func__);
-    g_agpsRilSetIdPrvFn(type, setid);
+    if (g_agpsRilSetIdPrvFn) {
+        g_agpsRilSetIdPrvFn(type, setid);
+    } else {
+        LBSLOGE(GNSS, "g_agpsRilSetIdPrvFn is null, %s maybe not load properly\n", __func__, GNSSMGT);
+    }
     return true;
 }
 
@@ -602,7 +610,11 @@ bool AGnssSetAgnssServer(uint16_t type, const char* server, size_t len, int32_t 
     UN_USED(len);
 
     LBSLOGI(GNSS, "enter function %{public}s \n", __func__);
-    g_agpsSetServerPrvFn(type, server, port);
+    if (g_agpsSetServerPrvFn) {
+        g_agpsSetServerPrvFn(type, server, port);
+    } else {
+        LBSLOGE(GNSS, "g_agpsSetServerPrvFn is null, %s maybe not load properly\n", __func__, GNSSMGT);
+    }
     return true;
 }
 
