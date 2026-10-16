@@ -210,7 +210,7 @@ private:
     uint32_t mZorder = -1;
     bool mPreMul = false;
     LayerAlpha mAlpha;
-    TransformType mTransformType;
+    TransformType mTransformType = ROTATE_NONE;
     CompositionType mCompositionType = COMPOSITION_CLIENT;
     CompositionType mDeviceSelect = COMPOSITION_CLIENT;
     BlendType mBlendType;
