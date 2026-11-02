@@ -29,13 +29,14 @@ const struct {
     const char *mName;
     const char *mLibNameSuffix;
     const char *mRole;
+    int maxInst;   // 每个组件允许的最大并发实例数
 } K_COMPONENTS[] = {
     /*Video decoder*/
-   { "OMX.sprd.h264.decoder", "sprd_h264dec", "video_decoder.avc" },
+   { "OMX.sprd.h264.decoder", "sprd_h264dec", "video_decoder.avc", 6 },
     /*Video encoder*/
-   { "OMX.sprd.h264.encoder", "sprd_h264enc", "video_encoder.avc" },
-   { "OMX.sprd.hevc.decoder", "sprd_h265dec", "video_decoder.hevc" },
-   { "OMX.sprd.h265.encoder", "sprd_h265enc", "video_encoder.hevc" },
+   { "OMX.sprd.h264.encoder", "sprd_h264enc", "video_encoder.avc", 6 },
+   { "OMX.sprd.hevc.decoder", "sprd_h265dec", "video_decoder.hevc", 6 },
+   { "OMX.sprd.h265.encoder", "sprd_h265enc", "video_encoder.hevc", 6 },
 };
 };    // namespace OMX
 };    // namespace OHOS

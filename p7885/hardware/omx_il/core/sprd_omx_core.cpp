@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <vector>
+#include <map>
 #undef LOG_TAG
 #define LOG_TAG "SPRD_OMX_CORE"
 #define MAX_COMPONENT_NAME_LEN 128
@@ -98,6 +99,11 @@ struct CreateComponentParams {
 
 static const size_t K_NUM_COMPONENTS =
     sizeof(K_COMPONENTS) / sizeof(K_COMPONENTS[0]);
+
+// 各组件当前活跃实例数；与 K_COMPONENTS[].maxInst 对应，受 g_omxCoreMutex 保护
+static int g_activeInst[K_NUM_COMPONENTS] = {0};
+// OMX_HANDLETYPE -> 组件索引，用于 OMX_FreeHandle 时递减对应计数
+static std::map<OMX_HANDLETYPE, int> g_handleToCompIndex;
 
 static ssize_t FindComponentIndexByName(const char *componentName)
 {
@@ -258,8 +264,19 @@ OMX_API OMX_ERRORTYPE OMX_APIENTRY OMX_GetHandle(
         sprdOmxCoreUnlockFunc();
         return OMX_ErrorInvalidComponentName;
     }
+    // maxInst 校验：当前组件活跃实例数已达上限则拒绝创建
+    if (g_activeInst[componentIndex] >= K_COMPONENTS[componentIndex].maxInst) {
+        OMX_LOGW("max instances (%d) reached for %s, reject OMX_GetHandle",
+            K_COMPONENTS[componentIndex].maxInst, cComponentName);
+        sprdOmxCoreUnlockFunc();
+        return OMX_ErrorInsufficientResources;
+    }
     OMX_ERRORTYPE err = LoadMatchingComponent(
         pHandle, cComponentName, pAppData, pCallBacks, static_cast<size_t>(componentIndex));
+    if (err == OMX_ErrorNone) {
+        g_activeInst[componentIndex]++;
+        g_handleToCompIndex[*pHandle] = static_cast<int>(componentIndex);
+    }
     sprdOmxCoreUnlockFunc();
     return err;
 }
@@ -284,6 +301,15 @@ OMX_API OMX_ERRORTYPE OMX_APIENTRY OMX_FreeHandle(
         return OMX_ErrorUndefined;
     }
     decOMXCore(omx_component, g_omxCore);
+    // 递减该组件的活跃实例计数（与 OMX_GetHandle 中递增对应）
+    auto it = g_handleToCompIndex.find(hComponent);
+    if (it != g_handleToCompIndex.end()) {
+        int idx = it->second;
+        if (g_activeInst[idx] > 0) {
+            g_activeInst[idx]--;
+        }
+        g_handleToCompIndex.erase(it);
+    }
     if (libHandle != nullptr) {
         // Do not dlclose in OMX_FreeHandle; defer to OMX_Deinit for safety.
         QueueLibHandleForDeferredClose(libHandle);
