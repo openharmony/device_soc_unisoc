@@ -75,7 +75,6 @@ public:
     virtual ~Allocator() {}
     static constexpr uint32_t BITS_PER_BYTES = 8;
     static constexpr uint32_t HEIGHT_ALIGN = 2;
-    static constexpr uint32_t HEIGHT_ALIGN_YUV = 16;
     static constexpr uint32_t WIDTH_ALIGN = 16;
 private:
     int32_t DmaBufferSync(const BufferHandle &handle, uint64_t flag);
