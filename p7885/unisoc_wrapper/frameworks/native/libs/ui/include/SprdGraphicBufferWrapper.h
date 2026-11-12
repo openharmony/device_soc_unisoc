@@ -43,6 +43,8 @@ typedef enum {
     ADAPTER_PIXEL_FORMAT_BGRA_8888     = 5,
     ADAPTER_PIXEL_FORMAT_RGBA_5551     = 6,
     ADAPTER_PIXEL_FORMAT_RGBA_4444     = 7,
+    /* Unisoc HAL_PIXEL_FORMAT_YCbCr_420_SP (NV12), distinct from NV21 below. */
+    ADAPTER_PIXEL_FORMAT_YUV420_SP     = 0x15,
     ADAPTER_PIXEL_FORMAT_YVU420_SP     = 0x11,
     ADAPTER_PIXEL_FORMAT_YUV422_SP     = 0x10,
 } AdapterPixelFormat;
