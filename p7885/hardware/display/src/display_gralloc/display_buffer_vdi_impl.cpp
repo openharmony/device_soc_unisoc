@@ -71,19 +71,7 @@ int32_t DisplayBufferVdiImpl::AllocMem(const AllocInfo& info, BufferHandle*& han
 
 void DisplayBufferVdiImpl::FreeMem(const BufferHandle& handle) const
 {
-    size_t copySize = sizeof(BufferHandle) + sizeof(int32_t) * (handle.reserveFds + handle.reserveInts);
-    BufferHandle *handleCopy = static_cast<BufferHandle *>(malloc(copySize));
-    if (handleCopy == nullptr) {
-        DISPLAY_LOGE("malloc handle copy failed");
-        return;
-    }
-    errno_t ret = memcpy_s(handleCopy, copySize, &handle, copySize);
-    if (ret != EOK) {
-        DISPLAY_LOGE("copy handle failed");
-        free(handleCopy);
-        return;
-    }
-    AllocatorManager::GetInstance().FreeMem(handleCopy);
+    AllocatorManager::GetInstance().FreeMem(const_cast<BufferHandle *>(&handle));
 }
 
 void* DisplayBufferVdiImpl::Mmap(const BufferHandle& handle) const
